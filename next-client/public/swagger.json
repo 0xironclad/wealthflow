@@ -1,0 +1,1075 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "WealthFlow API",
+        "description": "API documentation for WealthFlow financial tracking application",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/api",
+            "description": "API base URL"
+        }
+    ],
+    "paths": {
+        "/expense": {
+            "get": {
+                "summary": "Get all expenses for a user",
+                "description": "Retrieves all expense records for a specific user",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID of the user to fetch expenses for"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Expense"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid user ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new expense",
+                "description": "Adds a new expense record to the database",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewExpense"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Expense created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Expense"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid expense data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update an existing expense",
+                "description": "Updates an existing expense record in the database",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateExpense"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Expense updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Expense"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid expense data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Expense not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete an expense",
+                "description": "Deletes an expense record from the database",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID of the expense to delete"
+                    },
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID of the user who owns the expense"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Expense deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Expense"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Expense not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/income": {
+            "get": {
+                "summary": "Get all incomes for a user",
+                "description": "Retrieves all income records for a specific user",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID of the user to fetch incomes for"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Income"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid user ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new income record",
+                "description": "Adds a new income record to the database",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewIncome"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Income created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Income"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid income data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/savings": {
+            "get": {
+                "summary": "Get all savings for a user",
+                "description": "Retrieves all savings records for a specific user",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID of the user to fetch savings for"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Saving"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid user ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Create a new saving goal",
+                "description": "Adds a new saving goal to the database",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewSaving"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Saving goal created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Saving"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid saving data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update an existing saving goal",
+                "description": "Updates an existing saving goal in the database",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateSaving"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Saving goal updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/Saving"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid saving data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Saving goal not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/[...nextauth]": {
+            "get": {
+                "summary": "NextAuth handler",
+                "description": "Handles NextAuth authentication requests",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            },
+            "post": {
+                "summary": "NextAuth handler",
+                "description": "Handles NextAuth authentication submissions",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Expense": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "userid",
+                    "name",
+                    "date",
+                    "amount",
+                    "type",
+                    "paymentmethod",
+                    "category"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "userid": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 15
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Grocery Shopping"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-02-20T14:00:00Z"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "example": "85.75"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "income",
+                            "expense"
+                        ],
+                        "example": "expense"
+                    },
+                    "paymentmethod": {
+                        "type": "string",
+                        "enum": [
+                            "cash",
+                            "credit",
+                            "debit"
+                        ],
+                        "example": "debit"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "Food",
+                            "Rent",
+                            "Transport",
+                            "Entertainment",
+                            "Health",
+                            "Utilities",
+                            "Education",
+                            "Shopping",
+                            "Other"
+                        ],
+                        "example": "Food"
+                    }
+                }
+            },
+            "NewExpense": {
+                "type": "object",
+                "required": [
+                    "userId",
+                    "name",
+                    "date",
+                    "amount",
+                    "type",
+                    "paymentMethod",
+                    "category"
+                ],
+                "properties": {
+                    "userId": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Grocery Shopping"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-02-20T14:00:00Z"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 85.75
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "income",
+                            "expense"
+                        ],
+                        "example": "expense"
+                    },
+                    "paymentMethod": {
+                        "type": "string",
+                        "enum": [
+                            "cash",
+                            "credit",
+                            "debit"
+                        ],
+                        "example": "debit"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "Food",
+                            "Rent",
+                            "Transport",
+                            "Entertainment",
+                            "Health",
+                            "Utilities",
+                            "Education",
+                            "Shopping",
+                            "Other"
+                        ],
+                        "example": "Food"
+                    }
+                }
+            },
+            "UpdateExpense": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Grocery Shopping"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-02-20T14:00:00Z"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 85.75
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "income",
+                            "expense"
+                        ],
+                        "example": "expense"
+                    },
+                    "paymentMethod": {
+                        "type": "string",
+                        "enum": [
+                            "cash",
+                            "credit",
+                            "debit"
+                        ],
+                        "example": "debit"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "Food",
+                            "Rent",
+                            "Transport",
+                            "Entertainment",
+                            "Health",
+                            "Utilities",
+                            "Education",
+                            "Shopping",
+                            "Other"
+                        ],
+                        "example": "Food"
+                    }
+                }
+            },
+            "Income": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "userid",
+                    "name",
+                    "date",
+                    "amount",
+                    "category",
+                    "source"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "userid": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 15
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Salary"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-02-28T00:00:00Z"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "example": "3500.00"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "Salary",
+                            "Bonus",
+                            "Investment",
+                            "Freelance",
+                            "Business",
+                            "Other"
+                        ],
+                        "example": "Salary"
+                    },
+                    "source": {
+                        "type": "string",
+                        "enum": [
+                            "Employer",
+                            "Self-Employment",
+                            "Investments",
+                            "Client",
+                            "Family/Friend",
+                            "Other"
+                        ],
+                        "example": "Employer"
+                    },
+                    "isrecurring": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "recurringfrequency": {
+                        "type": "string",
+                        "example": "monthly"
+                    }
+                }
+            },
+            "NewIncome": {
+                "type": "object",
+                "required": [
+                    "userId",
+                    "name",
+                    "date",
+                    "amount",
+                    "category",
+                    "source"
+                ],
+                "properties": {
+                    "userId": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Salary"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-02-28T00:00:00Z"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 3500.00
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": [
+                            "Salary",
+                            "Bonus",
+                            "Investment",
+                            "Freelance",
+                            "Business",
+                            "Other"
+                        ],
+                        "example": "Salary"
+                    },
+                    "source": {
+                        "type": "string",
+                        "enum": [
+                            "Employer",
+                            "Self-Employment",
+                            "Investments",
+                            "Client",
+                            "Family/Friend",
+                            "Other"
+                        ],
+                        "example": "Employer"
+                    },
+                    "isRecurring": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "recurringFrequency": {
+                        "type": "string",
+                        "example": "monthly"
+                    }
+                }
+            },
+            "Saving": {
+                "type": "object",
+                "required": [
+                    "id",
+                    "userid",
+                    "name",
+                    "date",
+                    "amount",
+                    "goal",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    },
+                    "userid": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 15
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Emergency Fund"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-02-01T00:00:00Z"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "example": "5000.00"
+                    },
+                    "goal": {
+                        "type": "string",
+                        "example": "10000.00"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "completed",
+                            "atRisk"
+                        ],
+                        "example": "active"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Building emergency fund for unexpected expenses"
+                    }
+                }
+            },
+            "NewSaving": {
+                "type": "object",
+                "required": [
+                    "userId",
+                    "name",
+                    "date",
+                    "amount",
+                    "goal",
+                    "status"
+                ],
+                "properties": {
+                    "userId": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Emergency Fund"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-02-01T00:00:00Z"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 5000.00
+                    },
+                    "goal": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 10000.00
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "completed",
+                            "atRisk"
+                        ],
+                        "example": "active"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Building emergency fund for unexpected expenses"
+                    }
+                }
+            },
+            "UpdateSaving": {
+                "type": "object",
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Emergency Fund"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-02-01T00:00:00Z"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 6000.00
+                    },
+                    "goal": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 10000.00
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "completed",
+                            "atRisk"
+                        ],
+                        "example": "active"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Building emergency fund for unexpected expenses"
+                    }
+                }
+            },
+            "Error": {
+                "type": "object",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Error message"
+                    },
+                    "error": {
+                        "type": "object",
+                        "example": {}
+                    }
+                }
+            }
+        }
+    }
+}
