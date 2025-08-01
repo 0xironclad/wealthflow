@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import {AccountManager} from "@/components/account-manager/account-manager";
+import { AccountManager } from "@/components/account-manager/account-manager";
 
 
 
@@ -59,7 +59,7 @@ export default function AuthenticatedLayout({
               </Dialog>
             </div>
           </header>
-          <main className="flex-1 overflow-hidden">
+          <main className="flex-1 overflow-hidden min-h-[calc(100vh-1.75rem)]">
             <UserProvider>
               {children}
             </UserProvider>
