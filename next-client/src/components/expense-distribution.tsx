@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { getExpensesById } from "@/server/expense"
 import { useUser } from "@/context/UserContext"
+import { ExpenseDistributionNoData } from "./empty states/expense-distribution-no-data"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CHART_COLORS = [
@@ -133,6 +134,9 @@ function ExpenseDistribution() {
         ];
     }, [expenses]);
 
+    // Check if there are no expenses
+    const hasNoExpenses = !expenses || expenses.filter((exp: { type: string }) => exp.type === 'expense').length === 0;
+
     if (isAuthLoading || isLoading) {
         return (
             <Card className="h-full w-full">
@@ -145,6 +149,12 @@ function ExpenseDistribution() {
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </CardContent>
             </Card>
+        );
+    }
+
+    if (hasNoExpenses) {
+        return (
+            <ExpenseDistributionNoData />
         );
     }
 
