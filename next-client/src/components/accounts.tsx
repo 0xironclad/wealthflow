@@ -138,31 +138,62 @@ export default function AccountsCard() {
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="flex-1 flex items-center justify-center">
-                    You don&apos;t have any income yet!
+                    <div className="flex flex-col items-center justify-center space-y-6 px-4 text-center">
+                        <div className="relative">
+                            <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                                <Wallet className="w-12 h-12 text-primary" />
+                            </div>
+                            <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-chart-2/20 flex items-center justify-center">
+                                <ArrowUpRight className="w-4 h-4 text-chart-2" />
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h3 className="text-xl font-semibold text-foreground">
+                                No income sources yet
+                            </h3>
+                            <p className="text-muted-foreground text-sm max-w-sm leading-relaxed">
+                                Start building your financial foundation by adding your income sources.
+                                Track your earnings and watch your balance grow.
+                            </p>
+                        </div>
+
+                        <div className="flex flex-col space-y-3 w-full max-w-xs">
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add Your First Income
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Add New Income</DialogTitle>
+                                        <DialogDescription>
+                                            Add a new income source to your account
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <IncomeForm onSubmit={handleAddIncome} />
+                                </DialogContent>
+                            </Dialog>
+
+                            <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                                <div className="flex -space-x-1">
+                                    <div className="w-6 h-6 rounded-full bg-chart-1/20 flex items-center justify-center">
+                                        <CreditCard className="w-3 h-3 text-chart-1" />
+                                    </div>
+                                    <div className="w-6 h-6 rounded-full bg-chart-2/20 flex items-center justify-center">
+                                        <Wallet className="w-3 h-3 text-chart-2" />
+                                    </div>
+                                    <div className="w-6 h-6 rounded-full bg-chart-3/20 flex items-center justify-center">
+                                        <QrCode className="w-3 h-3 text-chart-3" />
+                                    </div>
+                                </div>
+                                <span>Track salary, freelance & more</span>
+                            </div>
+                        </div>
+                    </div>
                 </CardContent>
-                <CardFooter className="p-2 border-t grid grid-cols-2 gap-2">
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button size="sm" className="h-auto py-2 flex items-center gap-1">
-                                <Plus className="w-3.5 h-3.5" />
-                                <span>Add</span>
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Add New Income</DialogTitle>
-                                <DialogDescription>
-                                    Add a new income source to your account
-                                </DialogDescription>
-                            </DialogHeader>
-                            <IncomeForm onSubmit={handleAddIncome} />
-                        </DialogContent>
-                    </Dialog>
-                    <Button size="sm" variant={"secondary"} className="h-auto py-2 flex items-center gap-1">
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                        <span>Manage</span>
-                    </Button>
-                </CardFooter>
             </Card>
         );
     }
