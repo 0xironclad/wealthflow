@@ -35,7 +35,7 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
     isPositive = true
 }) => {
     return (
-        <Card className="border rounded-lg p-3 flex flex-col h-[120px]">
+        <Card className="border rounded-lg p-3 flex flex-col h-full">
             <CardTitle className="text-xs text-gray-500 mb-1">{label}</CardTitle>
             <div className="flex items-center justify-between">
                 <span className="text-lg font-bold">
@@ -182,7 +182,7 @@ const DashboardTopRow: React.FC = () => {
 
     if (isLoadingData) {
         return (
-            <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-3 md:grid-cols-5 gap-4 h-full">
                 <div className="col-span-1">
                     <Card className="p-3 flex flex-col animate-pulse">
                         <div className="h-4 w-16 bg-muted rounded mb-2"></div>
@@ -247,7 +247,7 @@ const DashboardTopRow: React.FC = () => {
 
 
     return (
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-5 gap-4 h-full">
             <div className="col-span-1">
                 <FinancialMetricCard
                     label="Income"
@@ -271,7 +271,7 @@ const DashboardTopRow: React.FC = () => {
                 />
             </div>
             <div className="col-span-3 md:col-span-1">
-                <Card className="p-3 flex flex-col h-[120px]">
+                <Card className="p-3 flex flex-col h-full">
                     <CardTitle className="text-xs text-gray-500 mb-1">Monthly Budget Spent</CardTitle>
                     <div className="flex items-center justify-between">
                         <span className="text-lg font-bold">
@@ -300,7 +300,7 @@ const DashboardTopRow: React.FC = () => {
                 </Card>
             </div>
             <div className="col-span-3 md:col-span-1">
-                <Card className="p-3 flex flex-col h-[120px]">
+                <Card className="p-3 flex flex-col h-full">
                     <CardTitle className="text-xs text-gray-500 mb-1">Invoices</CardTitle>
                     <p className="text-sm">
                         {
