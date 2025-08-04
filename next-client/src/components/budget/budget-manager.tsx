@@ -2,10 +2,8 @@
 "use client";
 
 import * as React from "react";
-import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { BudgetRadialChart } from "./budget-radial-chart";
-import { Card, CardContent } from "../ui/card";
 import dynamic from "next/dynamic";
 import { Toaster, toast } from "sonner";
 import {
@@ -35,6 +33,7 @@ import {
     PiggyBank,
     Target,
     Plus,
+    Loader2
 } from "lucide-react";
 import { useUser } from "@/context/UserContext";
 
@@ -183,7 +182,7 @@ function BudgetManager() {
                 <div className="flex flex-col space-y-1 h-[350px] overflow-y-auto">
                     {isLoading ? (
                         <div className="flex items-center justify-center h-full">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                            <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                         </div>
                     ) : error ? (
                         <div className="flex items-center justify-center h-full text-destructive">

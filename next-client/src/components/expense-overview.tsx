@@ -41,7 +41,7 @@ export function ExpenseOverview() {
             <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
                 {[1, 2, 3].map((index) => (
                     <div key={index} className="w-full h-[120px] flex items-center justify-center">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                        <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                     </div>
                 ))}
             </div>
