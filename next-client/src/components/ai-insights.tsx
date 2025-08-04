@@ -8,6 +8,7 @@ import {
   Sparkles,
   Loader2,
 } from "lucide-react";
+import { ErrorState } from "./ui/empty-states/error-state";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useUser } from "@/context/UserContext";
@@ -175,15 +176,11 @@ const AIInsights: React.FC = () => {
 
   if (error) {
     return (
-      <Card className="h-full w-full flex flex-col items-center justify-center p-4">
-        <AlertTriangle className="h-12 w-12 text-red-500 mb-4" />
-        <p className="text-sm text-muted-foreground text-center">
-          {error}. Please try again later.
-        </p>
-        <Button onClick={fetchAIInsights} className="mt-4">
-          Retry
-        </Button>
-      </Card>
+      <ErrorState 
+        error={`${error}. Please try again later.`}
+        onRetry={fetchAIInsights}
+        className="h-full w-full"
+      />
     );
   }
 
