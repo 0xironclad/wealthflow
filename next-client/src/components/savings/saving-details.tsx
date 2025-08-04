@@ -56,22 +56,22 @@ export function SavingDetails({
       id: number;
       userid: number;
       name: string;
-      createdat: string;
+      created_at: string;
       amount: string;
       goal: string;
       status: string;
       description: string;
-      targetDate?: string;
+      target_date?: string;
     }) => ({
       id: saving.id,
       userId: saving.userid,
       name: saving.name,
-      createdAt: saving.createdat,
+      createdAt: saving.created_at,
       amount: parseFloat(saving.amount),
       goal: parseFloat(saving.goal),
       status: saving.status,
       description: saving.description,
-      targetDate: saving.targetDate
+      targetDate: saving.target_date
     }))
   });
 
@@ -202,7 +202,7 @@ export function SavingDetails({
               <span className="text-sm font-medium">Target Completion</span>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">
-                  {new Date(currentSaving.createdAt).toLocaleDateString()}
+                  {new Date(currentSaving.targetDate).toLocaleDateString()}
                 </span>
                 <Badge
                   variant={

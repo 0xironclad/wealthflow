@@ -12,23 +12,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TbEdit } from "react-icons/tb";
-import { MdDeleteOutline } from "react-icons/md";
 import { useToast } from "@/hooks/use-toast";
 import { InvoiceType } from "@/lib/types";
 import {
-  ArrowDownLeft,
-  HeartPulse,
-  Droplets,
-  GraduationCap,
-  ShoppingCart,
-  WalletCards,
-  Utensils,
-  HousePlus,
-  MonitorPlay,
-  CarFront,
   Loader2,
-  Coins,
   TrendingUp,
   TrendingDown,
   PiggyBank
@@ -187,21 +174,6 @@ function Transaction() {
     });
   };
 
-  const getIcon = (category: string) => {
-    const iconMap = {
-      Food: Utensils,
-      Rent: HousePlus,
-      Entertainment: MonitorPlay,
-      Transport: CarFront,
-      Health: HeartPulse,
-      Utilities: Droplets,
-      Education: GraduationCap,
-      Shopping: ShoppingCart,
-      Saving: Coins,
-      Other: WalletCards,
-    };
-    return iconMap[category as keyof typeof iconMap] || ArrowDownLeft;
-  };
   if (!user) return null;
 
   if (isLoading) {
@@ -258,7 +230,7 @@ function Transaction() {
                     <TableRow className="cursor-pointer hover:bg-accent">
                       <TableCell className="flex items-center gap-2">
                         {(() => {
-                          const Icon = getIcon(invoice.category);
+                          // const Icon = getIcon(invoice.category);
                           return (
                             <div
                               className={`p-2 rounded-full ${invoice.type === "income"

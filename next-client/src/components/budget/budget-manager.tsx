@@ -263,7 +263,7 @@ function BudgetManager() {
                             const Icon = getIcon(category.category);
                             const progress = (category.spentAmount / category.plannedAmount) * 100;
                             const isOverBudget = progress > 100;
-                            const progressColor = isOverBudget ? "destructive" : progress > 70 ? "chart-4" : "chart-2";
+
 
                             return (
                                 <div

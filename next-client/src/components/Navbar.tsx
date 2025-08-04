@@ -7,7 +7,7 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
-import Logo from "../assets/App-logo.png";
+import Logo from "@/assets/app-logo.png";
 
 const Navbar = () => {
 

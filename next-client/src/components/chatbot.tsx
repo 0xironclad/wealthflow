@@ -54,9 +54,8 @@ function FloatingChatbot() {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
-    const smileEmojis = ['😊', '🙂', '😺']
-
     useEffect(() => {
+        const smileEmojis = ['😊', '🙂', '😺']
         scrollToBottom();
         if (isOpen && messages.length === 0) {
             setMessages([{

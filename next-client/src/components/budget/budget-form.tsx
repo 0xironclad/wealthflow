@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Budget } from "@/lib/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addDays } from "date-fns";
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
 import {
   Popover,
   PopoverContent,

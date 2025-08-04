@@ -1,7 +1,6 @@
 "use client"
 
 import {
-  BadgeCheck,
   ChevronsUpDown,
   LogOut,
 } from "lucide-react"
