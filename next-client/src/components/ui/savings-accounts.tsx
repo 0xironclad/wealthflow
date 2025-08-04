@@ -111,7 +111,7 @@ export default function SavingAccounts() {
       id: number;
       userid: number;
       name: string;
-      createdat: string;
+      created_at: string;
       amount: string;
       goal: string;
       status: string;
@@ -120,7 +120,7 @@ export default function SavingAccounts() {
       id: saving.id,
       userId: saving.userid,
       name: saving.name,
-      createdAt: saving.createdat,
+      createdAt: saving.created_at,
       amount: parseFloat(saving.amount),
       goal: parseFloat(saving.goal),
       status: saving.status,
@@ -143,6 +143,8 @@ export default function SavingAccounts() {
   if (!savings || savings.length === 0) {
     return <SavingsEmptyState />;
   }
+
+  console.log(savings);
 
   return (
     <div className="w-full h-full">
