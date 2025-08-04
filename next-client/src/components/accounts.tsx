@@ -83,7 +83,6 @@ export default function AccountsCard() {
                 description: "Income added successfully",
             })
         },
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onError: (error) => {
             console.error('Income creation error:', error)
             toast({

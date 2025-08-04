@@ -1,18 +1,16 @@
 "use client"
 
 import { useUser } from "@/context/UserContext";
-import { IncomeType, InvoiceType, SavingsType } from "@/lib/types";
+import { IncomeType, InvoiceType } from "@/lib/types";
 import { getExpensesById } from "@/server/expense";
-import { getSavings } from "@/server/saving";
 import { getIncomesById, getTotalIncome } from "@/server/income";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import logo from "@/assets/icon.png";
 import Image from "next/image";
 import {
     Calendar,
     TrendingUp,
     TrendingDown,
-    DollarSign,
     Receipt,
     User,
     PieChart,
@@ -23,14 +21,8 @@ import {
 function InvoicePage() {
     const { user } = useUser();
 
-    if (!user) {
-        return <div>Loading...</div>;
-    }
-
-    const userId = user.id;
-
     //   total income for the month
-    const { data: incomes, isLoading: isLoadingIncomes } = useQuery({
+    const { data: incomes } = useQuery({
         queryKey: ['incomes', user?.id],
         refetchOnWindowFocus: false,
         queryFn: async () => {
@@ -57,7 +49,7 @@ function InvoicePage() {
         }, 0) ?? 0;
 
     //   total expenses for the month
-    const { data: expenses, isLoading: isLoadingExpenses } = useQuery({
+    const { data: expenses } = useQuery({
         queryKey: ['expenses', user?.id],
         refetchOnWindowFocus: false,
         queryFn: async () => {
@@ -77,7 +69,7 @@ function InvoicePage() {
         .reduce((sum: number, expense: InvoiceType) => sum + Number(expense.amount), 0) ?? 0;
 
     // Income
-    const { data: totalIncome, isLoading: totalIncomeLoading } = useQuery({
+    const { data: totalIncome } = useQuery({
         queryKey: ['totalBalance', user?.id],
         queryFn: () => getTotalIncome(user?.id as string),
         refetchOnWindowFocus: false,
@@ -90,6 +82,11 @@ function InvoicePage() {
         },
         retry: 1
     });
+
+
+    if (!user) {
+        return <div>Loading...</div>;
+    }
 
     // Transactions for the month
     const transactions = expenses?.filter((expense: InvoiceType) => {

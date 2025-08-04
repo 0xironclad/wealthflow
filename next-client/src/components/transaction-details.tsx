@@ -1,5 +1,4 @@
 import { InvoiceType } from "@/lib/types";
-import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

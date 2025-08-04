@@ -3,20 +3,14 @@ import {
     CardContent,
     CardDescription,
     CardHeader,
-    CardTitle,
-    CardFooter
+    CardTitle
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import {
-    ArrowUpRight,
-    ArrowDownLeft,
     Receipt,
-    Plus,
-    Clock,
     TrendingUp,
-    CreditCard,
-    Wallet
+    Plus
 } from "lucide-react"
 
 export function LatestTransactionsNoData() {

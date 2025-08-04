@@ -1,6 +1,5 @@
 import { PiggyBank } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -13,7 +12,7 @@ export function SavingsEmptyState() {
             <PiggyBank className="w-12 h-12 mb-4 text-muted-foreground" />
             <h3 className="text-lg font-medium mb-2">No savings accounts yet</h3>
             <p className="text-sm text-muted-foreground mb-4 max-w-md">
-                You don't have any savings accounts set up yet. Start saving today by creating your first savings goal.
+                You don&apos;t have any savings accounts set up yet. Start saving today by creating your first savings goal.
             </p>
             <Dialog>
                 <DialogTrigger asChild>
