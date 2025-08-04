@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { getExpensesById } from "@/server/expense";
 import { useUser } from "@/context/UserContext";
+import { LatestTransactionsNoData } from "./empty states/latest-transactions-no-data";
 
 export default function LatestTransactions() {
   const { user, isLoading: isAuthLoading } = useUser();
@@ -76,6 +77,9 @@ export default function LatestTransactions() {
       }));
   }, [expenses]);
 
+  // Check if there are no transactions
+  const hasNoTransactions = !expenses || expenses.length === 0;
+
   if (isAuthLoading) {
     return (
       <Card className="h-full flex flex-col">
@@ -89,7 +93,7 @@ export default function LatestTransactions() {
           </div>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-[200px]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
         </CardContent>
       </Card>
     );
@@ -110,10 +114,15 @@ export default function LatestTransactions() {
           </div>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-[200px]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
         </CardContent>
       </Card>
     );
+  }
+
+  // Return empty state if no transactions
+  if (hasNoTransactions) {
+    return <LatestTransactionsNoData />;
   }
 
   return (

@@ -1,6 +1,7 @@
 "use client"
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
+import { SavingsEmptyState } from "./empty-states/savings-empty-state";
 import {
   Calendar,
   ArrowRight,
@@ -140,11 +141,7 @@ export default function SavingAccounts() {
   }
 
   if (!savings || savings.length === 0) {
-    return (
-      <div className="flex items-center justify-center w-full h-48 text-muted-foreground">
-        No savings accounts found
-      </div>
-    );
+    return <SavingsEmptyState />;
   }
 
   return (

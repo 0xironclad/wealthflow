@@ -318,7 +318,7 @@ export default function InsightsPage() {
                   disabled={isLoadingRecommendations}
                 >
                   {isLoadingRecommendations ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                   ) : (
                     "Refresh"
                   )}
@@ -329,7 +329,7 @@ export default function InsightsPage() {
               <div className="space-y-4 styled-scrollbar max-h-full overflow-y-auto pr-2">
                 {isLoadingRecommendations ? (
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                   </div>
                 ) : (
                   recommendations.map((recommendation, index) => (
