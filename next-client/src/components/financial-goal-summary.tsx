@@ -52,11 +52,11 @@ function FinancialGoalSummary() {
         );
     }
 
-    const activeGoals = savings?.filter((saving: SavingsType) => saving.status === 'active').length;
-    const completed = savings?.filter((saving: SavingsType) => saving.status === 'completed').length;
-    const atRisk = savings?.filter((saving: SavingsType) => saving.status === 'atRisk').length;
+    const activeGoals = savings?.filter((saving: SavingsType) => saving.status === 'active').length || 0;
+    const completed = savings?.filter((saving: SavingsType) => saving.status === 'completed').length || 0;
+    const atRisk = savings?.filter((saving: SavingsType) => saving.status === 'atRisk').length || 0;
     const totalGoals = activeGoals + completed + atRisk;
-    const percentageComplete = totalGoals > 0 ? (completed / totalGoals) * 100 : 0;
+    const percentageComplete = totalGoals > 0 ? Math.round((completed / totalGoals) * 100) : 0;
 
     const goalSummary = [
         { label: 'Active Goals', value: activeGoals },
@@ -81,7 +81,7 @@ function FinancialGoalSummary() {
                     ))}
                 </div>
                 <div className="h-32 w-32 flex-shrink-0 flex items-start justify-center flex-col">
-                    <RadialProgress progress={Number(percentageComplete.toFixed(1))} />
+                    <RadialProgress progress={percentageComplete} />
                 </div>
             </CardContent>
         </Card>
