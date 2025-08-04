@@ -99,7 +99,7 @@ export function AccountManager() {
               >
                 {mutation.isPending ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                     Saving...
                   </>
                 ) : (

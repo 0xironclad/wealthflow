@@ -49,7 +49,7 @@ function Savings() {
                     <CardTitle>Savings</CardTitle>
                 </div>
                 <CardContent className="flex items-center justify-center h-[200px]">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
                 </CardContent>
             </Card>
         );

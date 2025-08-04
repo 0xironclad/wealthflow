@@ -48,7 +48,7 @@ const PopoverTrigger = dynamic(() => import("@/components/ui/popover").then(mod 
 const TransactionForm = dynamic(() => import('@/components/transaction-form').then(mod => mod.TransactionForm), {
   loading: () => <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     <div className=" p-6 rounded-lg shadow-xl">
-      <Loader2 className="h-8 w-8 animate-spin mx-auto" />
+      <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       <p className="text-center mt-2">Loading form...</p>
     </div>
   </div>,
@@ -207,7 +207,7 @@ function Transaction() {
   if (isLoading) {
     return (
       <div className="w-full h-full flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
   }

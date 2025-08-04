@@ -29,7 +29,7 @@ export function ErrorState({
           onClick={onRetry}
           className="gap-2"
         >
-          <RefreshCw className="h-4 w-4" />
+          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
           {retryText}
         </Button>
       )}
