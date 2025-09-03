@@ -1,15 +1,5 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  images: {
-    domains: ['res.cloudinary.com'],
-  },
-  webpack: (config) => {
-    config.cache = {
-      type: "filesystem",
-    };
-    return config;
-  }
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
