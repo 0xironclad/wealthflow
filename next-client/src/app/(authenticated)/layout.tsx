@@ -19,7 +19,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { AccountManager } from "@/components/account-manager/account-manager";
+
 
 
 
@@ -54,7 +54,9 @@ export default function AuthenticatedLayout({
                       <DialogTitle>Account Details</DialogTitle>
                     </VisuallyHidden>
                   </DialogHeader>
-                  <AccountManager />
+                  <div className="p-6 text-center">
+                    <p className="text-muted-foreground">Account management coming soon...</p>
+                  </div>
                 </DialogContent>
               </Dialog>
             </div>
