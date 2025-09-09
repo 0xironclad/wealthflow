@@ -18,10 +18,8 @@ import {
 } from "@/components/ui/chart"
 import { cn } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import { getExpensesById } from "@/server/expense"
-import { getIncomesById } from "@/server/income"
 import { useUser } from "@/context/UserContext"
+import { useExpenses, useIncomes } from "@/lib/queries"
 
 interface ChartData {
   month: string;
@@ -46,54 +44,8 @@ export function IncomeVSExpense() {
   const [timeRange, setTimeRange] = useState<TimeRange>("6months");
   const { user, isLoading: isAuthLoading } = useUser();
 
-  const { data: expenses, isLoading: isLoadingExpenses } = useQuery({
-    queryKey: ['expenses', user?.id],
-    queryFn: () => getExpensesById(user?.id ?? ''),
-    enabled: !!user?.id,
-    select: (data) => data.map((expense: {
-      id: number;
-      userid: string;
-      name: string;
-      date: string;
-      amount: string;
-      type: 'income' | 'expense';
-      paymentmethod: string;
-      category: string;
-    }) => ({
-      id: expense.id,
-      userId: expense.userid,
-      name: expense.name,
-      date: expense.date,
-      amount: parseFloat(expense.amount),
-      type: expense.type,
-      paymentMethod: expense.paymentmethod,
-      category: expense.category
-    }))
-  });
-
-  const { data: incomes, isLoading: isLoadingIncomes } = useQuery({
-    queryKey: ['incomes', user?.id],
-    queryFn: () => getIncomesById(user?.id ?? ''),
-    enabled: !!user?.id,
-    select: (data) => data.map((income: {
-      id: number;
-      userid: string;
-      name: string;
-      date: string;
-      amount: string;
-      category: string;
-      source: string;
-    }) => ({
-      id: income.id,
-      userId: income.userid,
-      name: income.name,
-      date: income.date,
-      amount: parseFloat(income.amount),
-      type: 'income',
-      category: income.category,
-      source: income.source
-    }))
-  });
+  const { data: expenses, isLoading: isLoadingExpenses } = useExpenses(user?.id || '');
+  const { data: incomes, isLoading: isLoadingIncomes } = useIncomes(user?.id || '');
 
   const chartData = useMemo(() => {
     if (!expenses || !incomes) return [];
@@ -185,6 +137,8 @@ export function IncomeVSExpense() {
     }
   }, [chartData, timeRange]);
 
+  if (!user?.id) return null;
+
   if (isAuthLoading || isLoadingExpenses || isLoadingIncomes) {
     return (
       <Card className="h-full">
@@ -193,7 +147,7 @@ export function IncomeVSExpense() {
           <CardDescription>Loading data...</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-[200px]">
-          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" />
         </CardContent>
       </Card>
     );
