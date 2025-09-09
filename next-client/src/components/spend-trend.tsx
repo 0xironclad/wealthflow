@@ -17,9 +17,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { cn } from "@/lib/utils"
-import { Loader2 } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import { getExpensesById } from "@/server/expense"
 import { useUser } from "@/context/UserContext"
 import { useExpenses } from "@/lib/queries"
 import LoadingComponent from "./loading-component"
