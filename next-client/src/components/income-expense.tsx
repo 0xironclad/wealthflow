@@ -142,7 +142,7 @@ export function IncomeVSExpense() {
 
   if (isAuthLoading || isLoadingExpenses || isLoadingIncomes) {
     return (
-      <LoadingComponent />
+      <LoadingComponent title="Income vs Expense" />
     );
   }
 

@@ -117,7 +117,7 @@ export function SpendTrend() {
 
   if (isLoading || isAuthLoading) {
     return (
-      <LoadingComponent />
+      <LoadingComponent title="Money spent" />
     );
   }
 

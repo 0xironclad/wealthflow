@@ -1,11 +1,15 @@
 import { Card, CardContent, CardTitle, CardDescription, CardHeader } from './ui/card'
 import { Loader2 } from 'lucide-react'
 
-function LoadingComponent() {
+interface LoadingComponentProps {
+    title: string;
+}
+
+function LoadingComponent({ title }: LoadingComponentProps) {
     return (
         <Card className="h-full">
             <CardHeader className="pb-2">
-                <CardTitle>Money spent</CardTitle>
+                <CardTitle>{title}</CardTitle>
                 <CardDescription>Loading data...</CardDescription>
             </CardHeader>
             <CardContent className="flex items-center justify-center h-[200px]">

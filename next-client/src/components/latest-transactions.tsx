@@ -31,27 +31,14 @@ import { useQuery } from "@tanstack/react-query";
 import { getExpensesById } from "@/server/expense";
 import { useUser } from "@/context/UserContext";
 import { LatestTransactionsNoData } from "./empty states/latest-transactions-no-data";
+import { useExpenses } from "@/lib/queries";
+import LoadingComponent from "./loading-component";
 
 export default function LatestTransactions() {
   const { user, isLoading: isAuthLoading } = useUser();
 
-  const { data: expenses, isLoading } = useQuery({
-    queryKey: ['expenses', user?.id],
-    queryFn: () => user ? getExpensesById(user.id) : null,
-    enabled: !!user,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60,
-    select: (data) => data?.map((expense: { id: any; userid: any; name: any; date: any; amount: string; type: any; paymentmethod: any; category: any }) => ({
-      id: expense.id,
-      userId: expense.userid,
-      name: expense.name,
-      date: expense.date,
-      amount: parseFloat(expense.amount),
-      type: expense.type,
-      paymentMethod: expense.paymentmethod,
-      category: expense.category
-    }))
-  });
+  const { data: expenses, isLoading } = useExpenses(user?.id ?? '');
+  
 
   const sortedTransactions = useMemo(() => {
     if (!expenses) return [];
@@ -76,49 +63,16 @@ export default function LatestTransactions() {
         category: transaction.category,
       }));
   }, [expenses]);
+  if (!user?.id) return null;
 
   // Check if there are no transactions
   const hasNoTransactions = !expenses || expenses.length === 0;
 
-  if (isAuthLoading) {
-    return (
-      <Card className="h-full flex flex-col">
-        <CardHeader className="flex-none pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                Latest Transactions
-              </CardTitle>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="flex items-center justify-center h-[200px]">
-          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-        </CardContent>
-      </Card>
-    );
+  if (isAuthLoading || isLoading) {
+    return <LoadingComponent title="Latest Transactions" />
   }
 
 
-
-  if (isLoading) {
-    return (
-      <Card className="h-full flex flex-col">
-        <CardHeader className="flex-none pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <CardTitle className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                Latest Transactions
-              </CardTitle>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="flex items-center justify-center h-[200px]">
-          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-        </CardContent>
-      </Card>
-    );
-  }
 
   // Return empty state if no transactions
   if (hasNoTransactions) {

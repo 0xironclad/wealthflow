@@ -20,7 +20,7 @@ function Savings() {
     if (!user?.id) return null;
 
     if (isLoading || isAuthLoading) {
-        return <LoadingComponent />
+        return <LoadingComponent title="Savings" />
     }
 
     // Check if there are no savings
