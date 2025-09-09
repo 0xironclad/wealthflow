@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getExpensesById } from "@/server/expense";
 import { getIncomesById } from "@/server/income";
+import { getSavings } from "@/server/saving";
 
 export const useExpenses = (userId: string) => {
   return useQuery({
@@ -59,6 +60,36 @@ export const useIncomes = (userId: string) => {
           source: income.source,
         })
       ),
-    staleTime: 1000 * 30, 
+    staleTime: 1000 * 30,
+  });
+};
+
+export const useSavings = (userId: string) => {
+  return useQuery({
+    queryKey: ["savings", userId],
+    queryFn: () => (userId ? getSavings(userId) : null),
+    refetchOnWindowFocus: false,
+    staleTime: 1000 * 60 * 60,
+    enabled: !!userId,
+    select: (data) =>
+      data.map(
+        (saving: {
+          id: number;
+          userid: number;
+          name: string;
+          date: string;
+          amount: string;
+          goal: string;
+          status: string;
+        }) => ({
+          id: saving.id,
+          userId: saving.userid,
+          name: saving.name,
+          date: saving.date,
+          amount: parseFloat(saving.amount),
+          goal: parseFloat(saving.goal),
+          status: saving.status,
+        })
+      ),
   });
 };

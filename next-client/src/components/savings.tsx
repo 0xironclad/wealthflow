@@ -7,51 +7,20 @@ import {
 import { Progress } from "@/components/ui/progress"
 import Link from "next/link"
 import { SavingsType } from "@/lib/types"
-import { Loader2 } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import { getSavings } from "@/server/saving"
 import { useUser } from "@/context/UserContext"
 import { SavingsNoData } from "./empty states/no-data-savings"
+import { useSavings } from "@/lib/queries"
+import LoadingComponent from "./loading-component"
 
 function Savings() {
     const { user, isLoading: isAuthLoading } = useUser();
 
-    const { data: savings, isLoading } = useQuery({
-        queryKey: ['savings', user?.id],
-        queryFn: () => user ? getSavings(user.id) : null,
-        refetchOnWindowFocus: false,
-        staleTime: 1000 * 60 * 60,
-        enabled: !!user,
-        select: (data) => data.map((saving: {
-            id: number;
-            userid: number;
-            name: string;
-            date: string;
-            amount: string;
-            goal: string;
-            status: string;
-        }) => ({
-            id: saving.id,
-            userId: saving.userid,
-            name: saving.name,
-            date: saving.date,
-            amount: parseFloat(saving.amount),
-            goal: parseFloat(saving.goal),
-            status: saving.status
-        }))
-    });
+    const { data: savings, isLoading } = useSavings(user?.id ?? '');
+
+    if (!user?.id) return null;
 
     if (isLoading || isAuthLoading) {
-        return (
-            <Card className="h-full flex flex-col">
-                <div className="flex justify-between p-4 items-center flex-none">
-                    <CardTitle>Savings</CardTitle>
-                </div>
-                <CardContent className="flex items-center justify-center h-[200px]">
-                    <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-                </CardContent>
-            </Card>
-        );
+        return <LoadingComponent />
     }
 
     // Check if there are no savings
