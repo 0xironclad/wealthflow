@@ -17,7 +17,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { cn } from "@/lib/utils"
-import { Loader2 } from "lucide-react"
 import { useUser } from "@/context/UserContext"
 import { useExpenses, useIncomes } from "@/lib/queries"
 import LoadingComponent from "./loading-component"

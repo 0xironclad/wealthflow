@@ -101,6 +101,18 @@ function TransactionsTableSearchBar() {
     setOpen(false)
   }
 
+  const handleEdit = (expense: InvoiceType) => {
+    // TODO: Implement edit functionality
+    console.log("Edit expense:", expense)
+    setPopoverOpen(false)
+  }
+
+  const handleDelete = (id: number) => {
+    // TODO: Implement delete functionality
+    console.log("Delete expense with id:", id)
+    setPopoverOpen(false)
+  }
+
 
   const item = {
     hidden: { opacity: 0, y: 20 },
@@ -140,7 +152,13 @@ function TransactionsTableSearchBar() {
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80">
-          {selectedExpense && <TransactionDetails expense={selectedExpense} />}
+          {selectedExpense && (
+            <TransactionDetails
+              expense={selectedExpense}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          )}
         </PopoverContent>
       </Popover>
 

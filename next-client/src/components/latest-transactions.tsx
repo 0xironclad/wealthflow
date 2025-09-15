@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -14,7 +13,6 @@ import {
   HousePlus,
   MonitorPlay,
   CarFront,
-  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
@@ -27,8 +25,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
-import { getExpensesById } from "@/server/expense";
 import { useUser } from "@/context/UserContext";
 import { LatestTransactionsNoData } from "./empty states/latest-transactions-no-data";
 import { useExpenses } from "@/lib/queries";
@@ -38,7 +34,7 @@ export default function LatestTransactions() {
   const { user, isLoading: isAuthLoading } = useUser();
 
   const { data: expenses, isLoading } = useExpenses(user?.id ?? '');
-  
+
 
   const sortedTransactions = useMemo(() => {
     if (!expenses) return [];

@@ -8,7 +8,7 @@ import { HeroHeader } from "@/components/hero5-header"
 import dashboard2 from "@/assets/dashboard2.png"
 import { FeaturesSectionWithHoverEffects } from "@/components/feature-section-with-hover-effects"
 import Bg from "@/assets/faded_gallery.jpg"
-import {ArrowRight} from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import TestimonialsSection from "@/components/testimonials"
 
 const transitionVariants = {
@@ -23,7 +23,7 @@ const transitionVariants = {
             filter: "blur(0px)",
             y: 0,
             transition: {
-                type: "spring",
+                type: "spring" as const,
                 bounce: 0.3,
                 duration: 1.5,
             },
