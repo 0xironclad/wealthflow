@@ -1,7 +1,6 @@
 "use server";
 
 import pool from "@/database/db";
-import { NextResponse } from "next/server";
 
 export const getIncomesById = async (userId: string) => {
   if (!userId) {
