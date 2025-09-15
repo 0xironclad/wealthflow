@@ -21,6 +21,8 @@ interface Insight {
   suggestionType?: 'motivation' | 'action' | 'adjustment' | 'celebration';
 }
 
+
+
 interface CachedInsights {
   insights: Insight[];
   timestamp: number;
