@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
@@ -17,10 +16,9 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { cn } from "@/lib/utils"
-import { Loader2 } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import { getExpensesById } from "@/server/expense"
 import { useUser } from "@/context/UserContext"
+import { useExpenses } from "@/lib/queries"
+import LoadingComponent from "./loading-component"
 
 interface MonthlySpend {
   month: string;
@@ -38,26 +36,10 @@ const chartConfig = {
 
 export function SpendTrend() {
   const { user, isLoading: isAuthLoading } = useUser();
-
   const [timeRange, setTimeRange] = useState<TimeRange>("6months");
 
-  const { data: expenses, isLoading } = useQuery({
-    queryKey: ['expenses', user?.id],
-    queryFn: () => user ? getExpensesById(user.id) : null,
-    refetchOnWindowFocus: false,
-    staleTime: 1000 * 60 * 60,
-    enabled: !!user,
-    select: (data) => data.map((expense: { id: any; userid: any; name: any; date: any; amount: string; type: any; paymentmethod: any; category: any }) => ({
-      id: expense.id,
-      userId: expense.userid,
-      name: expense.name,
-      date: expense.date,
-      amount: parseFloat(expense.amount),
-      type: expense.type,
-      paymentMethod: expense.paymentmethod,
-      category: expense.category
-    }))
-  });
+  const { data: expenses, isLoading } = useExpenses(user?.id || '');
+
 
   const chartData = useMemo(() => {
     if (!expenses) return [];
@@ -130,17 +112,11 @@ export function SpendTrend() {
     return months;
   }, [expenses, timeRange]);
 
+  if (!user?.id) return null;
+
   if (isLoading || isAuthLoading) {
     return (
-      <Card className="h-full">
-        <CardHeader className="pb-2">
-          <CardTitle>Money spent</CardTitle>
-          <CardDescription>Loading data...</CardDescription>
-        </CardHeader>
-        <CardContent className="flex items-center justify-center h-[200px]">
-          <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-        </CardContent>
-      </Card>
+      <LoadingComponent title="Money spent" />
     );
   }
 

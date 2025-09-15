@@ -9,11 +9,10 @@ import {
 import TimelyAverage from "./timely-average"
 import { PieChartComponent } from "./pie-chart"
 import { useMemo } from "react"
-import { Loader2 } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
-import { getExpensesById } from "@/server/expense"
 import { useUser } from "@/context/UserContext"
 import { ExpenseDistributionNoData } from "./empty states/expense-distribution-no-data"
+import { useExpenses } from "@/lib/queries"
+import LoadingComponent from "./loading-component"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const CHART_COLORS = [
@@ -52,32 +51,7 @@ function ExpenseDetails({ chartData }: { chartData: ChartData[] }) {
 function ExpenseDistribution() {
     const { user, isLoading: isAuthLoading } = useUser();
 
-    const { data: expenses, isLoading } = useQuery({
-        queryKey: ['expenses', user?.id],
-        queryFn: () => getExpensesById(user?.id ?? ''),
-        enabled: !!user?.id,
-        refetchOnWindowFocus: false,
-        staleTime: 1000 * 60 * 60,
-        select: (data) => data.map((expense: {
-            id: number;
-            userid: string;
-            name: string;
-            date: string;
-            amount: string;
-            type: 'income' | 'expense';
-            paymentmethod: string;
-            category: string;
-        }) => ({
-            id: expense.id,
-            userId: expense.userid,
-            name: expense.name,
-            date: expense.date,
-            amount: parseFloat(expense.amount),
-            type: expense.type,
-            paymentMethod: expense.paymentmethod,
-            category: expense.category
-        }))
-    });
+    const { data: expenses, isLoading } = useExpenses(user?.id ?? '');
 
     const chartData = useMemo(() => {
         if (!expenses) return [];
@@ -139,16 +113,7 @@ function ExpenseDistribution() {
 
     if (isAuthLoading || isLoading) {
         return (
-            <Card className="h-full w-full">
-                <CardHeader className="pb-3">
-                    <div>
-                        <CardTitle className="text-sm">Expense Distribution</CardTitle>
-                    </div>
-                </CardHeader>
-                <CardContent className="flex items-center justify-center h-[200px]">
-                    <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-                </CardContent>
-            </Card>
+            <LoadingComponent title="Expense Distribution" />
         );
     }
 

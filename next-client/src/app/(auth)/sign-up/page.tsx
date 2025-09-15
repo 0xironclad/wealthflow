@@ -123,7 +123,7 @@ function SignUpPage() {
       <CardFooter>
         <p className="text-muted-foreground text-sm">
           Already have an account?
-          <Link href="/sign-in" className="text-primary hover:underline" prefetch={true}>
+          <Link href="/login" className="text-primary hover:underline" prefetch={true}>
             Sign In
           </Link>
         </p>

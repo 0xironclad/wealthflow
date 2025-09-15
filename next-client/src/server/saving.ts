@@ -1,5 +1,6 @@
 import { Saving} from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { NextResponse } from "next/server";
 
 export const getSavings = async (userId: string) => {
     try {
@@ -45,4 +46,39 @@ export const useCreateSaving = () => {
       queryClient.invalidateQueries({ queryKey: ["savings"] });
     },
   });
+};
+
+
+export const getSavingsHistory = async (userId: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  try {
+    if (!userId) {
+      throw new Error("User ID is required");
+    }
+    const encodedUserId = encodeURIComponent(userId);
+    const response = await fetch(
+      `${baseUrl}/api/savings/history?userId=${encodedUserId}`
+    );
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Error fetching savings history",
+          error: response.statusText,
+        },
+        { status: response.status }
+      );
+    }
+    return response.json();
+  } catch (error) {
+    console.error("Error in getSavingsHistory:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error fetching savings history",
+        error: String(error),
+      },
+      { status: 500 }
+    );
+  }
 };
