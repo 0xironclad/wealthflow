@@ -34,7 +34,7 @@ const AIInsights: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { user } = useUser();
+  const { user, isLoading: isAuthLoading } = useUser();
 
   const getCachedInsights = (): CachedInsights | null => {
     try {
@@ -166,10 +166,10 @@ const AIInsights: React.FC = () => {
     return icons[index] || icons[0];
   };
 
-  if (isLoading) {
+  if (isLoading || isAuthLoading) {
     return (
       <Card className="h-full w-full flex items-center justify-center">
-        <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" />
       </Card>
     );
   }
@@ -198,7 +198,7 @@ const AIInsights: React.FC = () => {
             onClick={handleManualRefresh}
             disabled={isLoading}
           >
-            {isLoading ? <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" /> : "Refresh"}
+            {isLoading ? <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" /> : "Refresh"}
           </Button>
         </div>
       </CardHeader>

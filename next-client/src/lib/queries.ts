@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getExpensesById } from "@/server/expense";
 import { getIncomesById } from "@/server/income";
-import { getSavings } from "@/server/saving";
+import { getSavings, getSavingsHistory } from "@/server/saving";
 
 export const useExpenses = (userId: string) => {
   return useQuery({
@@ -91,5 +91,16 @@ export const useSavings = (userId: string) => {
           status: saving.status,
         })
       ),
+  });
+};
+
+
+export const useSavingsHistory = (userId: string) => {
+  return useQuery({
+    queryKey: ["savingsHistory", userId],
+    queryFn: () => getSavingsHistory(userId),
+    enabled: !!userId,
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 };
