@@ -6875,6 +6875,7 @@ snapshots:
       '@supabase/supabase-js': 2.52.1
       '@tabler/icons-react': 3.34.1(react@19.1.1)
       '@tanstack/react-query': 5.83.0(react@19.1.1)
+      '@vercel/analytics': 1.5.0(next@15.4.5(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)
       axios: 1.11.0
       bcrypt: 5.1.1
       bcryptjs: 3.0.2
@@ -6908,6 +6909,8 @@ snapshots:
       - '@emotion/is-prop-valid'
       - '@opentelemetry/api'
       - '@playwright/test'
+      - '@remix-run/react'
+      - '@sveltejs/kit'
       - '@types/react'
       - '@types/react-dom'
       - babel-plugin-macros
@@ -6918,8 +6921,11 @@ snapshots:
       - pg-native
       - sass
       - supports-color
+      - svelte
       - tailwindcss
       - utf-8-validate
+      - vue
+      - vue-router
       - ws
 
   next-themes@0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
