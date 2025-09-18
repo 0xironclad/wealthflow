@@ -32,7 +32,7 @@ export default function BottomComponents() {
   return (
     <>
       {/* Desktop Layout - Original grid layout */}
-      <div className="hidden lg:grid grid-cols-12 gap-4 h-[380px] pb-5">
+      <div className="hidden lg:grid grid-cols-12 gap-4 h-[380px]">
         <div className="col-span-2 h-full">
           <Savings />
         </div>

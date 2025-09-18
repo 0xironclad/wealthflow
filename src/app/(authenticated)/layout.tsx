@@ -24,7 +24,7 @@ export default function AuthenticatedLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-screen overflow-hidden">
+      <div className="flex h-screen w-screen">
         <AppSidebar />
         <SidebarInset className="flex-1 w-full flex flex-col">
           <header className="flex h-9 shrink-0 items-center px-2">
@@ -40,7 +40,7 @@ export default function AuthenticatedLayout({
               }} />}
             </div>
           </header>
-          <main className="flex-1 overflow-hidden min-h-[calc(100vh-1.75rem)]">
+          <main className="flex-1">
             <UserProvider>
               {children}
             </UserProvider>

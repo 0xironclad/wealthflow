@@ -1,10 +1,9 @@
 "use client";
 import {
     Card,
-    CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button";
-import { ArrowDownToLine } from "lucide-react"
+import { TrendingUp, TrendingDown, Plus, CreditCard, Target, PiggyBank, DollarSign, ArrowUpDown, Wallet } from "lucide-react"
 import { getIncomesById } from "@/server/income";
 import { getExpensesById } from "@/server/expense";
 import { useQuery } from "@tanstack/react-query";
@@ -24,29 +23,121 @@ interface FinancialMetricCardProps {
     value: number | string;
     percentageChange: number;
     isPositive?: boolean;
+    previousValue?: number;
+    icon: React.ComponentType<{ className?: string }>;
+    gradient: string;
 }
 
 const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
     label,
     value,
     percentageChange,
-    isPositive = true
+    isPositive = true,
+    previousValue,
+    icon: Icon,
+    gradient
 }) => {
+    const TrendIcon = isPositive ? TrendingUp : TrendingDown;
+
     return (
-        <Card className="border rounded-lg p-3 flex flex-col h-full">
-            <CardTitle className="text-xs text-gray-500 mb-1">{label}</CardTitle>
-            <div className="flex items-center justify-between">
-                <span className="text-lg font-bold">
-                    {typeof value === 'number' ? `$${value.toLocaleString()}` : value}
-                </span>
-                <span
-                    className={`text-xs px-2 py-0.5 rounded-full ${isPositive
-                        ? ' text-green-600'
-                        : ' text-red-600'
-                        }`}
-                >
-                    {isPositive ? '+' : '-'}{Math.abs(percentageChange)}%
-                </span>
+        <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-lg">
+            <div className="p-4 flex flex-col h-full">
+                {/* Header with icon */}
+                <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                        <div className={`p-2 bg-gradient-to-r ${gradient} rounded-lg`}>
+                            <Icon className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                        <TrendIcon className={`w-3 h-3 ${isPositive ? 'text-green-600' : 'text-red-600'}`} />
+                        <span className={`text-xs font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                            {isPositive ? '+' : ''}{percentageChange}%
+                        </span>
+                    </div>
+                </div>
+
+                {/* Main value */}
+                <div className="mb-3 flex-1">
+                    <div className="text-2xl font-bold text-foreground leading-none">
+                        {typeof value === 'number' ? `$${value.toLocaleString()}` : value}
+                    </div>
+                </div>
+
+                {/* Comparison */}
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>vs last month</span>
+                    {previousValue && (
+                        <span className="bg-muted px-2 py-1 rounded-full">
+                            ${previousValue.toLocaleString()}
+                        </span>
+                    )}
+                </div>
+            </div>
+        </Card>
+    );
+};
+
+const QuickActionsCard: React.FC = () => {
+    const quickActions = [
+        {
+            label: "Add Transaction",
+            icon: Plus,
+            href: "/transaction",
+            gradient: "from-blue-500 to-blue-600"
+        },
+        {
+            label: "Add Income",
+            icon: CreditCard,
+            href: "/transaction?type=income",
+            gradient: "from-green-500 to-green-600"
+        },
+        {
+            label: "Set Goal",
+            icon: Target,
+            href: "/goals",
+            gradient: "from-purple-500 to-purple-600"
+        },
+        {
+            label: "Add Savings",
+            icon: PiggyBank,
+            href: "/goals?action=save",
+            gradient: "from-orange-500 to-orange-600"
+        }
+    ];
+
+    return (
+        <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-lg">
+            <div className="p-4 flex flex-col h-full">
+                {/* Header */}
+                <div className="flex items-center gap-2 mb-4">
+                    <div className="p-2 bg-gradient-to-r from-slate-600 to-slate-700 rounded-lg">
+                        <ArrowUpDown className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">Quick Actions</span>
+                </div>
+
+                {/* Action buttons */}
+                <div className="grid grid-cols-2 gap-3 flex-1">
+                    {quickActions.map((action, index) => {
+                        const IconComponent = action.icon;
+                        return (
+                            <button
+                                key={index}
+                                className={`bg-gradient-to-r ${action.gradient} p-3 rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 text-white`}
+                                onClick={() => window.location.href = action.href}
+                            >
+                                <div className="flex flex-col items-center gap-1">
+                                    <IconComponent className="w-4 h-4 mb-1" />
+                                    <span className="text-xs font-medium leading-tight text-center">
+                                        {action.label}
+                                    </span>
+                                </div>
+                            </button>
+                        );
+                    })}
+                </div>
             </div>
         </Card>
     );
@@ -219,6 +310,7 @@ const DashboardTopRow: React.FC = () => {
 
     const netSavings = savings?.reduce((sum: number, saving: SavingsType) => sum + saving.amount, 0) ?? 0;
 
+    // Current month calculations
     const expensesThisMonth = expenses?.filter((expense: InvoiceType) => {
         const expenseDate = new Date(expense.date);
         return expenseDate.getMonth() === today.getMonth() &&
@@ -238,6 +330,35 @@ const DashboardTopRow: React.FC = () => {
             return sum + (isNaN(amount) ? 0 : amount);
         }, 0) ?? 0;
 
+    // Previous month calculations for comparison
+    const expensesLastMonth = expenses?.filter((expense: InvoiceType) => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate.getMonth() === oneMonthAgo.getMonth() &&
+            expenseDate.getFullYear() === oneMonthAgo.getFullYear() && expense.type === 'expense';
+    }).reduce((sum: number, expense: InvoiceType) => sum + Number(expense.amount), 0) ?? 0;
+
+    const totalIncomeLastMonth = incomes
+        ?.filter((income: IncomeType) => {
+            const incomeDate = new Date(income.date);
+            return incomeDate.getMonth() === oneMonthAgo.getMonth() &&
+                incomeDate.getFullYear() === oneMonthAgo.getFullYear();
+        })
+        .reduce((sum: number, income: IncomeType) => {
+            const amount = typeof income.amount === 'string'
+                ? parseFloat(income.amount)
+                : Number(income.amount);
+            return sum + (isNaN(amount) ? 0 : amount);
+        }, 0) ?? 0;
+
+    // Calculate percentage changes
+    const incomeChange = totalIncomeLastMonth > 0
+        ? Math.round(((totalIncomeThisMonth - totalIncomeLastMonth) / totalIncomeLastMonth) * 100)
+        : 0;
+
+    const expenseChange = expensesLastMonth > 0
+        ? Math.round(((expensesThisMonth - expensesLastMonth) / expensesLastMonth) * 100)
+        : 0;
+
     // budgets
     const totalBudget = categories?.reduce((sum: number, budget: { plannedAmount: number; }) => sum + budget.plannedAmount, 0) ?? 0;
     const totalSpent = categories?.reduce((sum: number, budget: { spentAmount: number; }) => sum + budget.spentAmount, 0) ?? 0;
@@ -250,71 +371,107 @@ const DashboardTopRow: React.FC = () => {
                 <FinancialMetricCard
                     label="Income"
                     value={totalIncomeThisMonth}
-                    percentageChange={10}
+                    percentageChange={incomeChange}
+                    isPositive={incomeChange >= 0}
+                    previousValue={totalIncomeLastMonth}
+                    icon={DollarSign}
+                    gradient="from-emerald-500 to-teal-600"
                 />
             </div>
             <div className="col-span-1">
                 <FinancialMetricCard
                     label="Expenses"
                     value={Number(expensesThisMonth)}
-                    percentageChange={10}
-                    isPositive={false}
+                    percentageChange={Math.abs(expenseChange)}
+                    isPositive={expenseChange <= 0} // Lower expenses are positive
+                    previousValue={expensesLastMonth}
+                    icon={CreditCard}
+                    gradient="from-rose-500 to-pink-600"
                 />
             </div>
             <div className="col-span-1">
                 <FinancialMetricCard
                     label="Net Savings"
                     value={Number(netSavings)}
-                    percentageChange={20}
+                    percentageChange={15} // You can calculate this based on savings history
+                    isPositive={true}
+                    icon={PiggyBank}
+                    gradient="from-blue-500 to-cyan-600"
                 />
             </div>
             <div className="col-span-3 md:col-span-1">
-                <Card className="p-3 flex flex-col h-full">
-                    <CardTitle className="text-xs text-gray-500 mb-1">Monthly Budget Spent</CardTitle>
-                    <div className="flex items-center justify-between">
-                        <span className="text-lg font-bold">
-                            {isLoading ? 'Loading...' : `${percentUsed}%`}
-                        </span>
-                    </div>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button variant="secondary" className="w-full mt-2">
-                                Manage Budget
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[800px] w-[95vw]">
-                            <DialogTitle>Manage Monthly Budget</DialogTitle>
-                            <DialogHeader>
+                <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-lg">
+                    <div className="p-4 flex flex-col h-full">
+                        {/* Header */}
+                        <div className="flex items-center gap-2 mb-3">
+                            <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg">
+                                <Wallet className="w-4 h-4 text-white" />
+                            </div>
+                            <span className="text-sm font-medium text-muted-foreground">Budget Progress</span>
+                        </div>
+
+                        {/* Progress circle */}
+                        <div className="flex items-center justify-between mb-4 flex-1">
+                            <div className="relative">
+                                <div className="w-16 h-16 rounded-full border-4 border-muted flex items-center justify-center">
+                                    <span className="text-lg font-bold text-foreground">
+                                        {isLoading ? '...' : `${percentUsed}%`}
+                                    </span>
+                                </div>
+                                <svg className="absolute top-0 left-0 w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                                    <circle
+                                        cx="32"
+                                        cy="32"
+                                        r="28"
+                                        stroke="currentColor"
+                                        strokeWidth="4"
+                                        fill="none"
+                                        className={`transition-all duration-500 ${percentUsed > 90 ? 'text-red-500' :
+                                            percentUsed > 70 ? 'text-yellow-500' : 'text-green-500'
+                                            }`}
+                                        strokeDasharray={`${(percentUsed / 100) * 175.93} 175.93`}
+                                        strokeLinecap="round"
+                                    />
+                                </svg>
+                            </div>
+                            <div className="text-right">
+                                <div className="text-xs text-muted-foreground mb-1">Spent / Budget</div>
+                                <div className="text-sm font-semibold text-foreground">
+                                    ${totalSpent.toLocaleString()}
+                                </div>
+                                <div className="text-xs text-muted-foreground">
+                                    / ${totalBudget.toLocaleString()}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Action button */}
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="w-full"
+                                >
+                                    Manage Budget
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[800px] w-[95vw]">
                                 <DialogTitle>Manage Monthly Budget</DialogTitle>
-                                <DialogDescription className="text-sm text-muted-foreground">
-                                    All your budgets in one place.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <BudgetManager />
-                        </DialogContent>
-                    </Dialog>
+                                <DialogHeader>
+                                    <DialogTitle>Manage Monthly Budget</DialogTitle>
+                                    <DialogDescription className="text-sm text-muted-foreground">
+                                        All your budgets in one place.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <BudgetManager />
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </Card>
             </div>
             <div className="col-span-3 md:col-span-1">
-                <Card className="p-3 flex flex-col h-full">
-                    <CardTitle className="text-xs text-gray-500 mb-1">Invoices</CardTitle>
-                    <p className="text-sm">
-                        {
-                            today.toLocaleDateString('en-US', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
-                            })
-                        } - {
-                            oneMonthAgo.toLocaleDateString('en-US', {
-                                day: '2-digit',
-                                month: '2-digit',
-                                year: 'numeric'
-                            })
-                        }
-                    </p>
-                    <Button variant="secondary" className="w-full mt-2"> <ArrowDownToLine className="w-4 h-4" /> Download</Button>
-                </Card>
+                <QuickActionsCard />
             </div>
         </div>
     );
