@@ -108,7 +108,7 @@ export default function AccountsCard() {
           <CardTitle className="text-2xl font-semibold">$0</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-[200px]">
-          <Loader2 className="animate-spin ml-2 text-primary" />
+          <Loader2 className="animate-spin text-primary" />
         </CardContent>
       </Card>
     );
