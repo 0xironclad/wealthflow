@@ -15,7 +15,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import type { InvoiceType } from "@/lib/types"
 import TransactionDetails from "./transaction-details"
 import { useQuery } from "@tanstack/react-query"
@@ -165,9 +164,7 @@ function TransactionsTableSearchBar() {
       <CommandDialog open={open} onOpenChange={setOpen}>
         <div className="rounded-lg border shadow-md">
           <DialogHeader>
-            <VisuallyHidden>
-              <DialogTitle>Search Transactions</DialogTitle>
-            </VisuallyHidden>
+            <DialogTitle>Search Transactions</DialogTitle>
           </DialogHeader>
           <div className="relative">
             <CommandInput placeholder="Search transactions..." value={query} onValueChange={handleSearch} />

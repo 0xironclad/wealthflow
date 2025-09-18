@@ -11,8 +11,6 @@ import { useQuery } from "@tanstack/react-query";
 import { InvoiceType, IncomeType, SavingsType } from "@/lib/types";
 import { getSavings } from "@/server/saving";
 // import dynamic from "next/dynamic";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { getBudgetsById } from "@/server/budget";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@/context/UserContext";
@@ -285,9 +283,7 @@ const DashboardTopRow: React.FC = () => {
                             </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[800px] w-[95vw]">
-                            <DialogPrimitive.Title asChild>
-                                <VisuallyHidden>Manage Monthly Budget</VisuallyHidden>
-                            </DialogPrimitive.Title>
+                            <DialogTitle>Manage Monthly Budget</DialogTitle>
                             <DialogHeader>
                                 <DialogTitle>Manage Monthly Budget</DialogTitle>
                                 <DialogDescription className="text-sm text-muted-foreground">

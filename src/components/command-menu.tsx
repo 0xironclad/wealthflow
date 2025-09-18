@@ -15,7 +15,6 @@ import {
 import { cn } from "@/lib/utils"
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden"
 import type { InvoiceType } from "@/lib/types"
 import TransactionDetails from "./transaction-details"
 import { useQuery } from "@tanstack/react-query"
@@ -139,9 +138,7 @@ export function CommandMenu() {
       <CommandDialog open={open} onOpenChange={setOpen}>
         <Command className="rounded-lg border shadow-md">
           <DialogHeader>
-            <VisuallyHidden>
-              <DialogTitle>Search Transactions</DialogTitle>
-            </VisuallyHidden>
+            <DialogTitle>Search Transactions</DialogTitle>
           </DialogHeader>
           <CommandInput placeholder="Search transactions..." onValueChange={handleSearch} />
           <CommandList>

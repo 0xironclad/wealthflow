@@ -10,7 +10,7 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
 
@@ -23,7 +23,6 @@ import { determineStatus as determineSavingStatus } from "@/lib/determine-status
 import AddMoneyModal from "./add-money";
 import WithdrawMoneyModal from "./withdraw-money";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useQuery } from "@tanstack/react-query";
 import { getSavings } from "@/server/saving";
 import { Saving } from "@/lib/types";
@@ -239,11 +238,8 @@ export function SavingDetails({
           </DialogTrigger>
           <DialogContent className="p-0 gap-0">
             <DialogPrimitive.Title asChild>
-              <VisuallyHidden>Add Money to Saving</VisuallyHidden>
+              <DialogTitle>Add Money to Saving</DialogTitle>
             </DialogPrimitive.Title>
-            <DialogDescription asChild>
-              <VisuallyHidden>Add money to your saving goal</VisuallyHidden>
-            </DialogDescription>
             <AddMoneyModal savingId={currentSaving.id} />
           </DialogContent>
         </Dialog>
@@ -260,11 +256,8 @@ export function SavingDetails({
           </DialogTrigger>
           <DialogContent className="p-0 gap-0">
             <DialogPrimitive.Title asChild>
-              <VisuallyHidden>Withdraw Money from Saving</VisuallyHidden>
+              <DialogTitle>Withdraw Money from Saving</DialogTitle>
             </DialogPrimitive.Title>
-            <DialogDescription asChild>
-              <VisuallyHidden>Withdraw money from your saving goal</VisuallyHidden>
-            </DialogDescription>
             <WithdrawMoneyModal savingId={currentSaving.id} />
           </DialogContent>
         </Dialog>
