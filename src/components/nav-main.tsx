@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-export function NavMain({
+export function   NavMain({
   items,
 }: {
   items: {

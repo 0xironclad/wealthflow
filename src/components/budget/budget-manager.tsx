@@ -10,9 +10,7 @@ import {
     Dialog,
     DialogContent,
     DialogTrigger,
-    DialogTitle,
 } from "@/components/ui/dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getBudgetsById, createBudget, updateBudgetById } from "@/server/budget";
 import { Trash, Pencil } from "lucide-react";
@@ -218,9 +216,6 @@ function BudgetManager() {
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent>
-                                        <DialogTitle asChild>
-                                            <VisuallyHidden>Create New Budget</VisuallyHidden>
-                                        </DialogTitle>
                                         <BudgetForm
                                             budget={{
                                                 id: 0,
@@ -414,9 +409,6 @@ function BudgetManager() {
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="max-w-md h-[80vh] overflow-y-auto styled-scrollbar">
-                                <DialogTitle asChild>
-                                    <VisuallyHidden>Manage Budget</VisuallyHidden>
-                                </DialogTitle>
                                 <BudgetForm
                                     budget={{
                                         id: 0,
@@ -445,9 +437,6 @@ function BudgetManager() {
             {selectedBudget && (
                 <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                     <DialogContent>
-                        <DialogTitle asChild>
-                            <VisuallyHidden>Edit Budget</VisuallyHidden>
-                        </DialogTitle>
                         <EditBudgetFormComponent
                             budget={selectedBudget}
                             onSuccessfulSubmit={handleUpdate}

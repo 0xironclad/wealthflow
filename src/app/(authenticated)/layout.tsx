@@ -7,20 +7,10 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Bell } from "lucide-react";
 import { UserProvider } from "@/context/UserContext";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { AccountManager } from "@/components/account-manager/account-manager";
-
+import { Header } from "@/components/header";
+import { useUser } from "@/context/UserContext";
+import { Bell } from "lucide-react"
 
 
 export default function AuthenticatedLayout({
@@ -28,38 +18,29 @@ export default function AuthenticatedLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { user, isLoading } = useUser();
+
 
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-screen overflow-hidden">
+      <div className="flex h-screen w-screen">
         <AppSidebar />
         <SidebarInset className="flex-1 w-full flex flex-col">
-          <header className="flex h-7 shrink-0 items-center px-2">
+          <header className="flex h-9 shrink-0 items-center px-2">
             <SidebarTrigger className="h-7 w-7" />
             <Separator orientation="vertical" className="mx-2 h-4" />
-            <div className="justify-end flex-1 flex items-center mr-5 mt-1 gap-2">
-              <Bell className="h-5 w-5" />
-              <ModeToggle />
-              <Dialog >
-                <DialogTrigger>
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src="https://github.com/shadcn.png" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                </DialogTrigger>
-                <DialogContent className="max-h-[85vh] overflow-y-auto styled-scrollbar p-0 m-0">
-                  <DialogHeader>
-                    <VisuallyHidden>
-                      <DialogTitle>Account Details</DialogTitle>
-                    </VisuallyHidden>
-                  </DialogHeader>
-                  <AccountManager />
-                </DialogContent>
-              </Dialog>
+            {/* header */}
+            <div className="flex items-center gap-2 ml-auto">
+              <Bell className="h-4 w-4" />
+              {!isLoading && user && <Header user={{
+                name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
+                email: user.email || '',
+                avatar: user.user_metadata?.avatar_url || ''
+              }} />}
             </div>
           </header>
-          <main className="flex-1 overflow-hidden min-h-[calc(100vh-1.75rem)]">
+          <main className="flex-1">
             <UserProvider>
               {children}
             </UserProvider>

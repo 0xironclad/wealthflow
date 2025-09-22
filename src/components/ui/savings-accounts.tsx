@@ -15,11 +15,11 @@ import { Saving } from "@/lib/types";
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { SavingDetails } from "../savings/saving-details";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Skeleton } from "@/components/ui/skeleton"
 import React from "react";
 import { useUser } from "@/context/UserContext";
@@ -245,9 +245,9 @@ export default function SavingAccounts() {
                 </DialogTrigger>
                 <DialogContent className="p-0 gap-0">
                   <DialogPrimitive.Title asChild>
-                    <VisuallyHidden>
+                    <DialogTitle>
                       View Saving Details
-                    </VisuallyHidden>
+                    </DialogTitle>
                   </DialogPrimitive.Title>
                   <SavingDetails savingId={item.id} />
                 </DialogContent>

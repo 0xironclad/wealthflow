@@ -1,7 +1,7 @@
 "use client"
 
 import type * as React from "react"
-import { Landmark, LayoutDashboard, SquareActivity, ChartCandlestick, Brain } from "lucide-react"
+import { Landmark, LayoutDashboard, SquareActivity, ChartCandlestick, Brain, PiggyBank } from "lucide-react"
 
 import { NavMain } from "./nav-main"
 import { NavUser } from "./nav-user"
@@ -35,6 +35,11 @@ const data = {
       title: "Transactions",
       url: "/transaction",
       icon: Landmark,
+    },
+    {
+      title: "Budget",
+      url: "/budget",
+      icon: PiggyBank,
     },
     {
       title: "Goals",

@@ -13,8 +13,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import SavingForm from "@/components/savings/saving-form";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
+// import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+// import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { HistoryChart } from "@/components/savings/history-chart";
 
 function Goals() {
@@ -28,11 +28,6 @@ function Goals() {
             <Button variant="default">+ New Saving</Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[425px]">
-            <DialogPrimitive.Title asChild>
-              <VisuallyHidden>
-                New Saving
-              </VisuallyHidden>
-            </DialogPrimitive.Title>
             <DialogHeader>
               <DialogTitle>Add a New Saving</DialogTitle>
             </DialogHeader>

@@ -7,83 +7,83 @@ import BottomComponents from "@/components/bottom-components";
 
 export default function Overview() {
   return (
-    <div className="w-full max-w-[100vw] h-[calc(100vh-1.75rem)] flex flex-col overflow-hidden">
-      <div className="p-4 sticky top-0 bg-background z-20 flex-shrink-0">
+    <div className="h-full w-full flex flex-col">
+      <div className="flex-shrink-0 p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <h1 className="text-3xl font-bold">Overview</h1>
       </div>
 
-      <div className="flex-1 p-4 pt-0 pb-10 overflow-auto styled-scrollbar">
-        <div className="hidden lg:flex h-full flex-col gap-4">
-          {/* Top - 20% of parent height */}
-          <div className="w-full h-[20%] min-h-[200px]">
+      <div className="flex-1 overflow-y-auto styled-scrollbar p-4">
+        <div className="hidden lg:flex flex-col gap-6">
+          {/* Top - Fixed height for cards */}
+          <div className="w-full h-[160px]">
             <DashboardTopRow />
           </div>
 
-          {/* Middle - 40% of parent height */}
-          <div className="flex gap-4 w-full h-[40%] min-h-[300px]">
-            <div className="flex-1 h-full">
+          {/* Middle - Natural height */}
+          <div className="flex gap-4 w-full min-h-[350px]">
+            <div className="flex-1">
               <AccountsCard />
             </div>
-            <div className="flex-1 h-full">
+            <div className="flex-1">
               <ExpenseDistribution />
             </div>
-            <div className="flex-1 h-full">
+            <div className="flex-1">
               <LatestTransactions />
             </div>
           </div>
 
-          {/* Bottom - 40% of parent height */}
-          <div className="w-full h-[40%] min-h-[300px]">
+          {/* Bottom - Natural height */}
+          <div className="w-full min-h-[400px]">
             <BottomComponents />
           </div>
         </div>
 
         {/* Tablet Layout - Flexible heights */}
-        <div className="hidden md:flex lg:hidden flex-col gap-4">
-          {/* Top row - natural height */}
-          <div className="w-full min-h-[200px]">
+        <div className="hidden md:flex lg:hidden flex-col gap-6">
+          {/* Top row - fixed height */}
+          <div className="w-full h-[160px]">
             <DashboardTopRow />
           </div>
 
           {/* Middle row - 2x2 grid */}
-          <div className="grid grid-cols-2 gap-4 min-h-[300px]">
-            <div className="col-span-1">
+          <div className="grid grid-cols-2 gap-4 min-h-[350px]">
+            <div className="col-span-1 min-h-[300px]">
               <AccountsCard />
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 min-h-[300px]">
               <ExpenseDistribution />
             </div>
-            <div className="col-span-2">
+            <div className="col-span-2 min-h-[300px]">
               <LatestTransactions />
             </div>
           </div>
 
           {/* Bottom row */}
-          <div className="w-full min-h-[300px]">
+          <div className="w-full min-h-[400px]">
             <BottomComponents />
           </div>
         </div>
 
         {/* Mobile Layout - Stacked */}
-        <div className="flex md:hidden flex-col gap-4">
+        <div className="flex md:hidden flex-col gap-6">
           {/* All components stacked vertically */}
-          <div className="w-full min-h-[200px]">
+          <div className="w-full h-[160px]">
             <DashboardTopRow />
           </div>
 
-          <div className="w-full min-h-[250px]">
+          <div className="w-full min-h-[300px]">
             <AccountsCard />
           </div>
 
-          <div className="w-full min-h-[250px]">
+          <div className="w-full min-h-[300px]">
             <ExpenseDistribution />
           </div>
 
-          <div className="w-full min-h-[250px]">
+          <div className="w-full min-h-[300px]">
             <LatestTransactions />
           </div>
 
-          <div className="w-full min-h-[300px]">
+          <div className="w-full min-h-[400px]">
             <BottomComponents />
           </div>
         </div>

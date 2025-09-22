@@ -2,7 +2,6 @@ import { PiggyBank } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import SavingForm from "@/components/savings/saving-form";
 
@@ -20,9 +19,9 @@ export function SavingsEmptyState() {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                     <DialogPrimitive.Title asChild>
-                        <VisuallyHidden>
+                        <DialogTitle>
                             New Saving
-                        </VisuallyHidden>
+                        </DialogTitle>
                     </DialogPrimitive.Title>
                     <DialogHeader>
                         <DialogTitle>Add a New Saving</DialogTitle>

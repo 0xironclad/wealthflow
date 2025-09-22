@@ -18,7 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { SavingsType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { getSavings } from "@/server/saving";
@@ -144,9 +143,7 @@ export function SavingsCommandMenu() {
 
       <CommandDialog open={open} onOpenChange={setOpen}>
         <DialogHeader>
-          <VisuallyHidden>
             <DialogTitle>Search Goals</DialogTitle>
-          </VisuallyHidden>
         </DialogHeader>
         <Command className="rounded-lg border shadow-md">
           <CommandInput
