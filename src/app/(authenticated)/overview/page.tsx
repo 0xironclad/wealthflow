@@ -15,7 +15,7 @@ export default function Overview() {
       <div className="flex-1 overflow-y-auto styled-scrollbar p-4">
         <div className="hidden lg:flex flex-col gap-6">
           {/* Top - Fixed height for cards */}
-          <div className="w-full h-[220px]">
+          <div className="w-full h-[160px]">
             <DashboardTopRow />
           </div>
 
@@ -41,7 +41,7 @@ export default function Overview() {
         {/* Tablet Layout - Flexible heights */}
         <div className="hidden md:flex lg:hidden flex-col gap-6">
           {/* Top row - fixed height */}
-          <div className="w-full h-[220px]">
+          <div className="w-full h-[160px]">
             <DashboardTopRow />
           </div>
 
@@ -67,7 +67,7 @@ export default function Overview() {
         {/* Mobile Layout - Stacked */}
         <div className="flex md:hidden flex-col gap-6">
           {/* All components stacked vertically */}
-          <div className="w-full h-[220px]">
+          <div className="w-full h-[160px]">
             <DashboardTopRow />
           </div>
 
