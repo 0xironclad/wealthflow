@@ -2,8 +2,7 @@
 import {
     Card,
 } from "@/components/ui/card"
-import { Button } from "@/components/ui/button";
-import { TrendingUp, TrendingDown, Plus, CreditCard, Target, PiggyBank, DollarSign, ArrowUpDown, Wallet } from "lucide-react"
+import { TrendingUp, TrendingDown, CreditCard, PiggyBank, DollarSign, Wallet } from "lucide-react"
 import { getIncomesById } from "@/server/income";
 import { getExpensesById } from "@/server/expense";
 import { useQuery } from "@tanstack/react-query";
@@ -13,10 +12,6 @@ import { getSavings } from "@/server/saving";
 import { getBudgetsById } from "@/server/budget";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@/context/UserContext";
-
-// Dynamic imports
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import BudgetManager from "@/components/budget/budget-manager";
 
 interface FinancialMetricCardProps {
     label: string;
@@ -41,9 +36,9 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
 
     return (
         <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-lg">
-            <div className="p-4 flex flex-col h-full">
+            <div className="p-4 flex flex-col h-full justify-between">
                 {/* Header with icon */}
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                         <div className={`p-2 bg-gradient-to-r ${gradient} rounded-lg`}>
                             <Icon className="w-4 h-4 text-white" />
@@ -59,7 +54,7 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
                 </div>
 
                 {/* Main value */}
-                <div className="mb-3 flex-1">
+                <div className="mb-2">
                     <div className="text-2xl font-bold text-foreground leading-none">
                         {typeof value === 'number' ? `$${value.toLocaleString()}` : value}
                     </div>
@@ -73,70 +68,6 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
                             ${previousValue.toLocaleString()}
                         </span>
                     )}
-                </div>
-            </div>
-        </Card>
-    );
-};
-
-const QuickActionsCard: React.FC = () => {
-    const quickActions = [
-        {
-            label: "Add Transaction",
-            icon: Plus,
-            href: "/transaction",
-            gradient: "from-blue-500 to-blue-600"
-        },
-        {
-            label: "Add Income",
-            icon: CreditCard,
-            href: "/transaction?type=income",
-            gradient: "from-green-500 to-green-600"
-        },
-        {
-            label: "Set Goal",
-            icon: Target,
-            href: "/goals",
-            gradient: "from-purple-500 to-purple-600"
-        },
-        {
-            label: "Add Savings",
-            icon: PiggyBank,
-            href: "/goals?action=save",
-            gradient: "from-orange-500 to-orange-600"
-        }
-    ];
-
-    return (
-        <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-lg">
-            <div className="p-4 flex flex-col h-full">
-                {/* Header */}
-                <div className="flex items-center gap-2 mb-4">
-                    <div className="p-2 bg-gradient-to-r from-slate-600 to-slate-700 rounded-lg">
-                        <ArrowUpDown className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-sm font-medium text-muted-foreground">Quick Actions</span>
-                </div>
-
-                {/* Action buttons */}
-                <div className="grid grid-cols-2 gap-3 flex-1">
-                    {quickActions.map((action, index) => {
-                        const IconComponent = action.icon;
-                        return (
-                            <button
-                                key={index}
-                                className={`bg-gradient-to-r ${action.gradient} p-3 rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 text-white`}
-                                onClick={() => window.location.href = action.href}
-                            >
-                                <div className="flex flex-col items-center gap-1">
-                                    <IconComponent className="w-4 h-4 mb-1" />
-                                    <span className="text-xs font-medium leading-tight text-center">
-                                        {action.label}
-                                    </span>
-                                </div>
-                            </button>
-                        );
-                    })}
                 </div>
             </div>
         </Card>
@@ -366,7 +297,7 @@ const DashboardTopRow: React.FC = () => {
 
 
     return (
-        <div className="grid grid-cols-3 md:grid-cols-5 gap-4 h-full">
+        <div className="grid grid-cols-3 md:grid-cols-4 gap-4 h-full">
             <div className="col-span-1">
                 <FinancialMetricCard
                     label="Income"
@@ -403,33 +334,33 @@ const DashboardTopRow: React.FC = () => {
                 <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-lg">
                     <div className="p-4 flex flex-col h-full">
                         {/* Header */}
-                        <div className="flex items-center gap-2 mb-3">
+                        <div className="flex items-center gap-2 mb-2">
                             <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg">
                                 <Wallet className="w-4 h-4 text-white" />
                             </div>
                             <span className="text-sm font-medium text-muted-foreground">Budget Progress</span>
                         </div>
 
-                        {/* Progress circle */}
-                        <div className="flex items-center justify-between mb-4 flex-1">
+                        {/* Progress circle and details */}
+                        <div className="flex items-center justify-between mb-3">
                             <div className="relative">
-                                <div className="w-16 h-16 rounded-full border-4 border-muted flex items-center justify-center">
-                                    <span className="text-lg font-bold text-foreground">
+                                <div className="w-14 h-14 rounded-full border-4 border-muted flex items-center justify-center">
+                                    <span className="text-sm font-bold text-foreground">
                                         {isLoading ? '...' : `${percentUsed}%`}
                                     </span>
                                 </div>
-                                <svg className="absolute top-0 left-0 w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                                <svg className="absolute top-0 left-0 w-14 h-14 transform -rotate-90" viewBox="0 0 56 56">
                                     <circle
-                                        cx="32"
-                                        cy="32"
-                                        r="28"
+                                        cx="28"
+                                        cy="28"
+                                        r="24"
                                         stroke="currentColor"
-                                        strokeWidth="4"
+                                        strokeWidth="3"
                                         fill="none"
                                         className={`transition-all duration-500 ${percentUsed > 90 ? 'text-red-500' :
                                             percentUsed > 70 ? 'text-yellow-500' : 'text-green-500'
                                             }`}
-                                        strokeDasharray={`${(percentUsed / 100) * 175.93} 175.93`}
+                                        strokeDasharray={`${(percentUsed / 100) * 150.8} 150.8`}
                                         strokeLinecap="round"
                                     />
                                 </svg>
@@ -446,32 +377,8 @@ const DashboardTopRow: React.FC = () => {
                         </div>
 
                         {/* Action button */}
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="w-full"
-                                >
-                                    Manage Budget
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-[800px] w-[95vw]">
-                                <DialogTitle>Manage Monthly Budget</DialogTitle>
-                                <DialogHeader>
-                                    <DialogTitle>Manage Monthly Budget</DialogTitle>
-                                    <DialogDescription className="text-sm text-muted-foreground">
-                                        All your budgets in one place.
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <BudgetManager />
-                            </DialogContent>
-                        </Dialog>
                     </div>
                 </Card>
-            </div>
-            <div className="col-span-3 md:col-span-1">
-                <QuickActionsCard />
             </div>
         </div>
     );
