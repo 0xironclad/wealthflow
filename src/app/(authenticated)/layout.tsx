@@ -24,7 +24,7 @@ export default function AuthenticatedLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-screen">
+      <div className="flex h-screen w-screen overflow-x-hidden">
         <AppSidebar />
         <SidebarInset className="flex-1 w-full flex flex-col">
           <header className="flex h-9 shrink-0 items-center px-2">

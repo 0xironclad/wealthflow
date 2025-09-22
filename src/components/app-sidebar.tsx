@@ -60,8 +60,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   data.user.email = user?.email || ""
   data.user.avatar = ""
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+    <Sidebar collapsible="icon" {...props} className="h-[calc(100vh-1rem)] rounded-xl overflow-hidden">
+      <SidebarHeader className="rounded-t-xl">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" tooltip="WealthFlow">
@@ -78,7 +78,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="rounded-b-xl">
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />
