@@ -8,11 +8,11 @@ import BottomComponents from "@/components/bottom-components";
 export default function Overview() {
   return (
     <div className="h-full w-full flex flex-col">
-      <div className="flex-shrink-0 p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="flex-shrink-0 p-4  bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <h1 className="text-3xl font-bold">Overview</h1>
       </div>
 
-      <div className="flex-1 overflow-y-auto styled-scrollbar p-4">
+      <div className="flex-1 overflow-y-auto styled-scrollbar px-4">
         <div className="hidden lg:flex flex-col gap-6">
           {/* Top - Fixed height for cards */}
           <div className="w-full h-[160px]">
