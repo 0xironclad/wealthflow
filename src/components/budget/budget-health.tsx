@@ -10,7 +10,7 @@ interface BudgetHealthProps {
 }
 
 function BudgetHealth({ totalBudget, totalSpent }: BudgetHealthProps) {
-  const remainingBudget = useMemo(() => {
+  const remainingBudget: number = useMemo(() => {
     return (totalBudget - totalSpent) / totalBudget * 100;
   }, [totalBudget, totalSpent]);
   return (
