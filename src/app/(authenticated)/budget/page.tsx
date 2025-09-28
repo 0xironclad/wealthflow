@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import GenericCard from "@/components/budget/cards"
 import { BudgetAllocation } from "@/components/budget/budget-allocation"
+import { SpendTrendLineChart } from "@/components/budget/spend-trend-line-chart"
 
 function Budget() {
 
@@ -36,14 +37,7 @@ function Budget() {
           <BudgetAllocation />
         </div>
         <div className="md:col-span-4">
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <h2 className="text-lg font-bold">Budget Allocation</h2>
-              <p className="text-sm text-muted-foreground">
-                The budget allocation for the month.
-              </p>
-            </div>
-          </div>
+          <SpendTrendLineChart />
         </div>
       </div>
     </div>

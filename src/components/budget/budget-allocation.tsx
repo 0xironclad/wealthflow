@@ -60,11 +60,11 @@ export function BudgetAllocation() {
         return chartData.reduce((acc, curr) => acc + curr.plannedAmount, 0)
     }, [])
     return (
-        <Card className="flex flex-col">
-            <CardContent className="flex gap-4 flex-1 pb-0">
+        <Card className="flex flex-col h-[400px]">
+            <CardContent className="flex gap-4 flex-1 pb-0 items-center">
                 <ChartContainer
                     config={chartConfig}
-                    className="aspect-square max-h-[250px] flex-shrink-0"
+                    className="aspect-square max-h-[350px] flex-shrink-0"
                 >
                     <PieChart>
                         <ChartTooltip
@@ -110,7 +110,7 @@ export function BudgetAllocation() {
                         </Pie>
                     </PieChart>
                 </ChartContainer>
-                <div className="flex-1 space-y-3 p-2">
+                <div className="flex flex-col flex-1 justify-center space-y-4 p-3">
                     {
                         chartData.map((item) => (
                             <div key={item.category} className="space-y-1">
