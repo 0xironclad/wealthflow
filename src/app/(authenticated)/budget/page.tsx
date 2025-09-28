@@ -1,26 +1,32 @@
-import BudgetHealth from "@/components/budget/budget-health"
-import { BudgetsTooltip } from "@/components/budget/budgets-tooltip"
+import { Button } from "@/components/ui/button"
+import GenericCard from "@/components/budget/cards"
 
 function Budget() {
+
+  const budgetData = [
+    { title: "Total Budget", number: 1000 },
+    { title: "Total Spent", number: 500 },
+    { title: "Remaining Budget", number: 500, style: "text-green-500" },
+    { title: "Budget Progress", number: 500, style: "text-green-500", hasRadialChart: true, progress: 60 },
+  ]
+
   return (
     <div className="h-screen w-full flex flex-col">
-      <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <h1 className="text-3xl font-bold">Budget Manager</h1>
+      <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
+        <h1 className="text-3xl font-bold">Budgets</h1>
+        <Button variant="default" className="text-lg">+ New Budget</Button>
       </div>
-      {/* First row */}
-      <div className="flex-1 overflow-y-auto styled-scrollbar px-4 flex flex-col gap-4">
-        <div className="w-full">
-          <BudgetHealth totalBudget={1000} totalSpent={500} />
-        </div>
-        {/* second row */}
-        <div className="grid grid-cols-12 gap-4 h-96 w-full overflow-hidden">
-          <div className="col-span-8 h-full overflow-hidden">
-            <BudgetsTooltip />
-          </div>
-          <div className="col-span-4">
-            <BudgetHealth totalBudget={1000} totalSpent={500} />
-          </div>
-        </div>
+      <div className="px-4 py-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {budgetData.map((data) => (
+          <GenericCard
+            key={data.title}
+            title={data.title}
+            number={data.number}
+            style={data.style}
+            hasRadialChart={data.hasRadialChart}
+            progress={data.progress}
+          />
+        ))}
       </div>
     </div>
   )
