@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import GenericCard from "@/components/budget/cards"
+import { BudgetAllocation } from "@/components/budget/budget-allocation"
 
 function Budget() {
 
@@ -16,6 +17,7 @@ function Budget() {
         <h1 className="text-3xl font-bold">Budgets</h1>
         <Button variant="default" className="text-lg">+ New Budget</Button>
       </div>
+      {/* First Row */}
       <div className="px-4 py-3 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {budgetData.map((data) => (
           <GenericCard
@@ -27,6 +29,22 @@ function Budget() {
             progress={data.progress}
           />
         ))}
+      </div>
+      {/* Second Row */}
+      <div className="w-full px-4 py-3 grid grid-cols-1 gap-4 md:grid-cols-12">
+        <div className="md:col-span-8">
+          <BudgetAllocation />
+        </div>
+        <div className="md:col-span-4">
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-lg font-bold">Budget Allocation</h2>
+              <p className="text-sm text-muted-foreground">
+                The budget allocation for the month.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
