@@ -1,0 +1,13 @@
+node_modules/
+.git
+.next
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.DS_Store
+.next
+.env
+.env.local
+Dockerfile
