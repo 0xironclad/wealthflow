@@ -22,6 +22,12 @@ const chartData = [
     { category: "utilities", plannedAmount: 200, spentAmount: 130, fill: "hsl(var(--chart-4))" },
     { category: "dining", plannedAmount: 180, spentAmount: 110, fill: "hsl(var(--chart-5))" },
     { category: "shopping", plannedAmount: 150, spentAmount: 70, fill: "hsl(var(--chart-6))" },
+    { category: "healthcare", plannedAmount: 300, spentAmount: 180, fill: "hsl(var(--chart-1))" },
+    { category: "insurance", plannedAmount: 250, spentAmount: 250, fill: "hsl(var(--chart-2))" },
+    { category: "education", plannedAmount: 400, spentAmount: 320, fill: "hsl(var(--chart-3))" },
+    { category: "fitness", plannedAmount: 120, spentAmount: 85, fill: "hsl(var(--chart-4))" },
+    { category: "subscriptions", plannedAmount: 90, spentAmount: 90, fill: "hsl(var(--chart-5))" },
+    { category: "personal care", plannedAmount: 100, spentAmount: 45, fill: "hsl(var(--chart-6))" },
 ]
 
 
@@ -61,11 +67,12 @@ export function BudgetAllocation() {
         return chartData.reduce((acc, curr) => acc + curr.plannedAmount, 0)
     }, [])
     return (
+        // TODO: Smaller screen fix
         <Card className="flex flex-col h-[400px]">
-            <CardContent className="flex gap-4 flex-1 pb-0 items-center">
+            <CardContent className="flex gap-4 h-full p-6">
                 <ChartContainer
                     config={chartConfig}
-                    className="aspect-square max-h-[350px] flex-shrink-0"
+                    className="mx-auto aspect-square max-h-[350px] flex-shrink-0"
                 >
                     <PieChart>
                         <ChartTooltip
@@ -111,22 +118,24 @@ export function BudgetAllocation() {
                         </Pie>
                     </PieChart>
                 </ChartContainer>
-                <div className="flex flex-col flex-1 justify-center space-y-4 p-3">
-                    {
-                        chartData.map((item) => (
-                            <div key={item.category} className="space-y-1">
-                                <div className="flex justify-between text-xs text-muted-foreground">
-                                    <span className="capitalize">{item.category}</span>
-                                    <span>${item.spentAmount} / ${item.plannedAmount}</span>
+                <div className="flex flex-col flex-1 min-h-0">
+                    <div className="space-y-4 overflow-y-auto styled-scrollbar pr-2">
+                        {
+                            chartData.map((item) => (
+                                <div key={item.category} className="space-y-1">
+                                    <div className="flex justify-between text-xs text-muted-foreground">
+                                        <span className="capitalize">{item.category}</span>
+                                        <span>${item.spentAmount} / ${item.plannedAmount}</span>
+                                    </div>
+                                    <Progress
+                                        value={Math.round((item.spentAmount / item.plannedAmount) * 100)}
+                                        className="[&>div]:bg-current bg-secondary"
+                                        style={{ color: chartConfig[item.category as keyof typeof chartConfig]?.color || 'hsl(var(--primary))' }}
+                                    />
                                 </div>
-                                <Progress
-                                    value={Math.round((item.spentAmount / item.plannedAmount) * 100)}
-                                    className="[&>div]:bg-current bg-secondary"
-                                    style={{ color: chartConfig[item.category as keyof typeof chartConfig]?.color || 'hsl(var(--primary))' }}
-                                />
-                            </div>
-                        ))
-                    }
+                            ))
+                        }
+                    </div>
                 </div>
             </CardContent>
         </Card>
