@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button"
 import GenericCard from "@/components/budget/cards"
 import { BudgetAllocation } from "@/components/budget/budget-allocation"
 import { SpendTrendLineChart } from "@/components/budget/spend-trend-line-chart"
+import BudgetDetails from "@/components/budget/budget-details"
 
 function Budget() {
 
@@ -39,6 +40,10 @@ function Budget() {
         <div className="md:col-span-4">
           <SpendTrendLineChart />
         </div>
+      </div>
+      {/* Third Row */}
+      <div className="w-full px-4 py-3">
+        <BudgetDetails />
       </div>
     </div>
   )
