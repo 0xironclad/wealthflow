@@ -16,18 +16,19 @@ import {
 } from "@/components/ui/chart"
 
 const chartData = [
-    { category: "groceries", plannedAmount: 450, spentAmount: 50, fill: "var(--color-groceries)" },
-    { category: "transportation", plannedAmount: 320, spentAmount: 230, fill: "var(--color-transportation)" },
-    { category: "entertainment", plannedAmount: 280, spentAmount: 20, fill: "var(--color-entertainment)" },
-    { category: "utilities", plannedAmount: 200, spentAmount: 130, fill: "var(--color-utilities)" },
-    { category: "dining", plannedAmount: 180, spentAmount: 110, fill: "var(--color-dining)" },
-    { category: "shopping", plannedAmount: 150, spentAmount: 70, fill: "var(--color-shopping)" },
+    { category: "groceries", plannedAmount: 450, spentAmount: 50, fill: "hsl(var(--chart-1))" },
+    { category: "transportation", plannedAmount: 320, spentAmount: 230, fill: "hsl(var(--chart-2))" },
+    { category: "entertainment", plannedAmount: 280, spentAmount: 20, fill: "hsl(var(--chart-3))" },
+    { category: "utilities", plannedAmount: 200, spentAmount: 130, fill: "hsl(var(--chart-4))" },
+    { category: "dining", plannedAmount: 180, spentAmount: 110, fill: "hsl(var(--chart-5))" },
+    { category: "shopping", plannedAmount: 150, spentAmount: 70, fill: "hsl(var(--chart-6))" },
 ]
 
 
 const chartConfig = {
     amount: {
         label: "Amount",
+        color: "hsl(var(--primary))",
     },
     groceries: {
         label: "Groceries",
@@ -121,7 +122,7 @@ export function BudgetAllocation() {
                                 <Progress
                                     value={Math.round((item.spentAmount / item.plannedAmount) * 100)}
                                     className="[&>div]:bg-current bg-secondary"
-                                    style={{ color: chartConfig[item.category as keyof typeof chartConfig]?.label }}
+                                    style={{ color: chartConfig[item.category as keyof typeof chartConfig]?.color || 'hsl(var(--primary))' }}
                                 />
                             </div>
                         ))
