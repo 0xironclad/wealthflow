@@ -1,15 +1,42 @@
-FROM node:24-alpine
+# syntax=docker/dockerfile:1
 
-WORKDIR /app
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Dockerfile reference guide at
+# https://docs.docker.com/go/dockerfile-reference/
 
-RUN npm install -g pnpm
+# Want to help us make this template better? Share your feedback here: https://forms.gle/ybq9Krt8jtBL3iCk7
 
-COPY package*.json pnpm-lock.yaml ./
+ARG NODE_VERSION=22.17.1
+ARG PNPM_VERSION=10.13.1
 
-RUN pnpm install
+FROM node:${NODE_VERSION}-alpine
 
+# Use production node environment by default.
+ENV NODE_ENV production
+
+# Install pnpm.
+RUN --mount=type=cache,target=/root/.npm \
+    npm install -g pnpm@${PNPM_VERSION}
+
+WORKDIR /usr/src/app
+
+# Download dependencies as a separate step to take advantage of Docker's caching.
+# Leverage a cache mount to /root/.local/share/pnpm/store to speed up subsequent builds.
+# Leverage a bind mounts to package.json and pnpm-lock.yaml to avoid having to copy them into
+# into this layer.
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=pnpm-lock.yaml,target=pnpm-lock.yaml \
+    --mount=type=cache,target=/root/.local/share/pnpm/store \
+    pnpm install --prod --frozen-lockfile
+
+# Run the application as a non-root user.
+USER node
+
+# Copy the rest of the source files into the image.
 COPY . .
 
+# Expose the port that the application listens on.
 EXPOSE 3000
 
-CMD ["pnpm", "dev"]
+# Run the application.
+CMD pnpm dev
