@@ -18,11 +18,13 @@ import Link from "next/link"
 import { TransactionForm } from "@/components/transaction-form"
 import { IncomeForm } from "@/components/income/income-form"
 import { EditBudgetForm } from "@/components/budget/budget-form"
-import { InvoiceType, IncomeType, Budget } from "@/lib/types"
+import SavingForm from "@/components/savings/saving-form"
+import { InvoiceType, IncomeType, Budget, Saving } from "@/lib/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createExpense } from "@/server/expense"
 import { createIncome } from "@/server/income"
 import { createBudget } from "@/server/budget"
+import { useCreateSaving } from "@/server/saving"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@/context/UserContext"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -60,9 +62,10 @@ const quickActions = [
         id: "add-savings",
         label: "Add Savings",
         icon: PiggyBank,
-        href: "/savings",
+        href: null,
         color: "bg-yellow-500 hover:bg-yellow-600",
-        description: "Build your wealth"
+        description: "Build your wealth",
+        action: "open-savings-form"
     },
     {
         id: "view-insights",
@@ -87,6 +90,7 @@ export default function QuickActions() {
     const [showTransactionForm, setShowTransactionForm] = useState(false)
     const [showIncomeForm, setShowIncomeForm] = useState(false)
     const [showBudgetForm, setShowBudgetForm] = useState(false)
+    const [showSavingsForm, setShowSavingsForm] = useState(false)
     const { user } = useUser()
     const { toast } = useToast()
     const queryClient = useQueryClient()
@@ -169,6 +173,8 @@ export default function QuickActions() {
             });
         }
     });
+
+    const createSavingsMutation = useCreateSaving();
 
 
     const handleTransactionSubmit = (formData: Partial<InvoiceType>) => {
@@ -273,6 +279,38 @@ export default function QuickActions() {
         setIsOpen(false)
     }
 
+    const handleSavingsSubmit = (savingData: Saving) => {
+        // The SavingForm already handles the creation via useCreateSaving
+        // We just need to handle the success case
+        if (savingData) {
+            setShowSavingsForm(false);
+            setIsOpen(false);
+            const time = new Date();
+            toast({
+                title: "Savings goal created successfully",
+                description: time.toLocaleString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                }),
+                action: (
+                    <Button variant="outline" size="sm" onClick={() => window.location.href = '/goals'}>
+                        View Goals
+                    </Button>
+                ),
+            });
+        }
+    }
+
+    const handleSavingsCancel = () => {
+        setShowSavingsForm(false)
+        setIsOpen(false)
+    }
+
     const handleActionClick = (action: any) => {
         if (action.action === "open-transaction-form") {
             setShowTransactionForm(true)
@@ -280,6 +318,8 @@ export default function QuickActions() {
             setShowIncomeForm(true)
         } else if (action.action === "open-budget-form") {
             setShowBudgetForm(true)
+        } else if (action.action === "open-savings-form") {
+            setShowSavingsForm(true)
         } else if (action.href) {
             window.location.href = action.href
         }
@@ -470,6 +510,20 @@ export default function QuickActions() {
                             Cancel
                         </Button>
                     </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Savings Form Modal */}
+            <Dialog open={showSavingsForm} onOpenChange={setShowSavingsForm}>
+                <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Create Savings Goal</DialogTitle>
+                    </DialogHeader>
+                    {user && (
+                        <SavingForm
+                            onSuccessfulSubmit={handleSavingsSubmit}
+                        />
+                    )}
                 </DialogContent>
             </Dialog>
         </div>
