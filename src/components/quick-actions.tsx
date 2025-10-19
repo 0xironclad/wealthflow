@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import {
@@ -17,19 +17,23 @@ import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { TransactionForm } from "@/components/transaction-form"
 import { IncomeForm } from "@/components/income/income-form"
-import { InvoiceType, IncomeType } from "@/lib/types"
+import { EditBudgetForm } from "@/components/budget/budget-form"
+import { InvoiceType, IncomeType, Budget } from "@/lib/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createExpense } from "@/server/expense"
 import { createIncome } from "@/server/income"
+import { createBudget } from "@/server/budget"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@/context/UserContext"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+
 
 const quickActions = [
     {
         id: "add-transaction",
         label: "Add Transaction",
         icon: Receipt,
-        href: null, 
+        href: null,
         color: "bg-blue-500 hover:bg-blue-600",
         description: "Record income or expense",
         action: "open-transaction-form"
@@ -38,7 +42,7 @@ const quickActions = [
         id: "add-income",
         label: "Add Income",
         icon: TrendingUp,
-        href: null, 
+        href: null,
         color: "bg-green-500 hover:bg-green-600",
         description: "Track your earnings",
         action: "open-income-form"
@@ -47,9 +51,10 @@ const quickActions = [
         id: "create-budget",
         label: "Create Budget",
         icon: Target,
-        href: "/budget",
+        href: null,
         color: "bg-purple-500 hover:bg-purple-600",
-        description: "Set spending limits"
+        description: "Set spending limits",
+        action: "open-budget-form"
     },
     {
         id: "add-savings",
@@ -81,6 +86,7 @@ export default function QuickActions() {
     const [isOpen, setIsOpen] = useState(false)
     const [showTransactionForm, setShowTransactionForm] = useState(false)
     const [showIncomeForm, setShowIncomeForm] = useState(false)
+    const [showBudgetForm, setShowBudgetForm] = useState(false)
     const { user } = useUser()
     const { toast } = useToast()
     const queryClient = useQueryClient()
@@ -164,6 +170,7 @@ export default function QuickActions() {
         }
     });
 
+
     const handleTransactionSubmit = (formData: Partial<InvoiceType>) => {
         if (!user) {
             toast({
@@ -234,11 +241,45 @@ export default function QuickActions() {
         setIsOpen(false)
     }
 
+    const handleBudgetSubmit = (budgetData: any) => {
+        // The EditBudgetForm already handles the creation via createBudget server function
+        // We just need to handle the success case
+        if (budgetData) {
+            setShowBudgetForm(false);
+            setIsOpen(false);
+            const time = new Date();
+            toast({
+                title: "Budget created successfully",
+                description: time.toLocaleString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                }),
+                action: (
+                    <Button variant="outline" size="sm" onClick={() => window.location.href = '/budget'}>
+                        View Budgets
+                    </Button>
+                ),
+            });
+        }
+    }
+
+    const handleBudgetCancel = () => {
+        setShowBudgetForm(false)
+        setIsOpen(false)
+    }
+
     const handleActionClick = (action: any) => {
         if (action.action === "open-transaction-form") {
             setShowTransactionForm(true)
         } else if (action.action === "open-income-form") {
             setShowIncomeForm(true)
+        } else if (action.action === "open-budget-form") {
+            setShowBudgetForm(true)
         } else if (action.href) {
             window.location.href = action.href
         }
@@ -399,6 +440,38 @@ export default function QuickActions() {
                     </div>
                 </div>
             )}
+
+            {/* Budget Form Modal */}
+            <Dialog open={showBudgetForm} onOpenChange={setShowBudgetForm}>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Create Budget</DialogTitle>
+                    </DialogHeader>
+                    {user && (
+                        <EditBudgetForm
+                            budget={{
+                                id: 0, // 0 indicates new budget creation
+                                userId: user.id,
+                                name: "",
+                                description: "",
+                                periodType: "monthly",
+                                startDate: new Date().toISOString(),
+                                endDate: new Date().toISOString(),
+                                category: "Food",
+                                plannedAmount: 0,
+                                spentAmount: 0,
+                                rollOver: false,
+                            }}
+                            onSuccessfulSubmit={handleBudgetSubmit}
+                        />
+                    )}
+                    <div className="flex justify-end gap-4 mt-4">
+                        <Button variant="outline" onClick={handleBudgetCancel}>
+                            Cancel
+                        </Button>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
