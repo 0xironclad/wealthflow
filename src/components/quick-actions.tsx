@@ -16,9 +16,11 @@ import {
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { TransactionForm } from "@/components/transaction-form"
-import { InvoiceType } from "@/lib/types"
+import { IncomeForm } from "@/components/income/income-form"
+import { InvoiceType, IncomeType } from "@/lib/types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createExpense } from "@/server/expense"
+import { createIncome } from "@/server/income"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@/context/UserContext"
 
@@ -27,7 +29,7 @@ const quickActions = [
         id: "add-transaction",
         label: "Add Transaction",
         icon: Receipt,
-        href: null, // Will be handled by onClick
+        href: null, 
         color: "bg-blue-500 hover:bg-blue-600",
         description: "Record income or expense",
         action: "open-transaction-form"
@@ -36,9 +38,10 @@ const quickActions = [
         id: "add-income",
         label: "Add Income",
         icon: TrendingUp,
-        href: "/income",
+        href: null, 
         color: "bg-green-500 hover:bg-green-600",
-        description: "Track your earnings"
+        description: "Track your earnings",
+        action: "open-income-form"
     },
     {
         id: "create-budget",
@@ -77,11 +80,12 @@ const quickActions = [
 export default function QuickActions() {
     const [isOpen, setIsOpen] = useState(false)
     const [showTransactionForm, setShowTransactionForm] = useState(false)
+    const [showIncomeForm, setShowIncomeForm] = useState(false)
     const { user } = useUser()
     const { toast } = useToast()
     const queryClient = useQueryClient()
 
-    const createMutation = useMutation({
+    const createTransactionMutation = useMutation({
         mutationFn: (newInvoice: Omit<InvoiceType, "id">) =>
             createExpense(newInvoice),
         onSuccess: () => {
@@ -100,11 +104,60 @@ export default function QuickActions() {
                     minute: "numeric",
                     hour12: true,
                 }),
+                action: (
+                    <Button variant="outline" size="sm" onClick={() => window.location.href = '/transaction'}>
+                        View Transactions
+                    </Button>
+                ),
             });
         },
         onError: (error) => {
             toast({
                 title: "Error adding transaction",
+                description: error instanceof Error ? error.message : "Unknown error occurred",
+                variant: "destructive"
+            });
+        }
+    });
+
+    const createIncomeMutation = useMutation({
+        mutationFn: (newIncome: {
+            userId: string;
+            name: string;
+            amount: number;
+            date: Date;
+            category: string;
+            source: string;
+            isRecurring: boolean;
+            recurringFrequency?: string;
+        }) =>
+            createIncome(newIncome),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['incomes'] });
+            setShowIncomeForm(false);
+            setIsOpen(false);
+            const time = new Date();
+            toast({
+                title: "Income added successfully",
+                description: time.toLocaleString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                }),
+                action: (
+                    <Button variant="outline" size="sm" onClick={() => window.location.href = '/income'}>
+                        View Income
+                    </Button>
+                ),
+            });
+        },
+        onError: (error) => {
+            toast({
+                title: "Error adding income",
                 description: error instanceof Error ? error.message : "Unknown error occurred",
                 variant: "destructive"
             });
@@ -129,7 +182,7 @@ export default function QuickActions() {
             formData.paymentMethod &&
             formData.category
         ) {
-            createMutation.mutate({
+            createTransactionMutation.mutate({
                 userId: user.id,
                 name: formData.name,
                 date: formData.date,
@@ -141,16 +194,52 @@ export default function QuickActions() {
         }
     }
 
+    const handleIncomeSubmit = (formData: any) => {
+        if (!user) {
+            toast({
+                title: "Error",
+                description: "User not authenticated",
+                variant: "destructive"
+            });
+            return;
+        }
+
+        if (
+            formData.name &&
+            formData.date &&
+            formData.amount &&
+            formData.category &&
+            formData.source
+        ) {
+            createIncomeMutation.mutate({
+                userId: user.id,
+                name: formData.name,
+                date: new Date(formData.date),
+                amount: formData.amount,
+                category: formData.category,
+                source: formData.source,
+                isRecurring: formData.isRecurring || false,
+                recurringFrequency: formData.recurringFrequency || null
+            });
+        }
+    }
+
     const handleTransactionCancel = () => {
         setShowTransactionForm(false)
+        setIsOpen(false)
+    }
+
+    const handleIncomeCancel = () => {
+        setShowIncomeForm(false)
         setIsOpen(false)
     }
 
     const handleActionClick = (action: any) => {
         if (action.action === "open-transaction-form") {
             setShowTransactionForm(true)
+        } else if (action.action === "open-income-form") {
+            setShowIncomeForm(true)
         } else if (action.href) {
-            // Handle other navigation actions
             window.location.href = action.href
         }
     }
@@ -295,6 +384,20 @@ export default function QuickActions() {
                     onSubmit={handleTransactionSubmit}
                     onCancel={handleTransactionCancel}
                 />
+            )}
+
+            {/* Income Form Modal */}
+            {showIncomeForm && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-background p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+                        <IncomeForm onSubmit={handleIncomeSubmit} />
+                        <div className="flex justify-end gap-4 mt-4">
+                            <Button variant="outline" onClick={handleIncomeCancel}>
+                                Cancel
+                            </Button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     )
