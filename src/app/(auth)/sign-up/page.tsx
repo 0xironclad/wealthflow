@@ -51,10 +51,10 @@ function SignUpPage() {
       await signup(formData)
 
       toast({
-        title: "Account created",
-        description: "Your account has been created successfully."
+        title: "Account created successfully!",
+        description: "Please check your email and click the confirmation link to activate your account."
       })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast({
         title: "Error",
