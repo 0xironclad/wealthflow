@@ -67,12 +67,12 @@ export const useIncomes = (userId: string) => {
 export const useSavings = (userId: string) => {
   return useQuery({
     queryKey: ["savings", userId],
-    queryFn: () => (userId ? getSavings(userId) : null),
+    queryFn: () => getSavings(userId),
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60,
     enabled: !!userId,
     select: (data) =>
-      data.map(
+      data?.map(
         (saving: {
           id: number;
           userid: number;
@@ -90,10 +90,9 @@ export const useSavings = (userId: string) => {
           goal: parseFloat(saving.goal),
           status: saving.status,
         })
-      ),
+      ) || [],
   });
 };
-
 
 export const useSavingsHistory = (userId: string) => {
   return useQuery({

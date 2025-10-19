@@ -15,15 +15,16 @@ import LoadingComponent from "./loading-component"
 function Savings() {
     const { user, isLoading: isAuthLoading } = useUser();
 
-    const { data: savings, isLoading } = useSavings(user?.id ?? '');
+    const { data: savings, isLoading, isError } = useSavings(user?.id ?? '');
 
     if (!user?.id) return null;
-
     if (isLoading || isAuthLoading) {
         return <LoadingComponent title="Savings" />
     }
+    if (isError) {
+        return <LoadingComponent title="Savings" />
+    }
 
-    // Check if there are no savings
     const hasNoSavings = !savings || savings.length === 0;
 
     return hasNoSavings ? (
