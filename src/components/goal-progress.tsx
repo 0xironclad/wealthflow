@@ -6,7 +6,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+import { Progress as ProgressPrimitive } from "@/components/ui/progress"
+
+// Type cast for React 19 compatibility
+const Progress = ProgressPrimitive as any;
 import { Loader2 } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { getSavings } from "@/server/saving"

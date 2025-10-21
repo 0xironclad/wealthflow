@@ -21,16 +21,26 @@ import { InvoiceType, Saving, Budget } from "@/lib/types"
 interface QuickAction {
     id?: string;
     label?: string;
-    icon?: any;
+    icon?: React.ComponentType<{ className?: string }>;
     href?: string | null;
     color?: string;
     description?: string;
     action?: string;
 }
+
+interface IncomeFormData {
+    name: string;
+    date: Date;
+    amount: number;
+    category: string;
+    source: string;
+    isRecurring: boolean;
+    recurringFrequency?: string;
+}
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createExpense } from "@/server/expense"
 import { createIncome } from "@/server/income"
-import { useCreateSaving } from "@/server/saving"
+
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@/context/UserContext"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -204,7 +214,7 @@ export default function QuickActions() {
         }
     }
 
-    const handleIncomeSubmit = (formData: any) => {
+    const handleIncomeSubmit = (formData: IncomeFormData) => {
         if (!user) {
             toast({
                 title: "Error",
@@ -224,12 +234,12 @@ export default function QuickActions() {
             createIncomeMutation.mutate({
                 userId: user.id,
                 name: formData.name,
-                date: new Date(formData.date),
+                date: formData.date,
                 amount: formData.amount,
                 category: formData.category,
                 source: formData.source,
-                isRecurring: formData.isRecurring || false,
-                recurringFrequency: formData.recurringFrequency || null
+                isRecurring: formData.isRecurring,
+                recurringFrequency: formData.recurringFrequency
             });
         }
     }

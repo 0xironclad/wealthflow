@@ -11,6 +11,11 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent } from "../ui/card"
 import { Button } from "@/components/ui/button"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
 
 import {
     Dialog,
@@ -18,20 +23,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+
 import { Budget } from "@/lib/types"
 import { EditBudgetForm } from "./budget-form"
-import { Edit, Trash2 } from "lucide-react"
+import { Edit, Trash2, MoreVertical } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useQueryClient } from "@tanstack/react-query"
@@ -154,36 +149,39 @@ function BudgetDetails({ budgets = [] }: BudgetDetailsProps) {
                                         </span>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <div className="flex items-center gap-2">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                onClick={() => handleEdit(budget)}
-                                            >
-                                                <Edit className="h-4 w-4" />
-                                            </Button>
-                                            <AlertDialog>
-                                                <AlertDialogTrigger asChild>
-                                                    <Button variant="ghost" size="sm">
-                                                        <Trash2 className="h-4 w-4" />
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <Button variant="ghost" className="h-8 w-8 p-0">
+                                                    <span className="sr-only">Open menu</span>
+                                                    <MoreVertical className="h-4 w-4" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-40 p-1" align="end">
+                                                <div className="flex flex-col">
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="justify-start h-8 px-2"
+                                                        onClick={() => handleEdit(budget)}
+                                                    >
+                                                        <Edit className="mr-2 h-4 w-4" />
+                                                        Edit
                                                     </Button>
-                                                </AlertDialogTrigger>
-                                                <AlertDialogContent>
-                                                    <AlertDialogHeader>
-                                                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                        <AlertDialogDescription>
-                                                            This action cannot be undone. This will permanently delete the budget &ldquo;{budget.name}&rdquo;.
-                                                        </AlertDialogDescription>
-                                                    </AlertDialogHeader>
-                                                    <AlertDialogFooter>
-                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                        <AlertDialogAction onClick={() => handleDelete(budget)}>
-                                                            Delete
-                                                        </AlertDialogAction>
-                                                    </AlertDialogFooter>
-                                                </AlertDialogContent>
-                                            </AlertDialog>
-                                        </div>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="justify-start h-8 px-2 text-red-600 hover:text-red-600 hover:bg-red-50"
+                                                        onClick={() => {
+                                                            const confirmed = window.confirm(`Are you sure you want to delete the budget "${budget.name}"? This action cannot be undone.`);
+                                                            if (confirmed) {
+                                                                handleDelete(budget);
+                                                            }
+                                                        }}
+                                                    >
+                                                        <Trash2 className="mr-2 h-4 w-4" />
+                                                        Delete
+                                                    </Button>
+                                                </div>
+                                            </PopoverContent>
+                                        </Popover>
                                     </TableCell>
                                 </TableRow>
                             )
