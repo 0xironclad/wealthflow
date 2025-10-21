@@ -74,14 +74,6 @@ const quickActions = [
         href: "/insights",
         color: "bg-indigo-500 hover:bg-indigo-600",
         description: "AI-powered analysis"
-    },
-    {
-        id: "calculator",
-        label: "Calculator",
-        icon: Calculator,
-        href: "/calculator",
-        color: "bg-gray-500 hover:bg-gray-600",
-        description: "Quick calculations"
     }
 ]
 

@@ -17,15 +17,15 @@ function GenericCard({ title, number, style, hasRadialChart, progress }: Generic
         <>
             {
                 hasRadialChart ? (
-                    <div className="w-full">
+                    <div className="w-full h-full">
                         <ProgressRadial progress={progress || 0} />
                     </div>
                 ) : (
-                    <Card className={cn("w-full")}>
+                    <Card className={cn("w-full h-full flex flex-col")}>
                         <CardHeader className="pb-2">
                             <CardTitle className="text-sm">{title}</CardTitle>
                         </CardHeader>
-                        <CardContent className="pt-0">
+                        <CardContent className="pt-0 flex-1 flex items-start">
                             <div className={cn("text-xl font-semibold", style)}>$ {number.toLocaleString()}</div>
                         </CardContent>
                     </Card>

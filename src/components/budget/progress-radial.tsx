@@ -27,9 +27,9 @@ export function ProgressRadial({ progress }: { progress: number }) {
         },
     } satisfies ChartConfig
     return (
-        <Card className="flex flex-col">
-            <CardContent className="flex-1 pb-0">
-                <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[150px] w-full">
+        <Card className="flex flex-col h-full">
+            <CardContent className="flex-1 pb-0 flex items-center justify-center">
+                <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[120px] w-full">
                     <RadialBarChart
                         data={data}
                         startAngle={90}
@@ -59,7 +59,7 @@ export function ProgressRadial({ progress }: { progress: number }) {
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={viewBox.cy}
-                                                    className="fill-foreground text-4xl font-bold"
+                                                    className="fill-foreground text-3xl font-bold"
                                                 >
                                                     {clamped.toLocaleString()}%
                                                 </tspan>
