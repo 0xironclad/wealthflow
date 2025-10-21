@@ -16,14 +16,24 @@ import {
     ChartTooltipContent,
 } from "@/components/ui/chart"
 
-const chartData = [
-    { month: "Apr", spent: 1250 },
-    { month: "May", spent: 3200 },
-    { month: "Jun", spent: 1950 },
-    { month: "Jul", spent: 3400 },
-    { month: "Aug", spent: 2750 },
-    { month: "Sep", spent: 3100 },
-]
+interface Budget {
+    id: number;
+    userId: string;
+    name: string;
+    description: string;
+    periodType: string;
+    startDate: string;
+    endDate: string;
+    category: string;
+    plannedAmount: number;
+    spentAmount: number;
+    isRollover: boolean;
+}
+
+interface SpendTrendLineChartProps {
+    budgets?: Budget[];
+    period?: "6months" | "12months";
+}
 
 const chartConfig = {
     spent: {
@@ -32,16 +42,58 @@ const chartConfig = {
     },
 } satisfies ChartConfig
 
-export function SpendTrendLineChart() {
+export function SpendTrendLineChart({ budgets = [], period = "6months" }: SpendTrendLineChartProps) {
+    // Process budget data into monthly spending
+    const chartData = React.useMemo(() => {
+        // Create a map to aggregate spending by month
+        const monthlySpending = new Map<string, { monthKey: string, monthLabel: string, spent: number }>();
+
+        // Get the number of months to show
+        const monthsToShow = period === "6months" ? 6 : 12;
+
+        // Initialize months with 0 spending
+        const now = new Date();
+        for (let i = monthsToShow - 1; i >= 0; i--) {
+            const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const monthKey = date.toISOString().slice(0, 7); // YYYY-MM format
+            const monthLabel = date.toLocaleDateString('en-US', { month: 'short' });
+            monthlySpending.set(monthKey, { monthKey, monthLabel, spent: 0 });
+        }
+
+        // Aggregate spending from budgets if available
+        if (budgets && budgets.length > 0) {
+            budgets.forEach(budget => {
+                const startDate = new Date(budget.startDate);
+                const monthKey = startDate.toISOString().slice(0, 7);
+
+                if (monthlySpending.has(monthKey)) {
+                    const existing = monthlySpending.get(monthKey)!;
+                    monthlySpending.set(monthKey, {
+                        ...existing,
+                        spent: existing.spent + budget.spentAmount
+                    });
+                }
+            });
+        }
+
+        // Convert to chart format and sort by date
+        return Array.from(monthlySpending.values())
+            .sort((a, b) => a.monthKey.localeCompare(b.monthKey))
+            .map(({ monthLabel, spent }) => ({
+                month: monthLabel,
+                spent: Math.round(spent)
+            }));
+    }, [budgets, period]);
 
     return (
         <Card className="h-[400px]">
             <CardHeader>
-                <CardTitle>Budget Spending - Last 6 Months</CardTitle>
+                <CardTitle>Budget Spending - Last {period === "6months" ? "6" : "12"} Months</CardTitle>
             </CardHeader>
             <CardContent>
                 <ChartContainer config={chartConfig} className="aspect-auto h-[300px] w-full">
                     <LineChart
+                        key={`${period}-${chartData.length}`}
                         accessibilityLayer
                         data={chartData}
                         margin={{

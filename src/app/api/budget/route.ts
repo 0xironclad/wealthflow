@@ -2,18 +2,108 @@ import { NextResponse } from "next/server";
 import pool from "@/database/db";
 import { BudgetSchema, UpdateBudgetSchema } from "@/lib/schemas/budget-schema";
 
+// get budgets
 export async function GET(request: Request) {
     try {
         const url = new URL(request.url)
         const userId = url.searchParams.get('userId')
+        const getTotal = url.searchParams.get('total') === 'true'
+        const fromDate = url.searchParams.get('from')
+        const toDate = url.searchParams.get('to')
+
         if (!userId) {
             return NextResponse.json({
                 success: false,
                 message: "User ID is required"
             }, { status: 400 })
         }
-        const query = 'SELECT * FROM budgets WHERE user_id = $1'
-        const result = await pool.query(query, [userId])
+
+        if (getTotal) {
+            // Handle total budget calculation
+            let dateCondition = ''
+            const dateParams = [userId]
+
+            if (fromDate && toDate) {
+                // Custom date range
+                const from = new Date(fromDate).toISOString()
+                const to = new Date(toDate).toISOString()
+                dateCondition = `AND (
+                    (start_date <= $2 AND end_date >= $2) OR
+                    (start_date <= $3 AND end_date >= $3) OR
+                    (start_date >= $2 AND end_date <= $3)
+                )`
+                dateParams.push(from, to)
+            } else if (fromDate || toDate) {
+                // Single date boundary
+                if (fromDate) {
+                    const from = new Date(fromDate).toISOString()
+                    dateCondition = 'AND end_date >= $2'
+                    dateParams.push(from)
+                }
+                if (toDate) {
+                    const to = new Date(toDate).toISOString()
+                    const paramIndex = dateParams.length + 1
+                    dateCondition += (dateCondition ? ' AND ' : 'AND ') + `start_date <= $${paramIndex}`
+                    dateParams.push(to)
+                }
+            } else {
+                // Default to current month if no dates provided
+                const now = new Date()
+                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
+                const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString()
+                dateCondition = `AND (
+                    (start_date <= $2 AND end_date >= $2) OR
+                    (start_date <= $3 AND end_date >= $3) OR
+                    (start_date >= $2 AND end_date <= $3)
+                )`
+                dateParams.push(startOfMonth, endOfMonth)
+            }
+
+            const query = `
+                SELECT
+                    SUM(planned_amount) as total_planned,
+                    SUM(spent_amount) as total_spent,
+                    COUNT(*) as budget_count
+                FROM budgets
+                WHERE user_id = $1 ${dateCondition}
+            `
+
+            const result = await pool.query(query, dateParams)
+
+            return NextResponse.json({
+                success: true,
+                data: {
+                    totalPlanned: parseFloat(result.rows[0].total_planned) || 0,
+                    totalSpent: parseFloat(result.rows[0].total_spent) || 0,
+                    budgetCount: parseInt(result.rows[0].budget_count) || 0,
+                    remaining: (parseFloat(result.rows[0].total_planned) || 0) - (parseFloat(result.rows[0].total_spent) || 0),
+                    dateRange: {
+                        from: fromDate,
+                        to: toDate
+                    }
+                }
+            }, { status: 200 })
+        }
+
+        // Existing logic for getting all budgets with optional period filtering
+        let query = 'SELECT * FROM budgets WHERE user_id = $1'
+        const queryParams = [userId]
+
+        // Add period filtering if from/to dates are provided
+        if (fromDate && toDate) {
+            const from = new Date(fromDate).toISOString()
+            const to = new Date(toDate).toISOString()
+            query += ` AND (
+                (start_date <= $2 AND end_date >= $2) OR
+                (start_date <= $3 AND end_date >= $3) OR
+                (start_date >= $2 AND end_date <= $3)
+            ) ORDER BY start_date DESC`
+            queryParams.push(from, to)
+        } else {
+            query += ' ORDER BY start_date DESC'
+        }
+
+        const result = await pool.query(query, queryParams)
         return NextResponse.json(
             {
                 success: true,
@@ -52,7 +142,7 @@ export async function POST(request: Request) {
             body.endDate,
             body.category,
             body.plannedAmount,
-            body.spentAmount, 
+            body.spentAmount,
             body.rollOver
         ])
 
@@ -101,7 +191,7 @@ export async function PUT(request: Request) {
 
 
 export async function DELETE(request: Request) {
-    try{
+    try {
         const url = new URL(request.url)
         const id = url.searchParams.get('id')
         const userId = url.searchParams.get('userId')
@@ -112,7 +202,7 @@ export async function DELETE(request: Request) {
             data: result.rows[0]
         }, { status: 200 })
 
-    } catch(error){
+    } catch (error) {
         return NextResponse.json({
             success: false,
             message: "Error deleting budget",
