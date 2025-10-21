@@ -10,22 +10,21 @@ import { SpendTrendLineChart } from "@/components/budget/spend-trend-line-chart"
 import BudgetDetails from "@/components/budget/budget-details"
 import { useBudgets, useBudgetTotal } from "@/lib/queries"
 import { useUser } from "@/context/UserContext"
+import { useDatePeriod } from "@/hooks/useDatePeriod"
+import { DatePeriodSelector } from "@/components/ui/date-period-selector"
 import { AlertCircle, Plus } from "lucide-react"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { useState } from "react"
+
 
 function Budget() {
     const { user } = useUser()
-    const [period, setPeriod] = useState("6 months")
+    const { currentPeriod } = useDatePeriod()
 
     const { data: budgets, isLoading: budgetsLoading, error: budgetsError } = useBudgets(user?.id || "")
-    const { data: budgetTotal, isLoading: totalLoading, error: totalError } = useBudgetTotal(user?.id || "")
+    const { data: budgetTotal, isLoading: totalLoading, error: totalError } = useBudgetTotal(
+        user?.id || "",
+        currentPeriod.from,
+        currentPeriod.to
+    )
 
     if (!user) return null
 
@@ -92,16 +91,8 @@ function Budget() {
         <div className="h-screen w-full flex flex-col">
             <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
                 <h1 className="text-3xl font-bold">Budgets</h1>
-                <div className="flex items-center gap-2">
-                    <Select value={period} onValueChange={setPeriod}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Period" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="6 months">6 months</SelectItem>
-                            <SelectItem value="12 months">12 months</SelectItem>
-                        </SelectContent>
-                    </Select>
+                <div className="flex items-center gap-3">
+                    <DatePeriodSelector />
                     <Button variant="default" className="text-lg">
                         <Plus className="w-4 h-4 mr-2" />
                         New Budget
