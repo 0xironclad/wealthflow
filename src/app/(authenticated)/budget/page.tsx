@@ -260,7 +260,7 @@ function Budget() {
                         </div>
                     </div>
                 ) : budgets && budgets.length > 0 ? (
-                    <BudgetDetails />
+                    <BudgetDetails budgets={budgets} />
                 ) : (
                     <div className="p-8 rounded-lg border bg-card text-center">
                         <h3 className="text-lg font-semibold mb-2">No budgets found</h3>
