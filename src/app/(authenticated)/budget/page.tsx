@@ -149,7 +149,7 @@ function Budget() {
                             <Skeleton className="h-64 w-full" />
                         </div>
                     ) : (
-                        <BudgetAllocation />
+                        <BudgetAllocation budgets={budgets} />
                     )}
                 </div>
                 <div className="md:col-span-4">
