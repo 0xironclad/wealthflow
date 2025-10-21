@@ -11,16 +11,24 @@ import BudgetDetails from "@/components/budget/budget-details"
 import { useBudgets, useBudgetTotal } from "@/lib/queries"
 import { useUser } from "@/context/UserContext"
 import { AlertCircle, Plus } from "lucide-react"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { useState } from "react"
 
 function Budget() {
     const { user } = useUser()
+    const [period, setPeriod] = useState("6 months")
 
     const { data: budgets, isLoading: budgetsLoading, error: budgetsError } = useBudgets(user?.id || "")
     const { data: budgetTotal, isLoading: totalLoading, error: totalError } = useBudgetTotal(user?.id || "")
 
     if (!user) return null
 
-    // Calculate progress percentage
     const progressPercentage = budgetTotal?.totalPlanned
         ? Math.round((budgetTotal.totalSpent / budgetTotal.totalPlanned) * 100)
         : 0
@@ -84,10 +92,21 @@ function Budget() {
         <div className="h-screen w-full flex flex-col">
             <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
                 <h1 className="text-3xl font-bold">Budgets</h1>
-                <Button variant="default" className="text-lg">
-                    <Plus className="w-4 h-4 mr-2" />
-                    New Budget
-                </Button>
+                <div className="flex items-center gap-2">
+                    <Select value={period} onValueChange={setPeriod}>
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Period" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="6 months">6 months</SelectItem>
+                            <SelectItem value="12 months">12 months</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Button variant="default" className="text-lg">
+                        <Plus className="w-4 h-4 mr-2" />
+                        New Budget
+                    </Button>
+                </div>
             </div>
 
             {/* First Row - Budget Summary Cards */}
