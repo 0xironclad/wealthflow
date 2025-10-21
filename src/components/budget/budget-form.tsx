@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect } from "react";
 import { Budget } from "@/lib/types";
 import { useForm } from "react-hook-form";
@@ -16,12 +16,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
+    Select as SelectPrimitive,
+    SelectContent as SelectContentPrimitive,
+    SelectItem as SelectItemPrimitive,
+    SelectTrigger as SelectTriggerPrimitive,
+    SelectValue as SelectValuePrimitive
 } from "@/components/ui/select";
+
+// Type cast for React 19 compatibility
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const Select = SelectPrimitive as any;
+const SelectContent = SelectContentPrimitive as any;
+const SelectItem = SelectItemPrimitive as any;
+const SelectTrigger = SelectTriggerPrimitive as any;
+const SelectValue = SelectValuePrimitive as any;
+/* eslint-enable @typescript-eslint/no-explicit-any */
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns";
 import {
     Popover,
@@ -87,6 +96,7 @@ const formSchema = z.object({
 type ResultType = {
     success: boolean,
     message?: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     data?: any
 };
 
@@ -95,6 +105,7 @@ export function EditBudgetForm({
     onSuccessfulSubmit
 }: {
     budget: Budget,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSuccessfulSubmit?: (budgetData: any) => void
 }) {
     const form = useForm<z.infer<typeof formSchema>>({

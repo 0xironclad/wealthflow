@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card"
 import { Progress as ProgressPrimitive } from "@/components/ui/progress"
 
-// Type cast for React 19 compatibility
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Progress = ProgressPrimitive as any;
 import { Loader2 } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
