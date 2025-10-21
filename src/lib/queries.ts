@@ -106,8 +106,12 @@ export const useSavingsHistory = (userId: string) => {
 
 
 // Budget API functions
-const fetchBudgets = async (userId: string) => {
-    const response = await fetch(`/api/budget?userId=${userId}`);
+const fetchBudgets = async (userId: string, from?: string, to?: string) => {
+    const params = new URLSearchParams({ userId });
+    if (from) params.append('from', from);
+    if (to) params.append('to', to);
+
+    const response = await fetch(`/api/budget?${params.toString()}`);
     if (!response.ok) {
         throw new Error('Failed to fetch budgets');
     }
@@ -133,10 +137,10 @@ const fetchBudgetTotal = async (userId: string, from?: string, to?: string) => {
 };
 
 // React Query hooks
-export const useBudgets = (userId: string) => {
+export const useBudgets = (userId: string, from?: string, to?: string) => {
     return useQuery({
-        queryKey: ["budgets", userId],
-        queryFn: () => fetchBudgets(userId),
+        queryKey: ["budgets", userId, from, to],
+        queryFn: () => fetchBudgets(userId, from, to),
         enabled: !!userId,
         select: (data) =>
             data?.map((budget: {

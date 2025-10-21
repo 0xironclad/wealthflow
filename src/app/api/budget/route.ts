@@ -85,9 +85,25 @@ export async function GET(request: Request) {
             }, { status: 200 })
         }
 
-        // Existing logic for getting all budgets
-        const query = 'SELECT * FROM budgets WHERE user_id = $1'
-        const result = await pool.query(query, [userId])
+        // Existing logic for getting all budgets with optional period filtering
+        let query = 'SELECT * FROM budgets WHERE user_id = $1'
+        let queryParams = [userId]
+
+        // Add period filtering if from/to dates are provided
+        if (fromDate && toDate) {
+            const from = new Date(fromDate).toISOString()
+            const to = new Date(toDate).toISOString()
+            query += ` AND (
+                (start_date <= $2 AND end_date >= $2) OR
+                (start_date <= $3 AND end_date >= $3) OR
+                (start_date >= $2 AND end_date <= $3)
+            ) ORDER BY start_date DESC`
+            queryParams.push(from, to)
+        } else {
+            query += ' ORDER BY start_date DESC'
+        }
+
+        const result = await pool.query(query, queryParams)
         return NextResponse.json(
             {
                 success: true,

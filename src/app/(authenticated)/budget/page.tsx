@@ -19,7 +19,11 @@ function Budget() {
     const { user } = useUser()
     const { currentPeriod } = useDatePeriod()
 
-    const { data: budgets, isLoading: budgetsLoading, error: budgetsError } = useBudgets(user?.id || "")
+    const { data: budgets, isLoading: budgetsLoading, error: budgetsError } = useBudgets(
+        user?.id || "",
+        currentPeriod.from,
+        currentPeriod.to
+    )
     const { data: budgetTotal, isLoading: totalLoading, error: totalError } = useBudgetTotal(
         user?.id || "",
         currentPeriod.from,
@@ -155,7 +159,7 @@ function Budget() {
                             <Skeleton className="h-64 w-full" />
                         </div>
                     ) : (
-                        <SpendTrendLineChart />
+                        <SpendTrendLineChart budgets={budgets} period={currentPeriod.type} />
                     )}
                 </div>
             </div>
