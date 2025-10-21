@@ -1,3 +1,5 @@
+"use client"
+
 import {
     Table,
     TableBody,
@@ -9,18 +11,12 @@ import {
 } from "@/components/ui/table"
 import { Card, CardContent } from "../ui/card"
 import { Button } from "@/components/ui/button"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import {
     AlertDialog,
@@ -35,7 +31,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Budget } from "@/lib/types"
 import { EditBudgetForm } from "./budget-form"
-import { MoreHorizontal, Edit, Trash2 } from "lucide-react"
+import { Edit, Trash2 } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useQueryClient } from "@tanstack/react-query"
@@ -51,7 +47,7 @@ function BudgetDetails({ budgets = [] }: BudgetDetailsProps) {
     const queryClient = useQueryClient()
 
     // Handle successful budget update
-    const handleUpdateSuccess = (budgetData: any) => {
+    const handleUpdateSuccess = (budgetData: Budget) => {
         setIsEditDialogOpen(false)
         setEditingBudget(null)
 
@@ -158,42 +154,36 @@ function BudgetDetails({ budgets = [] }: BudgetDetailsProps) {
                                         </span>
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" className="h-8 w-8 p-0">
-                                                    <span className="sr-only">Open menu</span>
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuItem onClick={() => handleEdit(budget)}>
-                                                    <Edit className="mr-2 h-4 w-4" />
-                                                    Edit
-                                                </DropdownMenuItem>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                                            <Trash2 className="mr-2 h-4 w-4" />
+                                        <div className="flex items-center gap-2">
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => handleEdit(budget)}
+                                            >
+                                                <Edit className="h-4 w-4" />
+                                            </Button>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <Button variant="ghost" size="sm">
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </Button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            This action cannot be undone. This will permanently delete the budget &ldquo;{budget.name}&rdquo;.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={() => handleDelete(budget)}>
                                                             Delete
-                                                        </DropdownMenuItem>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action cannot be undone. This will permanently delete the budget "{budget.name}".
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                            <AlertDialogAction onClick={() => handleDelete(budget)}>
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             )

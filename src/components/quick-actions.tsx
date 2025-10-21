@@ -7,23 +7,29 @@ import {
     Plus,
     TrendingUp,
     Target,
-    CreditCard,
     PiggyBank,
     Receipt,
-    Calculator,
     BarChart3
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import Link from "next/link"
 import { TransactionForm } from "@/components/transaction-form"
 import { IncomeForm } from "@/components/income/income-form"
 import { EditBudgetForm } from "@/components/budget/budget-form"
 import SavingForm from "@/components/savings/saving-form"
-import { InvoiceType, IncomeType, Budget, Saving } from "@/lib/types"
+import { InvoiceType, Saving, Budget } from "@/lib/types"
+
+interface QuickAction {
+    id?: string;
+    label?: string;
+    icon?: any;
+    href?: string | null;
+    color?: string;
+    description?: string;
+    action?: string;
+}
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { createExpense } from "@/server/expense"
 import { createIncome } from "@/server/income"
-import { createBudget } from "@/server/budget"
 import { useCreateSaving } from "@/server/saving"
 import { useToast } from "@/hooks/use-toast"
 import { useUser } from "@/context/UserContext"
@@ -166,7 +172,6 @@ export default function QuickActions() {
         }
     });
 
-    const createSavingsMutation = useCreateSaving();
 
 
     const handleTransactionSubmit = (formData: Partial<InvoiceType>) => {
@@ -239,7 +244,7 @@ export default function QuickActions() {
         setIsOpen(false)
     }
 
-    const handleBudgetSubmit = (budgetData: any) => {
+    const handleBudgetSubmit = (budgetData: Budget) => {
         // The EditBudgetForm already handles the creation via createBudget server function
         // We just need to handle the success case
         if (budgetData) {
@@ -298,12 +303,9 @@ export default function QuickActions() {
         }
     }
 
-    const handleSavingsCancel = () => {
-        setShowSavingsForm(false)
-        setIsOpen(false)
-    }
 
-    const handleActionClick = (action: any) => {
+
+    const handleActionClick = (action: QuickAction) => {
         if (action.action === "open-transaction-form") {
             setShowTransactionForm(true)
         } else if (action.action === "open-income-form") {

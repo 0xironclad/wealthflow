@@ -21,7 +21,7 @@ export async function GET(request: Request) {
         if (getTotal) {
             // Handle total budget calculation
             let dateCondition = ''
-            let dateParams = [userId]
+            const dateParams = [userId]
 
             if (fromDate && toDate) {
                 // Custom date range
@@ -87,7 +87,7 @@ export async function GET(request: Request) {
 
         // Existing logic for getting all budgets with optional period filtering
         let query = 'SELECT * FROM budgets WHERE user_id = $1'
-        let queryParams = [userId]
+        const queryParams = [userId]
 
         // Add period filtering if from/to dates are provided
         if (fromDate && toDate) {

@@ -24,8 +24,9 @@ import { EditBudgetForm } from "@/components/budget/budget-form"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useQueryClient } from "@tanstack/react-query"
+import { Budget } from "@/lib/types"
 
-function Budget() {
+function BudgetManager() {
     const { user } = useUser()
     const { currentPeriod } = useDatePeriod()
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -33,11 +34,8 @@ function Budget() {
     const queryClient = useQueryClient()
 
     // Handle successful budget creation
-    const handleBudgetSuccess = (budgetData: any) => {
-        // Close the dialog
+    const handleBudgetSuccess = (budgetData: Budget) => {
         setIsDialogOpen(false)
-
-        // Show success toast
         toast({
             title: "Budget created successfully",
             description: `Budget "${budgetData?.name || 'New Budget'}" has been created.`,
@@ -305,4 +303,4 @@ function Budget() {
     )
 }
 
-export default Budget
+export default BudgetManager
