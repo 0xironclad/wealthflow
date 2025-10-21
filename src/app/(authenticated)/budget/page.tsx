@@ -4,6 +4,13 @@ import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import GenericCard from "@/components/budget/cards"
 import { BudgetAllocation } from "@/components/budget/budget-allocation"
 import { SpendTrendLineChart } from "@/components/budget/spend-trend-line-chart"
@@ -13,11 +20,34 @@ import { useUser } from "@/context/UserContext"
 import { useDatePeriod } from "@/hooks/useDatePeriod"
 import { DatePeriodSelector } from "@/components/ui/date-period-selector"
 import { AlertCircle, Plus } from "lucide-react"
-
+import { EditBudgetForm } from "@/components/budget/budget-form"
+import { useState } from "react"
+import { useToast } from "@/hooks/use-toast"
+import { useQueryClient } from "@tanstack/react-query"
 
 function Budget() {
     const { user } = useUser()
     const { currentPeriod } = useDatePeriod()
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const { toast } = useToast()
+    const queryClient = useQueryClient()
+
+    // Handle successful budget creation
+    const handleBudgetSuccess = (budgetData: any) => {
+        // Close the dialog
+        setIsDialogOpen(false)
+
+        // Show success toast
+        toast({
+            title: "Budget created successfully",
+            description: `Budget "${budgetData?.name || 'New Budget'}" has been created.`,
+            duration: 5000,
+        })
+
+        // Invalidate and refetch budget queries to show new data
+        queryClient.invalidateQueries({ queryKey: ["budgets"] })
+        queryClient.invalidateQueries({ queryKey: ["budgetTotal"] })
+    }
 
     const { data: budgets, isLoading: budgetsLoading, error: budgetsError } = useBudgets(
         user?.id || "",
@@ -74,10 +104,37 @@ function Budget() {
             <div className="h-screen w-full flex flex-col">
                 <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
                     <h1 className="text-3xl font-bold">Budgets</h1>
-                    <Button variant="default" className="text-lg">
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Budget
-                    </Button>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="default" className="text-lg">
+                                <Plus className="w-4 h-4 mr-2" />
+                                New Budget
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                            <DialogHeader>
+                                <DialogTitle>Create New Budget</DialogTitle>
+                            </DialogHeader>
+                            {user && (
+                                <EditBudgetForm
+                                    budget={{
+                                        id: 0, // 0 indicates new budget creation
+                                        userId: user.id,
+                                        name: "",
+                                        description: "",
+                                        periodType: "monthly",
+                                        startDate: new Date().toISOString(),
+                                        endDate: new Date().toISOString(),
+                                        category: "Food",
+                                        plannedAmount: 0,
+                                        spentAmount: 0,
+                                        rollOver: false,
+                                    }}
+                                    onSuccessfulSubmit={handleBudgetSuccess}
+                                />
+                            )}
+                        </DialogContent>
+                    </Dialog>
                 </div>
                 <div className="px-4 py-8">
                     <Alert variant="destructive">
@@ -97,10 +154,37 @@ function Budget() {
                 <h1 className="text-3xl font-bold">Budgets</h1>
                 <div className="flex items-center gap-3">
                     <DatePeriodSelector />
-                    <Button variant="default" className="text-lg">
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Budget
-                    </Button>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="default" className="text-lg">
+                                <Plus className="w-4 h-4 mr-2" />
+                                New Budget
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                            <DialogHeader>
+                                <DialogTitle>Create New Budget</DialogTitle>
+                            </DialogHeader>
+                            {user && (
+                                <EditBudgetForm
+                                    budget={{
+                                        id: 0, // 0 indicates new budget creation
+                                        userId: user.id,
+                                        name: "",
+                                        description: "",
+                                        periodType: "monthly",
+                                        startDate: new Date().toISOString(),
+                                        endDate: new Date().toISOString(),
+                                        category: "Food",
+                                        plannedAmount: 0,
+                                        spentAmount: 0,
+                                        rollOver: false,
+                                    }}
+                                    onSuccessfulSubmit={handleBudgetSuccess}
+                                />
+                            )}
+                        </DialogContent>
+                    </Dialog>
                 </div>
             </div>
 
@@ -183,10 +267,37 @@ function Budget() {
                         <p className="text-muted-foreground mb-4">
                             Create your first budget to start tracking your spending
                         </p>
-                        <Button variant="default">
-                            <Plus className="w-4 h-4 mr-2" />
-                            Create Budget
-                        </Button>
+                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                            <DialogTrigger asChild>
+                                <Button variant="default">
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Create Budget
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                                <DialogHeader>
+                                    <DialogTitle>Create New Budget</DialogTitle>
+                                </DialogHeader>
+                                {user && (
+                                    <EditBudgetForm
+                                        budget={{
+                                            id: 0, // 0 indicates new budget creation
+                                            userId: user.id,
+                                            name: "",
+                                            description: "",
+                                            periodType: "monthly",
+                                            startDate: new Date().toISOString(),
+                                            endDate: new Date().toISOString(),
+                                            category: "Food",
+                                            plannedAmount: 0,
+                                            spentAmount: 0,
+                                            rollOver: false,
+                                        }}
+                                        onSuccessfulSubmit={handleBudgetSuccess}
+                                    />
+                                )}
+                            </DialogContent>
+                        </Dialog>
                     </div>
                 )}
             </div>
