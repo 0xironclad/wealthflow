@@ -9,20 +9,49 @@ export async function GET(request: Request) {
         return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
     try {
-        const query = `SELECT s.name, sh.amount, sh.date FROM savings_history sh JOIN savings s ON sh.saving_id = s.id WHERE s.userid = $1 and sh.type = 'deposit' ORDER BY sh.date DESC`;
-        const values = [userId];
-        const result = await pool.query(query, values);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const history = result.rows.map((row: any) => ({
-            name: row.name,
-            amount: row.amount,
-            date: new Date(row.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "2-digit",
-                day: "2-digit",
-            }),
-        }));
-        return NextResponse.json(history, { status: 200 });
+        const query = `
+      WITH tx AS (
+        SELECT
+          s.name,
+          date_trunc('month', sh.date) AS month,
+          sh.amount::numeric AS amount,
+          sh.type
+        FROM savings_history sh
+        JOIN savings s ON sh.saving_id = s.id
+        WHERE s.userid = $1
+      ),
+      monthly AS (
+        SELECT
+          name,
+          month,
+          SUM(CASE WHEN type = 'deposit' THEN amount ELSE 0 END) AS deposits,
+          SUM(CASE WHEN type = 'withdrawal' THEN amount ELSE 0 END) AS withdrawals,
+          SUM(CASE WHEN type = 'deposit' THEN amount ELSE -amount END) AS net
+        FROM tx
+        GROUP BY name, month
+      ),
+      cumulative AS (
+        SELECT
+          name,
+          month,
+          deposits,
+          withdrawals,
+          net,
+          SUM(net) OVER (PARTITION BY name ORDER BY month ROWS UNBOUNDED PRECEDING) AS cumulative_balance
+        FROM monthly
+      )
+      SELECT
+        name,
+        to_char(month, 'YYYY-MM-01') AS month,
+        deposits::float,
+        withdrawals::float,
+        net::float,
+        cumulative_balance::float
+      FROM cumulative
+      ORDER BY month ASC, name ASC
+    `;
+        const { rows } = await pool.query(query, [userId]);
+        return NextResponse.json(rows, { status: 200 });
     } catch (error) {
         console.error("Error fetching savings history:", error);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

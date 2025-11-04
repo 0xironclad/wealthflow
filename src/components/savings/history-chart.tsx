@@ -18,13 +18,16 @@ import {
 } from "@/components/ui/chart"
 import { useUser } from "@/context/UserContext"
 
-interface SavingsHistory {
-    name: string;
-    amount: string;
-    date: string;
+type MonthlyRow = {
+    name: string
+    month: string // 'YYYY-MM-01'
+    deposits: number
+    withdrawals: number
+    net: number
+    cumulative_balance: number
 }
 
-const fetchSavingsHistory = async (userId: string): Promise<SavingsHistory[]> => {
+const fetchSavingsHistory = async (userId: string): Promise<MonthlyRow[]> => {
     const response = await fetch(`/api/savings/history?userId=${userId}`);
     if (!response.ok) {
         throw new Error('Failed to fetch savings history');
@@ -43,38 +46,29 @@ export function HistoryChart() {
         refetchOnWindowFocus: false,
     });
 
-    // Transform the data for the chart
+    // Build chart series for monthly net savings per goal
+    const allMonths = Array.from(new Set(historyData.map(d => d.month)))
+        .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+    const goals = Array.from(new Set(historyData.map(d => d.name)))
+
+    const byGoal = new Map<string, MonthlyRow[]>()
+    historyData.forEach(row => {
+        const key = row.name
+        if (!byGoal.has(key)) byGoal.set(key, [])
+        byGoal.get(key)!.push(row)
+    })
+    goals.forEach(name => byGoal.get(name)?.sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime()))
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chartData = historyData.reduce((acc: any[], item) => {
-        const date = new Date(item.date);
-        const monthKey = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-
-        let existingMonth = acc.find(entry => entry.month === monthKey);
-        if (!existingMonth) {
-            existingMonth = {
-                month: monthKey,
-                ...Object.fromEntries(Array.from(new Set(historyData.map(h => h.name))).map(name => [name, 0]))
-            };
-            acc.push(existingMonth);
-        }
-
-        existingMonth[item.name] = (existingMonth[item.name] || 0) + parseFloat(item.amount);
-
-        return acc;
-    }, []).sort((a, b) => {
-        const dateA = new Date(a.month);
-        const dateB = new Date(b.month);
-        return dateA.getTime() - dateB.getTime();
-    });
-
-    const allGoals = Array.from(new Set(historyData.map(item => item.name)));
-    chartData.forEach(monthData => {
-        allGoals.forEach(goalName => {
-            if (!(goalName in monthData)) {
-                monthData[goalName] = 0;
-            }
-        });
-    });
+    const chartData: any[] = allMonths.map(m => {
+        const entry: any = { month: new Date(m).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) }
+        goals.forEach(name => {
+            const rows = byGoal.get(name) || []
+            const match = rows.find(r => r.month === m)
+            entry[name] = match ? match.net : 0
+        })
+        return entry
+    })
 
     const colors = [
         'hsl(280, 100%, 60%)',
@@ -103,7 +97,7 @@ export function HistoryChart() {
             <CardHeader>
                 <CardTitle>Monthly Savings by Goal</CardTitle>
                 <CardDescription>
-                    Showing your savings deposits by goal and month
+                    Net savings per month for each goal (deposits - withdrawals)
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -143,10 +137,10 @@ export function HistoryChart() {
                 <div className="flex w-full items-start gap-2 text-sm">
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2 font-medium leading-none">
-                            Total savings: ${historyData.reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2)}
+                            Total net savings: ${historyData.reduce((sum, item) => sum + (item.net || 0), 0).toFixed(2)}
                         </div>
                         <div className="flex items-center gap-2 leading-none text-muted-foreground">
-                            {historyData.length} deposits across {chartData.length} months
+                            {chartData.length} months across {uniqueNames.length} goals
                         </div>
                     </div>
                 </div>

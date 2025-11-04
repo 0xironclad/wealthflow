@@ -45,6 +45,7 @@ export const useCreateSaving = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["savings"] });
+      queryClient.invalidateQueries({ queryKey: ["savingsHistory"] });
     },
   });
 };
@@ -95,6 +96,7 @@ export const useDeleteSaving = () => {
       queryClient.invalidateQueries({ queryKey: ["savings"] })
       queryClient.invalidateQueries({ queryKey: ["expenses"] })
       queryClient.invalidateQueries({ queryKey: ["totalBalance"] })
+      queryClient.invalidateQueries({ queryKey: ["savingsHistory"] })
       toast.success("Saving deleted successfully. Amount has been added back to your balance.")
     },
     onError: (error) => {

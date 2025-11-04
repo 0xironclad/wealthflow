@@ -262,7 +262,9 @@ export function SavingDetails({
           </DialogTrigger>
           <DialogContent className="p-0 gap-0">
             <DialogPrimitive.Title asChild>
-              <DialogTitle>Withdraw Money from Saving</DialogTitle>
+              <VisuallyHidden>
+                <DialogTitle>Withdraw Money from Saving</DialogTitle>
+              </VisuallyHidden>
             </DialogPrimitive.Title>
             <WithdrawMoneyModal savingId={currentSaving.id} />
           </DialogContent>
