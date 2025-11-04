@@ -263,3 +263,73 @@ export async function PATCH(request: Request) {
     );
   }
 }
+
+// delete a saving and add back its amount to total balance as a withdrawal
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const id = body?.id;
+    if (!id) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Missing required field: id",
+        },
+        { status: 400 }
+      );
+    }
+
+    const getQuery = "SELECT * FROM savings WHERE id = $1";
+    const getResult = await pool.query(getQuery, [id]);
+    if (getResult.rows.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Saving not found",
+        },
+        { status: 404 }
+      );
+    }
+
+    const saving = getResult.rows[0];
+    const userId = saving.userid;
+    const currentAmount = parseFloat(saving.amount || 0);
+
+    // if there is remaining amount, record a withdrawal expense and history
+    if (currentAmount > 0) {
+      const expenseInsert = `
+                INSERT INTO expenses (userid, name, date, amount, type, paymentmethod, category)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
+            `;
+      await pool.query(expenseInsert, [
+        userId,
+        `${saving.name} - Withdrawal (on delete)`,
+        new Date(),
+        currentAmount,
+        "withdrawal",
+        "debit",
+        "Saving",
+      ]);
+
+      const historyInsert = `
+                INSERT INTO savings_history (saving_id, amount, type, date)
+                VALUES ($1, $2, $3, NOW())
+            `;
+      await pool.query(historyInsert, [id, currentAmount, "withdrawal"]);
+    }
+
+    const deleteQuery = "DELETE FROM savings WHERE id = $1";
+    await pool.query(deleteQuery, [id]);
+
+    return NextResponse.json({ success: true }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Error deleting saving",
+        error,
+      },
+      { status: 500 }
+    );
+  }
+}

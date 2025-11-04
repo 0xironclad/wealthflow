@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Coins, Calendar, Edit, Plus, Minus, X } from "lucide-react";
+import { Coins, Calendar, Edit, Plus, Minus, X, Trash } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +29,8 @@ import { Saving } from "@/lib/types";
 import { useUser } from "@/context/UserContext";
 import { useEffect } from "react";
 import EditSaving from "./edit-saving";
+import { useDeleteSaving } from "@/server/saving";
+import { toast } from "sonner";
 
 interface SavingDetailsProps {
   savingId: number;
@@ -76,6 +78,7 @@ export function SavingDetails({
   });
 
   const currentSaving = savings?.find((s: Saving) => s.id === savingId);
+  const deleteSaving = useDeleteSaving()
 
 
 
@@ -277,6 +280,40 @@ export function SavingDetails({
               <DialogTitle>Edit Goal</DialogTitle>
             </DialogPrimitive.Title>
             <EditSaving saving={currentSaving} />
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="destructive" className="flex-1">
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogPrimitive.Title asChild>
+              <DialogTitle>Delete Saving</DialogTitle>
+            </DialogPrimitive.Title>
+            <p className="text-sm text-muted-foreground">This will remove the saving and add its remaining amount back to your total balance.</p>
+            <div className="flex gap-2 justify-end">
+              <DialogPrimitive.Close asChild>
+                <Button variant="secondary">Cancel</Button>
+              </DialogPrimitive.Close>
+              <DialogPrimitive.Close asChild>
+                <Button
+                  variant="destructive"
+                  onClick={async () => {
+                    try {
+                      await deleteSaving.mutateAsync(currentSaving.id)
+                      toast.success('Saving deleted')
+                    } catch (e) {
+                      toast.error(e instanceof Error ? e.message : 'Failed to delete saving')
+                    }
+                  }}
+                >
+                  Confirm Delete
+                </Button>
+              </DialogPrimitive.Close>
+            </div>
           </DialogContent>
         </Dialog>
       </CardFooter>

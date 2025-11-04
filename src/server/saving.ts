@@ -74,6 +74,30 @@ export const useUpdateSaving = () => {
   });
 };
 
+export const useDeleteSaving = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const response = await fetch("/api/savings", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      })
+      const result = await response.json()
+      if (!response.ok) {
+        throw new Error(result.message || `Error deleting saving: ${response.statusText}`)
+      }
+      return result
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["savings"] })
+      queryClient.invalidateQueries({ queryKey: ["expenses"] })
+      queryClient.invalidateQueries({ queryKey: ["totalBalance"] })
+    },
+  })
+}
+
 
 export const getSavingsHistory = async (userId: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
