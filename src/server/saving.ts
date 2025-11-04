@@ -49,6 +49,32 @@ export const useCreateSaving = () => {
 };
 
 
+export const useUpdateSaving = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (savingData: Partial<Saving> & { id: number }) => {
+      const response = await fetch("/api/savings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(savingData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || `Error updating saving: ${response.statusText}`);
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["savings"] });
+    },
+  });
+};
+
+
 export const getSavingsHistory = async (userId: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
   try {

@@ -28,6 +28,7 @@ import { getSavings } from "@/server/saving";
 import { Saving } from "@/lib/types";
 import { useUser } from "@/context/UserContext";
 import { useEffect } from "react";
+import EditSaving from "./edit-saving";
 
 interface SavingDetailsProps {
   savingId: number;
@@ -261,14 +262,23 @@ export function SavingDetails({
             <WithdrawMoneyModal savingId={currentSaving.id} />
           </DialogContent>
         </Dialog>
-        <Button
-          variant="outline"
-          className="flex-1"
-          onClick={() => onEdit?.(currentSaving.id)}
-        >
-          <Edit className="mr-2 h-4 w-4" />
-          Edit Goal
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              className="flex-1"
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              Edit Goal
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="p-0 gap-0">
+            <DialogPrimitive.Title asChild>
+              <DialogTitle>Edit Goal</DialogTitle>
+            </DialogPrimitive.Title>
+            <EditSaving saving={currentSaving} />
+          </DialogContent>
+        </Dialog>
       </CardFooter>
     </Card>
   );
