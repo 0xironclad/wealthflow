@@ -152,6 +152,8 @@ export default function QuickActions() {
             createIncome(newIncome),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['incomes'] });
+            queryClient.invalidateQueries({ queryKey: ['monthly-income'] })
+            queryClient.invalidateQueries({ queryKey: ['totalBalance'] })
             setShowIncomeForm(false);
             setIsOpen(false);
             const time = new Date();
