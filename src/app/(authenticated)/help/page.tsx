@@ -21,6 +21,7 @@ import {
     CardDescription,
     CardHeader,
     CardTitle,
+    CardFooter,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -313,7 +314,7 @@ export default function HelpPage() {
                             {quickLinks.map((link) => (
                                 <Card
                                     key={link.title}
-                                    className="hover:shadow-md transition-shadow cursor-pointer group"
+                                    className="hover:shadow-md transition-shadow cursor-pointer group flex flex-col h-full"
                                 >
                                     <CardHeader className="pb-3">
                                         <div className="flex items-center gap-3">
@@ -323,10 +324,12 @@ export default function HelpPage() {
                                             <CardTitle className="text-base">{link.title}</CardTitle>
                                         </div>
                                     </CardHeader>
-                                    <CardContent>
-                                        <CardDescription className="text-sm mb-3">
+                                    <CardContent className="flex-1">
+                                        <CardDescription className="text-sm">
                                             {link.description}
                                         </CardDescription>
+                                    </CardContent>
+                                    <CardFooter className="mt-auto pt-4">
                                         <Button
                                             variant="ghost"
                                             size="sm"
@@ -338,7 +341,7 @@ export default function HelpPage() {
                                                 <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                                             </a>
                                         </Button>
-                                    </CardContent>
+                                    </CardFooter>
                                 </Card>
                             ))}
                         </div>
@@ -409,15 +412,9 @@ export default function HelpPage() {
                         <CardContent>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Button variant="outline" className="flex-1" asChild>
-                                    <a href="mailto:support@wealthflow.com">
+                                    <a href="mailto:chemerilcollins@gmail.com">
                                         <Mail className="mr-2 h-4 w-4" />
                                         Email Support
-                                    </a>
-                                </Button>
-                                <Button variant="outline" className="flex-1" asChild>
-                                    <a href="https://discord.gg/wealthflow" target="_blank" rel="noopener noreferrer">
-                                        <MessageCircle className="mr-2 h-4 w-4" />
-                                        Join Discord
                                     </a>
                                 </Button>
                             </div>
