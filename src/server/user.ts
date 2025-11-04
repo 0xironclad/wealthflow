@@ -5,18 +5,17 @@ import { UserProfile } from "@/lib/types"
 
 export async function getUserData(userId: string) {
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/user?userId=${userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        const data = await response.json()
-        if (!data) {
+        if (!userId) {
+            throw new Error("User ID is required")
+        }
+        const query = "SELECT * FROM users WHERE id = $1"
+        const result = await pool.query(query, [userId])
+        
+        if (result.rows.length === 0) {
             throw new Error("User not found")
         }
-        console.log("User data:", data)
-        return data
+        
+        return result.rows[0]
     } catch (error) {
         console.error("Error fetching user data:", error)
         throw error

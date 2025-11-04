@@ -1,8 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import {
   ChevronsUpDown,
   LogOut,
+  User,
 } from "lucide-react"
 
 import {
@@ -27,6 +29,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Button } from "./ui/button"
 import { logout } from "@/app/actions/logout/actions"
+import { UserProfile } from "./user-profile"
 
 export function NavUser({
   user,
@@ -38,6 +41,8 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const [profileOpen, setProfileOpen] = useState(false)
+
   const handleLogout = async () => {
     try {
       await logout()
@@ -100,6 +105,13 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => setProfileOpen(true)}>
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
               <DropdownMenuItem asChild>
                 <form action={handleLogout} className="w-full">
                   <Button
@@ -111,11 +123,11 @@ export function NavUser({
                   Log out
                 </Button>
               </form>
-
             </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        <UserProfile open={profileOpen} onOpenChange={setProfileOpen} />
       </SidebarMenuItem>
     </SidebarMenu>
   )
