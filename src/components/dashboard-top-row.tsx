@@ -268,9 +268,6 @@ const DashboardTopRow: React.FC = () => {
 
     const { data: monthlyIncomeData } = useMonthlyIncome(user?.id ?? '', today.getFullYear(), today.getMonth() + 1);
     const totalIncomeThisMonth = monthlyIncomeData?.totalIncome ?? 0;
-    const incomeCountThisMonth = monthlyIncomeData?.incomeCount ?? 0;
-    console.log(`Total income this month ${totalIncomeThisMonth}`)
-
 
     const isLoadingData = isLoadingUser || isLoadingIncomes;
 
