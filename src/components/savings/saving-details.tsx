@@ -30,7 +30,7 @@ import { useUser } from "@/context/UserContext";
 import { useEffect } from "react";
 import EditSaving from "./edit-saving";
 import { useDeleteSaving } from "@/server/saving";
-import { toast } from "sonner";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface SavingDetailsProps {
   savingId: number;
@@ -242,7 +242,9 @@ export function SavingDetails({
           </DialogTrigger>
           <DialogContent className="p-0 gap-0">
             <DialogPrimitive.Title asChild>
+              <VisuallyHidden>
               <DialogTitle>Add Money to Saving</DialogTitle>
+              </VisuallyHidden>
             </DialogPrimitive.Title>
             <AddMoneyModal savingId={currentSaving.id} />
           </DialogContent>
@@ -277,7 +279,7 @@ export function SavingDetails({
           </DialogTrigger>
           <DialogContent className="p-0 gap-0">
             <DialogPrimitive.Title asChild>
-              <DialogTitle>Edit Goal</DialogTitle>
+              <DialogTitle className="p-4">Edit Goal</DialogTitle>
             </DialogPrimitive.Title>
             <EditSaving saving={currentSaving} />
           </DialogContent>
@@ -301,14 +303,7 @@ export function SavingDetails({
               <DialogPrimitive.Close asChild>
                 <Button
                   variant="destructive"
-                  onClick={async () => {
-                    try {
-                      await deleteSaving.mutateAsync(currentSaving.id)
-                      toast.success('Saving deleted')
-                    } catch (e) {
-                      toast.error(e instanceof Error ? e.message : 'Failed to delete saving')
-                    }
-                  }}
+                  onClick={() => deleteSaving.mutate(currentSaving.id)}
                 >
                   Confirm Delete
                 </Button>

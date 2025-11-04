@@ -1,6 +1,7 @@
 import { Saving} from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NextResponse } from "next/server";
+import { toast } from "sonner";
 
 export const getSavings = async (userId: string) => {
     try {
@@ -94,6 +95,10 @@ export const useDeleteSaving = () => {
       queryClient.invalidateQueries({ queryKey: ["savings"] })
       queryClient.invalidateQueries({ queryKey: ["expenses"] })
       queryClient.invalidateQueries({ queryKey: ["totalBalance"] })
+      toast.success("Saving deleted successfully. Amount has been added back to your balance.")
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to delete saving")
     },
   })
 }
