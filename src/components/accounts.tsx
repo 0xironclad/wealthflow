@@ -77,6 +77,7 @@ export default function AccountsCard() {
     mutationFn: createIncome,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['incomes'] })
+      queryClient.invalidateQueries({ queryKey: ['monthly-income'] })
       queryClient.invalidateQueries({ queryKey: ['totalBalance'] })
       toast({
         title: "Success",

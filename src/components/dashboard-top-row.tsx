@@ -12,6 +12,7 @@ import { getSavings } from "@/server/saving";
 import { getBudgetsById } from "@/server/budget";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@/context/UserContext";
+import { useMonthlyIncome } from "@/hooks/useMonthlyIncome";
 
 interface FinancialMetricCardProps {
     label: string;
@@ -265,6 +266,8 @@ const DashboardTopRow: React.FC = () => {
         }
     });
 
+    const { data: monthlyIncomeData } = useMonthlyIncome(user?.id ?? '', today.getFullYear(), today.getMonth() + 1);
+    const totalIncomeThisMonth = monthlyIncomeData?.totalIncome ?? 0;
 
     const isLoadingData = isLoadingUser || isLoadingIncomes;
 
@@ -298,18 +301,6 @@ const DashboardTopRow: React.FC = () => {
             expenseDate.getFullYear() === today.getFullYear() && expense.type === 'expense';
     }).reduce((sum: number, expense: InvoiceType) => sum + Number(expense.amount), 0) ?? 0;
 
-    const totalIncomeThisMonth = incomes
-        ?.filter((income: IncomeType) => {
-            const incomeDate = new Date(income.date);
-            return incomeDate.getMonth() === today.getMonth() &&
-                incomeDate.getFullYear() === today.getFullYear();
-        })
-        .reduce((sum: number, income: IncomeType) => {
-            const amount = typeof income.amount === 'string'
-                ? parseFloat(income.amount)
-                : Number(income.amount);
-            return sum + (isNaN(amount) ? 0 : amount);
-        }, 0) ?? 0;
 
     // Previous month calculations for comparison
     const expensesLastMonth = expenses?.filter((expense: InvoiceType) => {
