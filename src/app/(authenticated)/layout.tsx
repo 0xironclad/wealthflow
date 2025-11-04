@@ -10,7 +10,6 @@ import { Separator } from "@/components/ui/separator";
 import { UserProvider } from "@/context/UserContext";
 import { Header } from "@/components/header";
 import { useUser } from "@/context/UserContext";
-import { Bell } from "lucide-react"
 
 
 export default function AuthenticatedLayout({
@@ -32,7 +31,6 @@ export default function AuthenticatedLayout({
             <Separator orientation="vertical" className="mx-2 h-4" />
             {/* header */}
             <div className="flex items-center gap-2 ml-auto">
-              <Bell className="h-4 w-4" />
               {!isLoading && user && <Header user={{
                 name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0] || 'User',
                 email: user.email || '',

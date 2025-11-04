@@ -2,9 +2,13 @@
 
 import {
     LogOut,
-    Settings,
-    User
+    User,
+    Sun,
+    Moon,
+    Palette,
+    Monitor
 } from "lucide-react"
+import { useTheme } from "next-themes"
 
 import {
     Avatar,
@@ -19,6 +23,9 @@ import {
     DropdownMenuLabel as DropdownMenuLabelPrimitive,
     DropdownMenuSeparator as DropdownMenuSeparatorPrimitive,
     DropdownMenuTrigger as DropdownMenuTriggerPrimitive,
+    DropdownMenuSub as DropdownMenuSubPrimitive,
+    DropdownMenuSubContent as DropdownMenuSubContentPrimitive,
+    DropdownMenuSubTrigger as DropdownMenuSubTriggerPrimitive,
 } from "@/components/ui/dropdown-menu"
 
 // Type cast for React 19 compatibility
@@ -30,6 +37,9 @@ const DropdownMenuItem = DropdownMenuItemPrimitive as any;
 const DropdownMenuLabel = DropdownMenuLabelPrimitive as any;
 const DropdownMenuSeparator = DropdownMenuSeparatorPrimitive as any;
 const DropdownMenuTrigger = DropdownMenuTriggerPrimitive as any;
+const DropdownMenuSub = DropdownMenuSubPrimitive as any;
+const DropdownMenuSubContent = DropdownMenuSubContentPrimitive as any;
+const DropdownMenuSubTrigger = DropdownMenuSubTriggerPrimitive as any;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button"
 import { logout } from "@/app/actions/logout/actions"
@@ -44,6 +54,7 @@ export function Header({
         avatar: string
     }
 }) {
+    const { setTheme, theme } = useTheme()
 
     const handleLogout = async () => {
         try {
@@ -95,10 +106,35 @@ export function Header({
                             <User />
                             Profile
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <Settings />
-                            Settings
-                        </DropdownMenuItem>
+                        <DropdownMenuSub>
+                            <DropdownMenuSubTrigger>
+                                <Palette />
+                                Theme
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
+                                <DropdownMenuItem onClick={() => setTheme("light")}>
+                                    <Sun className="mr-2 h-4 w-4" />
+                                    <span>Light</span>
+                                    {theme === "light" && (
+                                        <span className="ml-auto">✓</span>
+                                    )}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                    <Moon className="mr-2 h-4 w-4" />
+                                    <span>Dark</span>
+                                    {theme === "dark" && (
+                                        <span className="ml-auto">✓</span>
+                                    )}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("system")}>
+                                    <Monitor className="mr-2 h-4 w-4" />
+                                    <span>System</span>
+                                    {theme === "system" && (
+                                        <span className="ml-auto">✓</span>
+                                    )}
+                                </DropdownMenuItem>
+                            </DropdownMenuSubContent>
+                        </DropdownMenuSub>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>
