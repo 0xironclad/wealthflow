@@ -1,10 +1,10 @@
 "use client"
 
 import type * as React from "react"
-import { Landmark, LayoutDashboard, SquareActivity, ChartCandlestick, Brain, PiggyBank } from "lucide-react"
+import { Landmark, LayoutDashboard, SquareActivity, ChartCandlestick, Brain, PiggyBank, HelpCircle, Coins } from "lucide-react"
+import Link from "next/link"
 
 import { NavMain } from "./nav-main"
-import { NavUser } from "./nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -14,6 +14,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  SidebarGroup,
 } from "@/components/ui/sidebar"
 import { useUser } from "@/context/UserContext"
 
@@ -78,8 +79,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>
-      <SidebarFooter className="rounded-b-xl">
-        <NavUser user={data.user} />
+      <SidebarFooter className="rounded-b-xl border-t">
+        <SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild size="sm" className="gap-2">
+                <Link href="/help" prefetch>
+                  <HelpCircle className="h-4 w-4" />
+                  <span>Help & Support</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+          <div className="px-2 py-3">
+            <div className="flex items-center gap-2 rounded-lg bg-sidebar-accent/50 p-2 text-xs">
+              <Coins className="h-3 w-3 text-primary" />
+              <span className="text-sidebar-foreground/70">
+                Track your wealth, grow your future
+              </span>
+            </div>
+          </div>
+        </SidebarGroup>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

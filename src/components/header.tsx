@@ -43,7 +43,8 @@ const DropdownMenuSubTrigger = DropdownMenuSubTriggerPrimitive as any;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button"
 import { logout } from "@/app/actions/logout/actions"
-
+import { useState } from "react"
+import { UserProfile } from "./user-profile"
 
 export function Header({
     user,
@@ -55,7 +56,7 @@ export function Header({
     }
 }) {
     const { setTheme, theme } = useTheme()
-
+    const [profileOpen, setProfileOpen] = useState(false)
     const handleLogout = async () => {
         try {
             await logout()
@@ -102,7 +103,7 @@ export function Header({
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setProfileOpen(true)}>
                             <User />
                             Profile
                         </DropdownMenuItem>
@@ -143,6 +144,7 @@ export function Header({
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+            <UserProfile open={profileOpen} onOpenChange={setProfileOpen} />
         </div>
     )
 }
