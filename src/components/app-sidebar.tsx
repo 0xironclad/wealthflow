@@ -15,7 +15,13 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarGroup,
+  useSidebar,
 } from "@/components/ui/sidebar"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { useUser } from "@/context/UserContext"
 
 
@@ -60,6 +66,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   data.user.name = "Tester"
   data.user.email = user?.email || ""
   data.user.avatar = ""
+
+  return <AppSidebarContent {...props} />
+}
+
+function AppSidebarContent({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { isMobile, state } = useSidebar()
+  const isCollapsed = state === "collapsed"
   return (
     <Sidebar collapsible="icon" {...props} className="h-[calc(100vh-1rem)] rounded-xl overflow-hidden">
       <SidebarHeader className="rounded-t-xl">
@@ -92,12 +105,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenuItem>
           </SidebarMenu>
           <div className="px-2 py-3">
-            <div className="flex items-center gap-2 rounded-lg bg-sidebar-accent/50 p-2 text-xs">
-              <Coins className="h-3 w-3 text-primary" />
-              <span className="text-sidebar-foreground/70">
-                Track your wealth, grow your future
-              </span>
-            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-2 rounded-lg bg-sidebar-accent/50 p-2 text-xs cursor-pointer group-data-[collapsible=icon]:justify-center">
+                  <Coins className="h-4 w-4 text-primary shrink-0" />
+                  <span className="text-sidebar-foreground/70 group-data-[collapsible=icon]:hidden">
+                    Track your wealth, grow your future
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right" hidden={!isCollapsed || isMobile}>
+                <p>Track your wealth, grow your future</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </SidebarGroup>
       </SidebarFooter>
