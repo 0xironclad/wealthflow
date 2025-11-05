@@ -107,8 +107,9 @@ export default function QuickActions() {
         mutationFn: (newInvoice: Omit<InvoiceType, "id">) =>
             createExpense(newInvoice),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['expenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budgets'] });
+            queryClient.invalidateQueries({ queryKey: ['expenses', user?.id] });
+            queryClient.invalidateQueries({ queryKey: ['budgets', user?.id] });
+            queryClient.invalidateQueries({ queryKey: ['totalBalance', user?.id] });
             setShowTransactionForm(false);
             setIsOpen(false);
             const time = new Date();
@@ -152,9 +153,10 @@ export default function QuickActions() {
         }) =>
             createIncome(newIncome),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['incomes'] });
-            queryClient.invalidateQueries({ queryKey: ['monthly-income'] })
-            queryClient.invalidateQueries({ queryKey: ['totalBalance'] })
+            queryClient.invalidateQueries({ queryKey: ['incomes', user?.id] });
+            queryClient.invalidateQueries({ queryKey: ['monthly-income', user?.id] })
+            queryClient.invalidateQueries({ queryKey: ['totalBalance', user?.id] })
+            queryClient.invalidateQueries({ queryKey: ['savingsHistory'] })
             setShowIncomeForm(false);
             setIsOpen(false);
             const time = new Date();

@@ -83,9 +83,9 @@ export default function AccountsCard() {
   const createIncomeMutation = useMutation({
     mutationFn: createIncome,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['incomes'] })
-      queryClient.invalidateQueries({ queryKey: ['monthly-income'] })
-      queryClient.invalidateQueries({ queryKey: ['totalBalance'] })
+      queryClient.invalidateQueries({ queryKey: ['incomes', user?.id] })
+      queryClient.invalidateQueries({ queryKey: ['monthly-income', user?.id] })
+      queryClient.invalidateQueries({ queryKey: ['totalBalance', user?.id] })
       toast({
         title: "Success",
         description: "Income added successfully",
