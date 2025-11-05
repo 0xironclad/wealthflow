@@ -144,7 +144,6 @@ export default function SavingAccounts() {
     return <SavingsEmptyState />;
   }
 
-  console.log(savings);
 
   return (
     <div className="w-full h-full">

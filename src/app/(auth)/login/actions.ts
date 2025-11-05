@@ -18,7 +18,6 @@ export async function login(formData: FormData) {
   const { data: authData, error } = await supabase.auth.signInWithPassword(
     data
   );
-  console.log("Auth Data:", authData);
 
   if (error) {
     return {
@@ -38,7 +37,6 @@ export async function login(formData: FormData) {
         id = EXCLUDED.id
     `;
     await pool.query(upsertQuery, [authData.user.id, authData.user.email]);
-    console.log("User upserted successfully");
   } catch (error) {
     console.error("Error upserting user:", error);
   }

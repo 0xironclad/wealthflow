@@ -61,7 +61,6 @@ export function Header({
         try {
             await logout()
             window.location.reload()
-            console.log("logout")
 
         } catch (error) {
             console.error(error)

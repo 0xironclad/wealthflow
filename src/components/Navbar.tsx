@@ -68,7 +68,6 @@ const Navbar = () => {
               variant="ghost"
               className="w-full justify-start"
               onClick={() => {
-                console.log("logout");
               }}
             >
               Log out

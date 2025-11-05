@@ -126,7 +126,6 @@ const AIInsights: React.FC = () => {
           setInsights(parsedInsights);
         } catch (parseError) {
           console.error('Error parsing insights:', parseError);
-          console.log('Raw text content:', geminiResponse.candidates[0].content.parts[0].text);
           throw new Error("Invalid insights format received");
         }
       } else {

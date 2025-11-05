@@ -47,7 +47,6 @@ export function NavUser({
     try {
       await logout()
       window.location.reload()
-      console.log("logout")
 
     } catch (error) {
       console.error(error)
@@ -115,15 +114,15 @@ export function NavUser({
               <DropdownMenuItem asChild>
                 <form action={handleLogout} className="w-full">
                   <Button
-                  type="submit"
-                  variant="ghost"
-                  className="w-full justify-start"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Log out
-                </Button>
-              </form>
-            </DropdownMenuItem>
+                    type="submit"
+                    variant="ghost"
+                    className="w-full justify-start"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log out
+                  </Button>
+                </form>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
