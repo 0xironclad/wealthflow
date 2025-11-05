@@ -181,6 +181,8 @@ const DashboardTopRow: React.FC = () => {
     const oneMonthAgo = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
 
     const { user, isLoading: isLoadingUser } = useUser();
+    
+    console.log('[DashboardTopRow] Render - user:', user?.email, 'userId:', user?.id, 'isLoading:', isLoadingUser);
 
     const { data: incomes, isLoading: isLoadingIncomes } = useQuery({
         queryKey: ['incomes', user?.id],
