@@ -132,8 +132,7 @@ function Transaction() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (newInvoice: Omit<InvoiceType, "id">) =>
-      createExpense(newInvoice),
+    mutationFn: (newInvoice: Omit<InvoiceType, "id">) => createExpense(newInvoice),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
       queryClient.invalidateQueries({ queryKey: ['budgets'] });

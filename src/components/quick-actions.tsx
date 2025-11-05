@@ -104,8 +104,7 @@ export default function QuickActions() {
     const queryClient = useQueryClient()
 
     const createTransactionMutation = useMutation({
-        mutationFn: (newInvoice: Omit<InvoiceType, "id">) =>
-            createExpense(newInvoice),
+        mutationFn: (newInvoice: Omit<InvoiceType, "id">) => createExpense(newInvoice),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['expenses'] });
             queryClient.invalidateQueries({ queryKey: ['budgets'] });
