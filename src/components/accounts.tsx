@@ -264,7 +264,7 @@ export default function AccountsCard() {
         </div>
       </CardContent>
 
-      <CardFooter className="p-2 border-t grid grid-cols-2 gap-2">
+      <CardFooter className="p-2 border-t grid grid-cols-1 gap-2">
         <Dialog>
           <DialogTrigger asChild>
             <Button size="sm" className="h-auto py-2 flex items-center gap-1">
@@ -282,10 +282,10 @@ export default function AccountsCard() {
             <IncomeForm onSubmit={handleAddIncome} />
           </DialogContent>
         </Dialog>
-        <Button size="sm" variant={"secondary"} className="h-auto py-2 flex items-center gap-1">
+        {/* <Button size="sm" variant={"secondary"} className="h-auto py-2 flex items-center gap-1">
           <ArrowUpRight className="w-3.5 h-3.5" />
           <span>Manage</span>
-        </Button>
+        </Button> */}
       </CardFooter>
     </Card>
   );
