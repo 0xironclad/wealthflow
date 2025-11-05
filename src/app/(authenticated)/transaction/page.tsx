@@ -89,7 +89,7 @@ function Transaction() {
       user ? deleteExpenseById(id, user.id) : Promise.reject("No user"),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses', user?.id] });
-      queryClient.invalidateQueries({ queryKey: ['budgets'] });
+      queryClient.invalidateQueries({ queryKey: ['budgets', user?.id] });
       const time = new Date();
       toast({
         title: "Transaction deleted successfully",
@@ -110,8 +110,8 @@ function Transaction() {
     mutationFn: ({ id, data }: { id: number; data: Partial<InvoiceType> }) =>
       updateExpenseById(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] });
-      queryClient.invalidateQueries({ queryKey: ['budgets'] });
+      queryClient.invalidateQueries({ queryKey: ['expenses', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['budgets', user?.id] });
       setEditingInvoice(null);
       const time = new Date();
       toast({
@@ -133,8 +133,8 @@ function Transaction() {
     mutationFn: (newInvoice: Omit<InvoiceType, "id">) =>
       createExpense(newInvoice),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] });
-      queryClient.invalidateQueries({ queryKey: ['budgets'] });
+      queryClient.invalidateQueries({ queryKey: ['expenses', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['budgets', user?.id] });
       setIsAddingInvoice(false);
       const time = new Date();
       toast({
