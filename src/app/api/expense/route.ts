@@ -91,9 +91,11 @@ export async function POST(request: Request) {
 
       // If it's an expense, update the corresponding budget
       if (body.type === "expense") {
+        console.log('[EXPENSE] Checking for budget - userId:', body.userId, 'category:', body.category, 'date:', body.date);
+        
         // Find the active budget for this category and user that covers the transaction date
         const budgetQuery = `
-                    SELECT id, spent_amount
+                    SELECT id, spent_amount, name
                     FROM budgets
                     WHERE user_id = $1
                     AND category = $2
@@ -109,9 +111,13 @@ export async function POST(request: Request) {
           body.date,
         ]);
 
+        console.log('[EXPENSE] Found budgets:', budgetResult.rows.length);
+
         // If a budget exists, update its spent amount
         if (budgetResult.rows.length > 0) {
           const budget = budgetResult.rows[0];
+          console.log('[EXPENSE] Updating budget:', budget.name, 'adding amount:', body.amount);
+          
           const updateBudgetQuery = `
                         UPDATE budgets
                         SET spent_amount = spent_amount + $1,
@@ -119,7 +125,10 @@ export async function POST(request: Request) {
                         WHERE id = $2
                         RETURNING *
                     `;
-          await client.query(updateBudgetQuery, [body.amount, budget.id]);
+          const updateResult = await client.query(updateBudgetQuery, [body.amount, budget.id]);
+          console.log('[EXPENSE] Budget updated successfully. New spent_amount:', updateResult.rows[0].spent_amount);
+        } else {
+          console.log('[EXPENSE] No matching budget found for category:', body.category);
         }
       }
 

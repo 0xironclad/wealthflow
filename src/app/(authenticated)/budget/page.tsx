@@ -45,6 +45,7 @@ function BudgetManager() {
         // Invalidate and refetch budget queries to show new data
         queryClient.invalidateQueries({ queryKey: ["budgets"] })
         queryClient.invalidateQueries({ queryKey: ["budgetTotal"] })
+        queryClient.invalidateQueries({ queryKey: ["expenses"] })
     }
 
     const { data: budgets, isLoading: budgetsLoading, error: budgetsError } = useBudgets(

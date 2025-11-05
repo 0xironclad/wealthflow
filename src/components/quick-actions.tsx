@@ -107,9 +107,10 @@ export default function QuickActions() {
         mutationFn: (newInvoice: Omit<InvoiceType, "id">) =>
             createExpense(newInvoice),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['expenses', user?.id] });
-            queryClient.invalidateQueries({ queryKey: ['budgets', user?.id] });
-            queryClient.invalidateQueries({ queryKey: ['totalBalance', user?.id] });
+            queryClient.invalidateQueries({ queryKey: ['expenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgets'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetTotal'] });
+            queryClient.invalidateQueries({ queryKey: ['totalBalance'] });
             setShowTransactionForm(false);
             setIsOpen(false);
             const time = new Date();
