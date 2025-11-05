@@ -33,14 +33,11 @@ import {
 } from "@/components/ui/accordion"
 import {
     Command,
-    CommandDialog,
     CommandEmpty,
     CommandGroup,
     CommandInput,
     CommandItem,
     CommandList,
-    CommandSeparator,
-    CommandShortcut,
 } from "@/components/ui/command"
 
 const faqCategories = [
@@ -139,7 +136,7 @@ const faqCategories = [
             },
             {
                 question: "Can the AI help me create or adjust budgets?",
-                answer: "Yes! The AI can analyze your spending patterns and suggest budget adjustments based on your actual expenses. You can ask it questions like 'Should I adjust my food budget?' or 'What's a good budget for groceries?'",
+                answer: "Yes! The AI can analyze your spending patterns and suggest budget adjustments based on your actual expenses. You can ask it questions like &apos;Should I adjust my food budget?&apos; or &apos;What&apos;s a good budget for groceries?&apos;",
             },
             {
                 question: "Is my data secure when using the chatbot?",
@@ -147,7 +144,7 @@ const faqCategories = [
             },
             {
                 question: "Can I ask the AI about savings goals?",
-                answer: "Yes! The AI can help you track progress on your savings goals, suggest ways to reach them faster, and provide insights on your savings patterns. Ask questions like 'How am I doing with my vacation fund?' or 'What should I save for next?'",
+                answer: "Yes! The AI can help you track progress on your savings goals, suggest ways to reach them faster, and provide insights on your savings patterns. Ask questions like &apos;How am I doing with my vacation fund?&apos; or &apos;What should I save for next?&apos;",
             },
         ],
     },
@@ -406,7 +403,7 @@ export default function HelpPage() {
                                 Still need help?
                             </CardTitle>
                             <CardDescription>
-                                Can't find what you're looking for? Reach out to our support team
+                                Can&apos;t find what you&apos;re looking for? Reach out to our support team
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
