@@ -10,29 +10,10 @@ export const getIncomesById = async (userId: string) => {
     }
 
     try {
-        const encodedUserId = encodeURIComponent(userId);
-        if (!encodedUserId) {
-            console.error("Failed to encode userId");
-            return [];
-        }
-        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-        const response = await fetch(
-            `${baseUrl}/api/income?userId=${encodedUserId}`
-        );
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error(
-                result.message || `Error fetching incomes: ${response.statusText}`
-            );
-        }
-
-        if (!result.success) {
-            throw new Error(result.message || "Failed to fetch incomes");
-        }
-
-        return result.data;
+        const query = "SELECT * FROM incomes WHERE userid = $1 ORDER BY date DESC";
+        const result = await pool.query(query, [userId]);
+        console.log('[getIncomesById] Query result:', result.rows.length, 'rows');
+        return result.rows;
     } catch (error) {
         console.error("Error in getIncomesById:", error);
         return [];
@@ -76,22 +57,24 @@ export async function createIncome(data: {
 }
 
 export const getTotalIncome = async (userId: string) => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     try {
         if (!userId) {
             throw new Error("User ID is required");
         }
 
-        const encodedUserId = encodeURIComponent(userId);
-        const response = await fetch(
-            `${baseUrl}/api/balance?userId=${encodedUserId}`
-        );
-
-        if (!response.ok) {
-            throw new Error(`Error fetching total income: ${response.statusText}`);
-        }
-        const result = await response.json();
-        return result.data;
+        const query = `
+            SELECT 
+                COALESCE(
+                    (SELECT SUM(amount) FROM incomes WHERE userid = $1) - 
+                    (SELECT SUM(amount) FROM expenses WHERE userid = $1 AND type = 'expense') +
+                    (SELECT SUM(amount) FROM expenses WHERE userid = $1 AND type = 'income') -
+                    (SELECT SUM(amount) FROM expenses WHERE userid = $1 AND type = 'withdrawal') -
+                    (SELECT SUM(amount) FROM savings WHERE userid = $1), 
+                    0
+                ) as total_balance
+        `;
+        const result = await pool.query(query, [userId]);
+        return result.rows[0].total_balance;
     } catch (error) {
         console.error("Error in getTotalIncome:", error);
         return 0;
@@ -99,13 +82,10 @@ export const getTotalIncome = async (userId: string) => {
 };
 
 export const getMonthlyIncomeTotal = async (userId: string, year?: number, month?: number) => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     try {
         if (!userId) {
             throw new Error("User ID is required");
         }
-
-        const encodedUserId = encodeURIComponent(userId);
 
         // If no year/month provided, use current month
         const now = new Date();
@@ -116,21 +96,24 @@ export const getMonthlyIncomeTotal = async (userId: string, year?: number, month
         const startOfMonth = new Date(targetYear, targetMonth - 1, 1).toISOString().split('T')[0];
         const endOfMonth = new Date(targetYear, targetMonth, 0).toISOString().split('T')[0];
 
-        const response = await fetch(
-            `${baseUrl}/api/income?userId=${encodedUserId}&total=true&from=${startOfMonth}&to=${endOfMonth}`
-        );
-
-        if (!response.ok) {
-            throw new Error(`Error fetching monthly income total: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-
-        if (!result.success) {
-            throw new Error(result.message || "Failed to fetch monthly income total");
-        }
-
-        return result.data;
+        const query = `
+            SELECT 
+                COALESCE(SUM(amount), 0) as total_income,
+                COUNT(*) as income_count,
+                COALESCE(AVG(amount), 0) as average_income
+            FROM incomes
+            WHERE userid = $1
+            AND date >= $2::date
+            AND date <= $3::date
+        `;
+        const result = await pool.query(query, [userId, startOfMonth, endOfMonth]);
+        
+        return {
+            totalIncome: parseFloat(result.rows[0].total_income),
+            incomeCount: parseInt(result.rows[0].income_count),
+            averageIncome: parseFloat(result.rows[0].average_income),
+            dateRange: { from: startOfMonth, to: endOfMonth }
+        };
     } catch (error) {
         console.error("Error in getMonthlyIncomeTotal:", error);
         return {
