@@ -187,13 +187,13 @@ const DashboardTopRow: React.FC = () => {
     const { data: incomes, isLoading: isLoadingIncomes } = useQuery({
         queryKey: ['incomes', user?.id],
         refetchOnWindowFocus: false,
-        initialData: queryClient.getQueryData(['incomes']),
         queryFn: async () => {
+            console.log('[DashboardTopRow] Fetching incomes for user:', user?.id);
             if (!user) return Promise.resolve([]);
             return getIncomesById(user.id);
         },
         enabled: !!user,
-        staleTime: 1000 * 60 * 60,
+        staleTime: 1000 * 60 * 5, // 5 minutes instead of 1 hour
     });
 
     const { data: expenses } = useQuery({
@@ -245,11 +245,10 @@ const DashboardTopRow: React.FC = () => {
 
     const { data: categories, isLoading } = useQuery<BudgetResponse, Error, TransformedBudget[]>({
         queryKey: ['budgets', user?.id],
-        staleTime: 1000 * 60 * 60,
+        staleTime: 1000 * 60 * 5,
         queryFn: () => user ? getBudgetsById(user.id) : Promise.resolve({ success: true, data: [] }),
         enabled: !!user,
         refetchOnWindowFocus: false,
-        initialData: queryClient.getQueryData(['budgets']),
         select: (data) => {
             if (!data.success || !data.data) return [];
             return data.data.map((budget) => ({
