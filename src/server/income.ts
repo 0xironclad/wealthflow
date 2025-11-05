@@ -60,19 +60,22 @@ export const getTotalIncome = async (userId: string) => {
       throw new Error("User ID is required");
     }
 
-    const query = `
-            SELECT 
-                COALESCE(
-                    (SELECT SUM(amount) FROM incomes WHERE userid = $1) - 
-                    (SELECT SUM(amount) FROM expenses WHERE userid = $1 AND type = 'expense') +
-                    (SELECT SUM(amount) FROM expenses WHERE userid = $1 AND type = 'income') -
-                    (SELECT SUM(amount) FROM expenses WHERE userid = $1 AND type = 'withdrawal') -
-                    (SELECT SUM(amount) FROM savings WHERE userid = $1), 
-                    0
-                ) as total_balance
-        `;
-    const result = await pool.query(query, [userId]);
-    return result.rows[0].total_balance;
+    // Total balance = incomes - expenses + withdrawals
+    const incomeQuery = `SELECT SUM(amount) AS total_income FROM incomes WHERE userid = $1`;
+    const incomeResult = await pool.query(incomeQuery, [userId]);
+    const totalIncome = parseFloat(incomeResult.rows[0].total_income || 0);
+
+    const expenseQuery = `SELECT SUM(amount) AS total_expense FROM expenses WHERE userid = $1 AND (type = 'expense' OR type = 'saving')`;
+    const expenseResult = await pool.query(expenseQuery, [userId]);
+    const totalExpense = parseFloat(expenseResult.rows[0].total_expense || 0);
+
+    const withdrawalQuery = `SELECT SUM(amount) AS total_withdrawal FROM expenses WHERE userid = $1 AND type = 'withdrawal'`;
+    const withdrawalResult = await pool.query(withdrawalQuery, [userId]);
+    const totalWithdrawal = parseFloat(withdrawalResult.rows[0].total_withdrawal || 0);
+
+    const totalBalance = Number(totalIncome) - Number(totalExpense) + Number(totalWithdrawal);
+    
+    return Number(totalBalance.toFixed(2));
   } catch (error) {
     console.error("Error in getTotalIncome:", error);
     return 0;
