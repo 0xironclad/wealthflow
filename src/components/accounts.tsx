@@ -37,9 +37,11 @@ export default function AccountsCard() {
 
   const { data: incomes, error } = useQuery({
     queryKey: ['incomes', user?.id],
-    queryFn: () => {
+    queryFn: async () => {
       console.log('[Accounts] Fetching incomes for user:', user?.id);
-      return getIncomesById(user?.id ?? '');
+      const result = await getIncomesById(user?.id ?? '');
+      console.log('[Accounts] Got incomes result:', result);
+      return result;
     },
     enabled: !!user?.id,
     refetchOnWindowFocus: false,
