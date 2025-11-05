@@ -45,10 +45,10 @@ export default function EditSaving({ saving }: { saving: Saving }) {
       const payload = {
         id: saving.id,
         name: values.name,
-        description: values.description ?? null,
-        goal: values.goal ?? null,
+        description: values.description ?? undefined,
+        goal: values.goal ?? undefined,
         amount: values.amount,
-        targetDate: values.targetDate ? values.targetDate.toISOString() : null,
+        targetDate: values.targetDate ? values.targetDate.toISOString() : undefined,
         status: values.status,
       }
       await updateSaving.mutateAsync(payload)

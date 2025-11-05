@@ -59,9 +59,13 @@ export function HistoryChart() {
     })
     goals.forEach(name => byGoal.get(name)?.sort((a, b) => new Date(a.month).getTime() - new Date(b.month).getTime()))
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const chartData: any[] = allMonths.map(m => {
-        const entry: any = { month: new Date(m).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) }
+    type ChartDataEntry = {
+        month: string
+        [key: string]: string | number
+    }
+
+    const chartData: ChartDataEntry[] = allMonths.map(m => {
+        const entry: ChartDataEntry = { month: new Date(m).toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) }
         goals.forEach(name => {
             const rows = byGoal.get(name) || []
             const match = rows.find(r => r.month === m)

@@ -37,7 +37,6 @@ interface SavingDetailsProps {
   onClose?: () => void;
   onAddMoney?: (savingId: number) => void;
   onWithdraw?: (savingId: number) => void;
-  onEdit?: (savingId: number) => void;
 }
 
 export function SavingDetails({
@@ -45,7 +44,6 @@ export function SavingDetails({
   onClose,
   onAddMoney,
   onWithdraw,
-  onEdit,
 }: SavingDetailsProps) {
 
   const { user, isLoading: isAuthLoading } = useUser();
