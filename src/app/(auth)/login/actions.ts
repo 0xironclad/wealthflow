@@ -51,10 +51,8 @@ export async function login(formData: FormData) {
     // Don't fail login if UPSERT fails, but log it
   }
 
-  revalidatePath("/overview", "layout");
-  return {
-    success: true,
-  };
+  revalidatePath("/", "layout");
+  redirect("/overview");
 }
 
 export async function signup(formData: FormData) {
