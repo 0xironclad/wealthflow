@@ -1,5 +1,4 @@
 "use client";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { z } from "zod";
@@ -47,7 +46,6 @@ const signInSchema = z.object({
 type SignInFormValues = z.infer<typeof signInSchema>;
 
 function SignInPage() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
