@@ -66,22 +66,15 @@ function SignInPage() {
       formData.append('email', values.email);
       formData.append('password', values.password);
 
-      const results = await login(formData);
-
-      if (results.success) {
-        toast({
-          title: "Success",
-          description: "You have successfully signed in.",
-        });
-        router.push('/overview')
-      } else {
-        toast({
-          title: "Error",
-          description: results.error || "Failed to sign in. Please try again.",
-          variant: "destructive",
-        });
-      }
+      await login(formData);
+      // If we reach here without redirect, there was an error
+      // Redirect will throw NEXT_REDIRECT which is expected
     } catch (error) {
+      // Ignore NEXT_REDIRECT error (it's expected from server action redirect)
+      if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+        return; // This is normal, redirect is happening
+      }
+      
       console.error(error);
       toast({
         title: "Error",
