@@ -75,9 +75,7 @@ function InvoicePage() {
         refetchOnWindowFocus: false,
         enabled: !!user?.id,
         select: (response) => {
-            const amount = typeof response === 'string' ?
-                parseFloat(response.replace(/[^0-9.-]+/g, "")) :
-                Number(response);
+            const amount = Number(response);
             return `$${amount.toLocaleString()}`
         },
         retry: 1

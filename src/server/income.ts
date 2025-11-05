@@ -71,10 +71,13 @@ export const getTotalIncome = async (userId: string) => {
 
     const withdrawalQuery = `SELECT SUM(amount) AS total_withdrawal FROM expenses WHERE userid = $1 AND type = 'withdrawal'`;
     const withdrawalResult = await pool.query(withdrawalQuery, [userId]);
-    const totalWithdrawal = parseFloat(withdrawalResult.rows[0].total_withdrawal || 0);
+    const totalWithdrawal = parseFloat(
+      withdrawalResult.rows[0].total_withdrawal || 0
+    );
 
-    const totalBalance = Number(totalIncome) - Number(totalExpense) + Number(totalWithdrawal);
-    
+    const totalBalance =
+      Number(totalIncome) - Number(totalExpense) + Number(totalWithdrawal);
+
     return Number(totalBalance.toFixed(2));
   } catch (error) {
     console.error("Error in getTotalIncome:", error);

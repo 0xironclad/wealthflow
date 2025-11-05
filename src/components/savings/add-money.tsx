@@ -79,14 +79,14 @@ export default function AddMoneyForm({ savingId }: AddMoneyFormProps) {
     mode: "onChange",
   });
 
-  const isExceedingBalance = form.watch("amount") > totalBalance;
+  const isExceedingBalance = form.watch("amount") > (totalBalance ?? 0);
   const isFormValid =
     form.formState.isValid &&
     !isExceedingBalance &&
     form.getValues("amount") > 0;
 
   async function handleSubmit(values: FormData) {
-    if (values.amount > totalBalance) {
+    if (values.amount > (totalBalance ?? 0)) {
       form.setError("amount", {
         type: "manual",
         message: "Amount cannot exceed your available balance",
