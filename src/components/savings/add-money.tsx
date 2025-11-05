@@ -61,6 +61,7 @@ export default function AddMoneyForm({ savingId }: AddMoneyFormProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["savings", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["savingsHistory"] });
       toast.success("Amount added successfully");
     },
     onError: (error) => {

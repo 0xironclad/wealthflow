@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import { Coins, Calendar, Edit, Plus, Minus, X } from "lucide-react";
+import { Coins, Calendar, Edit, Plus, Minus, X, Trash } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,13 +28,15 @@ import { getSavings } from "@/server/saving";
 import { Saving } from "@/lib/types";
 import { useUser } from "@/context/UserContext";
 import { useEffect } from "react";
+import EditSaving from "./edit-saving";
+import { useDeleteSaving } from "@/server/saving";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface SavingDetailsProps {
   savingId: number;
   onClose?: () => void;
   onAddMoney?: (savingId: number) => void;
   onWithdraw?: (savingId: number) => void;
-  onEdit?: (savingId: number) => void;
 }
 
 export function SavingDetails({
@@ -42,7 +44,6 @@ export function SavingDetails({
   onClose,
   onAddMoney,
   onWithdraw,
-  onEdit,
 }: SavingDetailsProps) {
 
   const { user, isLoading: isAuthLoading } = useUser();
@@ -75,6 +76,7 @@ export function SavingDetails({
   });
 
   const currentSaving = savings?.find((s: Saving) => s.id === savingId);
+  const deleteSaving = useDeleteSaving()
 
 
 
@@ -238,7 +240,9 @@ export function SavingDetails({
           </DialogTrigger>
           <DialogContent className="p-0 gap-0">
             <DialogPrimitive.Title asChild>
+              <VisuallyHidden>
               <DialogTitle>Add Money to Saving</DialogTitle>
+              </VisuallyHidden>
             </DialogPrimitive.Title>
             <AddMoneyModal savingId={currentSaving.id} />
           </DialogContent>
@@ -256,19 +260,57 @@ export function SavingDetails({
           </DialogTrigger>
           <DialogContent className="p-0 gap-0">
             <DialogPrimitive.Title asChild>
-              <DialogTitle>Withdraw Money from Saving</DialogTitle>
+              <VisuallyHidden>
+                <DialogTitle>Withdraw Money from Saving</DialogTitle>
+              </VisuallyHidden>
             </DialogPrimitive.Title>
             <WithdrawMoneyModal savingId={currentSaving.id} />
           </DialogContent>
         </Dialog>
-        <Button
-          variant="outline"
-          className="flex-1"
-          onClick={() => onEdit?.(currentSaving.id)}
-        >
-          <Edit className="mr-2 h-4 w-4" />
-          Edit Goal
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="outline"
+              className="flex-1"
+            >
+              <Edit className="mr-2 h-4 w-4" />
+              Edit Goal
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="p-0 gap-0">
+            <DialogPrimitive.Title asChild>
+              <DialogTitle className="p-4">Edit Goal</DialogTitle>
+            </DialogPrimitive.Title>
+            <EditSaving saving={currentSaving} />
+          </DialogContent>
+        </Dialog>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="destructive" className="flex-1">
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogPrimitive.Title asChild>
+              <DialogTitle>Delete Saving</DialogTitle>
+            </DialogPrimitive.Title>
+            <p className="text-sm text-muted-foreground">This will remove the saving and add its remaining amount back to your total balance.</p>
+            <div className="flex gap-2 justify-end">
+              <DialogPrimitive.Close asChild>
+                <Button variant="secondary">Cancel</Button>
+              </DialogPrimitive.Close>
+              <DialogPrimitive.Close asChild>
+                <Button
+                  variant="destructive"
+                  onClick={() => deleteSaving.mutate(currentSaving.id)}
+                >
+                  Confirm Delete
+                </Button>
+              </DialogPrimitive.Close>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardFooter>
     </Card>
   );

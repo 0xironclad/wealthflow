@@ -9,5 +9,9 @@ export function useUserData() {
     queryKey: ['userData', user?.id],
     queryFn: () => getUserData(user?.id as string),
     enabled: !!user?.id,
+    staleTime: 1000 * 60 * 10, 
+    gcTime: 1000 * 60 * 30, 
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 }

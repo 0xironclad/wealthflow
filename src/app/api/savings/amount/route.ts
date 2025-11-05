@@ -45,7 +45,6 @@ export async function PATCH(request: Request) {
     `;
     try {
       await pool.query(historyQuery, [body.id, addAmount, 'deposit']);
-      console.log('Savings history updated successfully')
     } catch (error) {
       console.error('Error inserting into savings_history:', error);
       // return NextResponse.json({

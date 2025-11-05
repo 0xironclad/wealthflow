@@ -18,7 +18,6 @@ export async function login(formData: FormData) {
   const { data: authData, error } = await supabase.auth.signInWithPassword(
     data
   );
-  console.log("Auth Data:", authData);
 
   if (error) {
     return {
@@ -27,16 +26,19 @@ export async function login(formData: FormData) {
     };
   }
   try {
-    const checkQuery = "SELECT * FROM users WHERE id = $1";
-    const checkResult = await pool.query(checkQuery, [authData.user.id]);
-    if (checkResult.rows.length === 0) {
-      const insertQuery = "INSERT INTO users (id, email) VALUES ($1, $2)";
-      await pool.query(insertQuery, [authData.user.id, authData.user.email]);
-    } else {
-      console.log("User already exists");
-    }
+    // Use UPSERT to handle both new users and existing users
+    // If user exists by email, update the id to match Supabase auth
+    // If user doesn't exist, insert new user
+    const upsertQuery = `
+      INSERT INTO users (id, email)
+      VALUES ($1, $2)
+      ON CONFLICT (email) 
+      DO UPDATE SET
+        id = EXCLUDED.id
+    `;
+    await pool.query(upsertQuery, [authData.user.id, authData.user.email]);
   } catch (error) {
-    console.log(error);
+    console.error("Error upserting user:", error);
   }
 
   revalidatePath("/overview", "layout");

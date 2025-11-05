@@ -1,6 +1,7 @@
 import { Saving} from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NextResponse } from "next/server";
+import { toast } from "sonner";
 
 export const getSavings = async (userId: string) => {
     try {
@@ -44,9 +45,65 @@ export const useCreateSaving = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["savings"] });
+      queryClient.invalidateQueries({ queryKey: ["savingsHistory"] });
     },
   });
 };
+
+
+export const useUpdateSaving = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (savingData: Partial<Saving> & { id: number }) => {
+      const response = await fetch("/api/savings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(savingData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || `Error updating saving: ${response.statusText}`);
+      }
+
+      return result;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["savings"] });
+    },
+  });
+};
+
+export const useDeleteSaving = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const response = await fetch("/api/savings", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      })
+      const result = await response.json()
+      if (!response.ok) {
+        throw new Error(result.message || `Error deleting saving: ${response.statusText}`)
+      }
+      return result
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["savings"] })
+      queryClient.invalidateQueries({ queryKey: ["expenses"] })
+      queryClient.invalidateQueries({ queryKey: ["totalBalance"] })
+      queryClient.invalidateQueries({ queryKey: ["savingsHistory"] })
+      toast.success("Saving deleted successfully. Amount has been added back to your balance.")
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to delete saving")
+    },
+  })
+}
 
 
 export const getSavingsHistory = async (userId: string) => {

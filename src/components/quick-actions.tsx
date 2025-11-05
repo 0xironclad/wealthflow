@@ -108,6 +108,7 @@ export default function QuickActions() {
             createExpense(newInvoice),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['expenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgets'] });
             setShowTransactionForm(false);
             setIsOpen(false);
             const time = new Date();

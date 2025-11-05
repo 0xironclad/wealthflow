@@ -23,7 +23,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Skeleton } from "@/components/ui/skeleton"
 import React from "react";
 import { useUser } from "@/context/UserContext";
-
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 const statusConfig = {
   "atRisk": {
@@ -144,7 +144,6 @@ export default function SavingAccounts() {
     return <SavingsEmptyState />;
   }
 
-  console.log(savings);
 
   return (
     <div className="w-full h-full">
@@ -243,11 +242,13 @@ export default function SavingAccounts() {
                     </button>
                   </div>
                 </DialogTrigger>
-                <DialogContent className="p-0 gap-0">
+                <DialogContent className="p-0 gap-0 sm:max-w-[760px] w-[95vw] max-h-[85vh] overflow-auto">
                   <DialogPrimitive.Title asChild>
-                    <DialogTitle>
-                      View Saving Details
-                    </DialogTitle>
+                    <VisuallyHidden>
+                      <DialogTitle>
+                        View Saving Details
+                      </DialogTitle>
+                    </VisuallyHidden>
                   </DialogPrimitive.Title>
                   <SavingDetails savingId={item.id} />
                 </DialogContent>

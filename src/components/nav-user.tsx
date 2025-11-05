@@ -1,8 +1,10 @@
 "use client"
 
+import { useState } from "react"
 import {
   ChevronsUpDown,
   LogOut,
+  User,
 } from "lucide-react"
 
 import {
@@ -27,6 +29,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Button } from "./ui/button"
 import { logout } from "@/app/actions/logout/actions"
+import { UserProfile } from "./user-profile"
 
 export function NavUser({
   user,
@@ -38,11 +41,12 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const [profileOpen, setProfileOpen] = useState(false)
+
   const handleLogout = async () => {
     try {
       await logout()
       window.location.reload()
-      console.log("logout")
 
     } catch (error) {
       console.error(error)
@@ -100,22 +104,29 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => setProfileOpen(true)}>
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
               <DropdownMenuItem asChild>
                 <form action={handleLogout} className="w-full">
                   <Button
-                  type="submit"
-                  variant="ghost"
-                  className="w-full justify-start"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Log out
-                </Button>
-              </form>
-
-            </DropdownMenuItem>
+                    type="submit"
+                    variant="ghost"
+                    className="w-full justify-start"
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Log out
+                  </Button>
+                </form>
+              </DropdownMenuItem>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+        <UserProfile open={profileOpen} onOpenChange={setProfileOpen} />
       </SidebarMenuItem>
     </SidebarMenu>
   )

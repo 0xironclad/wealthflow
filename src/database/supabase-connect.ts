@@ -20,7 +20,7 @@ export const testConnection = async () => {
             .limit(1)
 
         if (error) throw error
-        console.log('Connection successful:', data)
+        console.info('Connection successful:', data)
         return true
     } catch (error) {
         console.error('Connection error:', error)
