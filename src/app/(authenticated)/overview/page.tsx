@@ -4,7 +4,6 @@ import AccountsCard from "@/components/accounts";
 import ExpenseDistribution from "@/components/expense-distribution";
 import LatestTransactions from "@/components/latest-transactions";
 import BottomComponents from "@/components/bottom-components";
-import QuickActions from "@/components/quick-actions";
 
 export default function Overview() {
   return (
@@ -89,9 +88,6 @@ export default function Overview() {
           </div>
         </div>
       </div>
-
-      {/* Quick Actions Floating Button */}
-      <QuickActions />
     </div>
   );
 }

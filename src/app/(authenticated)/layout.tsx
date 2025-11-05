@@ -10,16 +10,16 @@ import { Separator } from "@/components/ui/separator";
 import { UserProvider } from "@/context/UserContext";
 import { Header } from "@/components/header";
 import { useUser } from "@/context/UserContext";
+import QuickActions from "@/components/quick-actions";
+import FloatingChatbot from "@/components/chatbot";
 
 
-export default function AuthenticatedLayout({
+function AuthenticatedLayoutContent({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { user, isLoading } = useUser();
-
-
 
   return (
     <SidebarProvider>
@@ -39,12 +39,31 @@ export default function AuthenticatedLayout({
             </div>
           </header>
           <main className="flex-1">
-            <UserProvider>
-              {children}
-            </UserProvider>
+            {children}
           </main>
         </SidebarInset>
+
+        {!isLoading && user && (
+          <>
+            <QuickActions />
+            <FloatingChatbot />
+          </>
+        )}
       </div>
     </SidebarProvider>
+  );
+}
+
+export default function AuthenticatedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <UserProvider>
+      <AuthenticatedLayoutContent>
+        {children}
+      </AuthenticatedLayoutContent>
+    </UserProvider>
   );
 }

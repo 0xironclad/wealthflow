@@ -30,7 +30,6 @@ import { Saving } from "@/lib/types";
 import { useUser } from "@/context/UserContext";
 import { getOverviewRecommendation } from "@/server/ai";
 import { RecommendationType } from "@/lib/types";
-import FloatingChatbot from "@/components/chatbot";
 
 // Mock data
 const monthlySavingsData = [
@@ -456,8 +455,6 @@ export default function InsightsPage() {
           </Card>
         </div>
       </div>
-
-      <FloatingChatbot />
     </div>
   );
 }

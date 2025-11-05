@@ -190,7 +190,7 @@ const DashboardTopRow: React.FC = () => {
             return getIncomesById(user.id);
         },
         enabled: !!user,
-        staleTime: 1000 * 60 * 5, // 5 minutes instead of 1 hour
+        staleTime: 1000 * 60 * 5, 
     });
 
     const { data: expenses } = useQuery({
@@ -339,7 +339,7 @@ const DashboardTopRow: React.FC = () => {
         <div className="grid grid-cols-3 md:grid-cols-4 gap-4 h-full">
             <div className="col-span-1">
                 <FinancialMetricCard
-                    label="Income"
+                    label="Income This Month"
                     value={totalIncomeThisMonth}
                     percentageChange={incomeChange}
                     isPositive={incomeChange >= 0}
@@ -350,7 +350,7 @@ const DashboardTopRow: React.FC = () => {
             </div>
             <div className="col-span-1">
                 <FinancialMetricCard
-                    label="Expenses"
+                    label="Expenses This Month"
                     value={Number(expensesThisMonth)}
                     percentageChange={Math.abs(expenseChange)}
                     isPositive={expenseChange <= 0} // Lower expenses are positive
