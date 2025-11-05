@@ -88,8 +88,9 @@ function Transaction() {
     mutationFn: ({ id }: { id: number }) =>
       user ? deleteExpenseById(id, user.id) : Promise.reject("No user"),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses', user?.id] });
-      queryClient.invalidateQueries({ queryKey: ['budgets', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      queryClient.invalidateQueries({ queryKey: ['budgets'] });
+      queryClient.invalidateQueries({ queryKey: ['budgetTotal'] });
       const time = new Date();
       toast({
         title: "Transaction deleted successfully",
