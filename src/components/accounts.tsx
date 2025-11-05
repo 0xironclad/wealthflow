@@ -32,6 +32,8 @@ import { formSchema } from "./income/income-form"
 export default function AccountsCard() {
   const { user, isLoading: isAuthLoading } = useUser();
   const { toast } = useToast()
+  
+  console.log('[AccountsCard] Render - user:', user?.email, 'userId:', user?.id, 'isLoading:', isAuthLoading);
 
   const { data: incomes, error } = useQuery({
     queryKey: ['incomes', user?.id],
