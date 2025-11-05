@@ -3,8 +3,9 @@
 import pool from "@/database/db";
 
 export const getIncomesById = async (userId: string) => {
+    console.log('[getIncomesById] Called with userId:', userId);
     if (!userId) {
-        console.error("Invalid userId provided");
+        console.error("[getIncomesById] Invalid userId provided");
         return [];
     }
 

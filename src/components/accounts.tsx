@@ -34,8 +34,11 @@ export default function AccountsCard() {
   const { toast } = useToast()
 
   const { data: incomes, error } = useQuery({
-    queryKey: ['incomes'],
-    queryFn: () => getIncomesById(user?.id ?? ''),
+    queryKey: ['incomes', user?.id],
+    queryFn: () => {
+      console.log('[Accounts] Fetching incomes for user:', user?.id);
+      return getIncomesById(user?.id ?? '');
+    },
     enabled: !!user?.id,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60,
