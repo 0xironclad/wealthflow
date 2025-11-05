@@ -20,7 +20,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      console.log('[UserContext] Fetched user:', user ? user.email : 'No user');
       setUser(user);
       setIsLoading(false);
     };
@@ -29,7 +28,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('[UserContext] Auth state changed:', event, session?.user?.email);
       setUser(session?.user ?? null);
     });
 

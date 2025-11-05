@@ -3,7 +3,6 @@
 import pool from "@/database/db";
 
 export const getIncomesById = async (userId: string) => {
-  console.log("[getIncomesById] Called with userId:", userId);
   if (!userId) {
     console.error("[getIncomesById] Invalid userId provided");
     return [];
@@ -12,7 +11,6 @@ export const getIncomesById = async (userId: string) => {
   try {
     const query = "SELECT * FROM incomes WHERE userid = $1 ORDER BY date DESC";
     const result = await pool.query(query, [userId]);
-    console.log("[getIncomesById] Query result:", result.rows.length, "rows");
     return result.rows;
   } catch (error) {
     console.error("Error in getIncomesById:", error);

@@ -182,17 +182,12 @@ const DashboardTopRow: React.FC = () => {
 
     const { user, isLoading: isLoadingUser } = useUser();
 
-    console.log('[DashboardTopRow] Render - user:', user?.email, 'userId:', user?.id, 'isLoading:', isLoadingUser);
-
     const { data: incomes, isLoading: isLoadingIncomes } = useQuery({
         queryKey: ['incomes', user?.id],
         refetchOnWindowFocus: false,
-        queryFn: async () => {
-            console.log('[DashboardTopRow] Fetching incomes for user:', user?.id);
+        queryFn: () => {
             if (!user) return Promise.resolve([]);
-            const result = await getIncomesById(user.id);
-            console.log('[DashboardTopRow] Got incomes result:', result);
-            return result;
+            return getIncomesById(user.id);
         },
         enabled: !!user,
         staleTime: 1000 * 60 * 5, // 5 minutes instead of 1 hour

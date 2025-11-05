@@ -33,16 +33,9 @@ export default function AccountsCard() {
   const { user, isLoading: isAuthLoading } = useUser();
   const { toast } = useToast()
 
-  console.log('[AccountsCard] Render - user:', user?.email, 'userId:', user?.id, 'isLoading:', isAuthLoading);
-
   const { data: incomes, error } = useQuery({
     queryKey: ['incomes', user?.id],
-    queryFn: async () => {
-      console.log('[Accounts] Fetching incomes for user:', user?.id);
-      const result = await getIncomesById(user?.id ?? '');
-      console.log('[Accounts] Got incomes result:', result);
-      return result;
-    },
+    queryFn: () => getIncomesById(user?.id ?? ''),
     enabled: !!user?.id,
     refetchOnWindowFocus: false,
     staleTime: 1000 * 60 * 60,
