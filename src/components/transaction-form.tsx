@@ -31,7 +31,7 @@ export function TransactionForm({
   onCancel,
 }: TransactionFormProps) {
   const title = mode === 'add' ? 'Add New Transaction' : 'Edit Transaction';
-  const description = mode === 'add' 
+  const description = mode === 'add'
     ? 'Enter the details for your new transaction.'
     : 'Update the transaction details below.';
   const submitLabel = mode === 'add' ? 'Add Transaction' : 'Save Changes';
@@ -66,7 +66,7 @@ export function TransactionForm({
                 ).value as ExpenseCategory,
               };
 
-              onSubmit(mode === 'edit' && invoice 
+              onSubmit(mode === 'edit' && invoice
                 ? { ...formData, id: invoice.id }
                 : formData
               );
@@ -90,8 +90,8 @@ export function TransactionForm({
                     defaultValue={
                       invoice?.date
                         ? new Date(invoice.date)
-                            .toISOString()
-                            .split("T")[0]
+                          .toISOString()
+                          .split("T")[0]
                         : undefined
                     }
                   />
@@ -162,7 +162,7 @@ export function TransactionForm({
                 </div>
               </div>
             </CardContent>
-            <CardFooter className="flex justify-end gap-4">
+            <CardFooter className="flex justify-end gap-4 ">
               <Button
                 type="button"
                 variant="outline"
