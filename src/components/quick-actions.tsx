@@ -427,16 +427,9 @@ export default function QuickActions() {
 
             <motion.div
                 whileHover={{
-                    scale: 1.05,
-                    boxShadow: "0 10px 25px rgba(0,0,0,0.2)"
+                    scale: 1.05
                 }}
                 whileTap={{ scale: 0.95 }}
-                animate={{
-                    boxShadow: isOpen
-                        ? "0 10px 25px rgba(0,0,0,0.3)"
-                        : "0 4px 12px rgba(0,0,0,0.15)"
-                }}
-                transition={{ duration: 0.3 }}
             >
                 <Button
                     onClick={() => setIsOpen(!isOpen)}

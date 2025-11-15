@@ -206,7 +206,7 @@ export default function AccountsCard() {
       </CardHeader>
 
       <CardContent className="flex-1 overflow-y-auto styled-scrollbar">
-        <h2 className="text-xs font-medium mb-2">Your Accounts</h2>
+        <h2 className="text-xs font-medium mb-2">Your incomes</h2>
 
         <div className="space-y-1">
           {(displayAccounts ?? []).map((account: {
