@@ -1,7 +1,7 @@
 "use client"
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { SavingsEmptyState } from "./empty-states/savings-empty-state";
+import { SavingsState } from "./empty-states/savings-empty-state";
 import {
   Calendar,
   ArrowRight,
@@ -103,7 +103,7 @@ const SavingsAccountSkeleton = () => {
 export default function SavingAccounts() {
   const { user, isLoading: isAuthLoading } = useUser();
 
-  const { data: savings, isLoading, error } = useQuery({
+  const { data: savings, isLoading, error, refetch } = useQuery({
     queryKey: ['savings', user?.id],
     queryFn: () => user ? getSavings(user.id) : null,
     enabled: !!user,
@@ -133,15 +133,11 @@ export default function SavingAccounts() {
   }
 
   if (error) {
-    return (
-      <div className="flex items-center justify-center w-full h-48 text-red-500">
-        Failed to load savings accounts
-      </div>
-    );
+    return <SavingsState variant="error" onRetry={() => refetch()} />;
   }
 
   if (!savings || savings.length === 0) {
-    return <SavingsEmptyState />;
+    return <SavingsState variant="empty" />;
   }
 
 
