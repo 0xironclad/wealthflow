@@ -22,6 +22,8 @@ import { SavingsType } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import { getSavings } from "@/server/saving";
 import { useUser } from "@/context/UserContext";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+
 
 export function SavingsCommandMenu() {
   const [open, setOpen] = useState(false);
@@ -143,7 +145,9 @@ export function SavingsCommandMenu() {
 
       <CommandDialog open={open} onOpenChange={setOpen}>
         <DialogHeader>
-            <DialogTitle>Search Goals</DialogTitle>
+            <VisuallyHidden>
+              <DialogTitle>Search Goals</DialogTitle>
+            </VisuallyHidden>
         </DialogHeader>
         <Command className="rounded-lg border shadow-md">
           <CommandInput
