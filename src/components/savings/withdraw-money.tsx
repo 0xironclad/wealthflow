@@ -21,6 +21,7 @@ import { useUser } from "@/context/UserContext";
 
 interface WithdrawMoneyProps {
   savingId: number;
+  onClose?: () => void;
 }
 const formSchema = z.object({
   amount: z.coerce
@@ -33,7 +34,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 
-export default function WithdrawMoneyModal({ savingId }: WithdrawMoneyProps) {
+export default function WithdrawMoneyModal({ savingId, onClose }: WithdrawMoneyProps) {
   const { user } = useUser();
 
   const queryClient = useQueryClient();
@@ -57,11 +58,21 @@ export default function WithdrawMoneyModal({ savingId }: WithdrawMoneyProps) {
       }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data, amount) => {
       queryClient.invalidateQueries({ queryKey: ["savings", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["savingsHistory"] });
-      toast.success("Amount withdrawn successfully");
+      const time = new Date();
+      toast.success("Money withdrawn successfully", {
+        description: `$${amount.toLocaleString()} has been withdrawn from your savings goal at ${time.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        })}`,
+      });
+      setTimeout(() => {
+        onClose?.();
+      }, 100);
     },
     onError: (error) => {
       toast.error(

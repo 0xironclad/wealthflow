@@ -46,6 +46,7 @@ export function SavingDetails({
   onWithdraw,
 }: SavingDetailsProps) {
   const [addMoneyOpen, setAddMoneyOpen] = useState(false);
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
 
   const { user, isLoading: isAuthLoading } = useUser();
 
@@ -248,7 +249,7 @@ export function SavingDetails({
             <AddMoneyModal savingId={currentSaving.id} onClose={() => setAddMoneyOpen(false)} />
           </DialogContent>
         </Dialog>
-        <Dialog>
+        <Dialog open={withdrawOpen} onOpenChange={setWithdrawOpen}>
           <DialogTrigger asChild>
             <Button
               variant="outline"
@@ -265,7 +266,7 @@ export function SavingDetails({
                 <DialogTitle>Withdraw Money from Saving</DialogTitle>
               </VisuallyHidden>
             </DialogPrimitive.Title>
-            <WithdrawMoneyModal savingId={currentSaving.id} />
+            <WithdrawMoneyModal savingId={currentSaving.id} onClose={() => setWithdrawOpen(false)} />
           </DialogContent>
         </Dialog>
         <Dialog>
