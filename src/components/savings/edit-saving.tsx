@@ -52,7 +52,14 @@ export default function EditSaving({ saving }: { saving: Saving }) {
         status: values.status,
       }
       await updateSaving.mutateAsync(payload)
-      toast.success("Goal updated")
+      const time = new Date();
+      toast.success("Savings goal updated successfully", {
+        description: `${values.name} has been updated at ${time.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        })}`,
+      })
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Failed to update goal")
     }
