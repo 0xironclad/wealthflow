@@ -305,7 +305,7 @@ export function SavingDetails({
               <DialogPrimitive.Close asChild>
                 <Button
                   variant="destructive"
-                  onClick={() => deleteSaving.mutate(currentSaving.id)}
+                  onClick={() => deleteSaving.mutate({ id: currentSaving.id, userId: currentSaving.userId })}
                 >
                   Confirm Delete
                 </Button>

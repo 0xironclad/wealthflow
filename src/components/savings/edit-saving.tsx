@@ -44,6 +44,7 @@ export default function EditSaving({ saving }: { saving: Saving }) {
     try {
       const payload = {
         id: saving.id,
+        userId: saving.userId,
         name: values.name,
         description: values.description ?? undefined,
         goal: values.goal ?? undefined,

@@ -1,28 +1,23 @@
-import { Saving} from "@/lib/types";
+import { Saving } from "@/lib/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NextResponse } from "next/server";
 import { toast } from "sonner";
 
 export const getSavings = async (userId: string) => {
-    try {
-        if (!userId) {
-            console.error("Invalid userId provided");
-            return [];
-        }
+  if (!userId) {
+    throw new Error("Invalid userId provided");
+  }
 
-        const response = await fetch(`/api/savings?userId=${userId}`);
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `Error fetching savings: ${response.statusText}`);
-        }
-        const result = await response.json();
-        return result.data;
-    } catch (error) {
-        console.error("Error in getSavings:", error);
-        return [];
-    }
-}
-
+  const response = await fetch(`/api/savings?userId=${userId}`);
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(
+      errorData.message || `Error fetching savings: ${response.statusText}`
+    );
+  }
+  const result = await response.json();
+  return result.data || [];
+};
 
 export const useCreateSaving = () => {
   const queryClient = useQueryClient();
@@ -32,24 +27,32 @@ export const useCreateSaving = () => {
       const response = await fetch("/api/savings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({...savingData, userId: String(savingData.userId)}),
+        body: JSON.stringify({
+          ...savingData,
+          userId: String(savingData.userId),
+        }),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || `Error adding saving: ${response.statusText}`);
+        throw new Error(
+          result.message || `Error adding saving: ${response.statusText}`
+        );
       }
 
       return result;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["savings"] });
-      queryClient.invalidateQueries({ queryKey: ["savingsHistory"] });
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["savings", String(variables.userId)],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["savingsHistory", String(variables.userId)],
+      });
     },
   });
 };
-
 
 export const useUpdateSaving = () => {
   const queryClient = useQueryClient();
@@ -65,13 +68,21 @@ export const useUpdateSaving = () => {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || `Error updating saving: ${response.statusText}`);
+        throw new Error(
+          result.message || `Error updating saving: ${response.statusText}`
+        );
       }
 
       return result;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["savings"] });
+    onSuccess: (data, variables) => {
+      if (variables.userId) {
+        queryClient.invalidateQueries({
+          queryKey: ["savings", String(variables.userId)],
+        });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["savings"] });
+      }
     },
   });
 };
@@ -80,31 +91,51 @@ export const useDeleteSaving = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
+    mutationFn: async ({ id }: { id: number; userId?: string | number }) => {
       const response = await fetch("/api/savings", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
-      })
-      const result = await response.json()
+      });
+      const result = await response.json();
       if (!response.ok) {
-        throw new Error(result.message || `Error deleting saving: ${response.statusText}`)
+        throw new Error(
+          result.message || `Error deleting saving: ${response.statusText}`
+        );
       }
-      return result
+      return result;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["savings"] })
-      queryClient.invalidateQueries({ queryKey: ["expenses"] })
-      queryClient.invalidateQueries({ queryKey: ["totalBalance"] })
-      queryClient.invalidateQueries({ queryKey: ["savingsHistory"] })
-      toast.success("Saving deleted successfully. Amount has been added back to your balance.")
+    onSuccess: (data, variables) => {
+      if (variables.userId) {
+        queryClient.invalidateQueries({
+          queryKey: ["savings", String(variables.userId)],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["expenses", String(variables.userId)],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["totalBalance", String(variables.userId)],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["savingsHistory", String(variables.userId)],
+        });
+      } else {
+        queryClient.invalidateQueries({ queryKey: ["savings"] });
+        queryClient.invalidateQueries({ queryKey: ["expenses"] });
+        queryClient.invalidateQueries({ queryKey: ["totalBalance"] });
+        queryClient.invalidateQueries({ queryKey: ["savingsHistory"] });
+      }
+      toast.success(
+        "Saving deleted successfully. Amount has been added back to your balance."
+      );
     },
     onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to delete saving")
+      toast.error(
+        error instanceof Error ? error.message : "Failed to delete saving"
+      );
     },
-  })
-}
-
+  });
+};
 
 export const getSavingsHistory = async (userId: string) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;

@@ -103,32 +103,48 @@ const SavingsAccountSkeleton = () => {
 export default function SavingAccounts() {
   const { user, isLoading: isAuthLoading } = useUser();
 
-  const { data: savings, isLoading, error, refetch } = useQuery({
+  const { data: savings, isLoading, error, refetch, isFetched } = useQuery({
     queryKey: ['savings', user?.id],
-    queryFn: () => user ? getSavings(user.id) : null,
-    enabled: !!user,
-    select: (data) => data.map((saving: {
-      id: number;
-      userid: number;
-      name: string;
-      created_at: string;
-      amount: string;
-      goal: string;
-      status: string;
-      description: string;
-    }) => ({
-      id: saving.id,
-      userId: saving.userid,
-      name: saving.name,
-      createdAt: saving.created_at,
-      amount: parseFloat(saving.amount),
-      goal: parseFloat(saving.goal),
-      status: saving.status,
-      description: saving.description
-    })).sort((a: Saving, b: Saving) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    queryFn: async () => {
+      if (!user?.id) {
+        throw new Error("User ID is required");
+      }
+      return getSavings(user.id);
+    },
+    enabled: !!user?.id && !isAuthLoading,
+    retry: 2,
+    retryDelay: 1000,
+    staleTime: 1000 * 60,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
+    select: (data) => {
+      if (!Array.isArray(data)) return [];
+
+      return data.map((saving: {
+        id: number;
+        userid: number;
+        name: string;
+        created_at: string;
+        amount: string;
+        goal: string;
+        status: string;
+        description: string;
+        target_date?: string;
+      }) => ({
+        id: saving.id,
+        userId: String(saving.userid),
+        name: saving.name,
+        createdAt: saving.created_at,
+        amount: parseFloat(saving.amount),
+        goal: parseFloat(saving.goal),
+        status: saving.status as "active" | "completed" | "atRisk",
+        description: saving.description,
+        targetDate: saving.target_date
+      } as Saving)).sort((a: Saving, b: Saving) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    }
   });
 
-  if (isLoading || isAuthLoading) {
+  if (isAuthLoading || isLoading || !isFetched) {
     return <SavingsAccountSkeleton />;
   }
 
@@ -136,8 +152,12 @@ export default function SavingAccounts() {
     return <SavingsState variant="error" onRetry={() => refetch()} />;
   }
 
-  if (!savings || savings.length === 0) {
+  if (isFetched && (!savings || savings.length === 0)) {
     return <SavingsState variant="empty" />;
+  }
+
+  if (!savings) {
+    return <SavingsAccountSkeleton />;
   }
 
 
