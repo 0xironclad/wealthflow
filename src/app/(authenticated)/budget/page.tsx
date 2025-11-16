@@ -18,7 +18,6 @@ import BudgetDetails from "@/components/budget/budget-details"
 import { useBudgets, useBudgetTotal } from "@/lib/queries"
 import { useUser } from "@/context/UserContext"
 import { useDatePeriod } from "@/hooks/useDatePeriod"
-import { DatePeriodSelector } from "@/components/ui/date-period-selector"
 import { AlertCircle, Plus } from "lucide-react"
 import { EditBudgetForm } from "@/components/budget/budget-form"
 import { useState } from "react"
@@ -152,7 +151,6 @@ function BudgetManager() {
             <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
                 <h1 className="text-3xl font-bold">Budgets</h1>
                 <div className="flex items-center gap-3">
-                    <DatePeriodSelector />
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                         <DialogTrigger asChild>
                             <Button variant="default" className="text-lg">
