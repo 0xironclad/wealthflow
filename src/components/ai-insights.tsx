@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   Sparkles,
   Loader2,
+  RefreshCw,
 } from "lucide-react";
 import { ErrorState } from "./ui/empty-states/error-state";
 import { Button } from "@/components/ui/button";
@@ -198,8 +199,19 @@ const AIInsights: React.FC = () => {
             size="sm"
             onClick={handleManualRefresh}
             disabled={isLoading}
+            className="gap-2"
           >
-            {isLoading ? <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" /> : "Refresh"}
+            {isLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Refreshing...</span>
+              </>
+            ) : (
+              <>
+                <RefreshCw className="h-4 w-4" />
+                <span>Refresh</span>
+              </>
+            )}
           </Button>
         </div>
       </CardHeader>
