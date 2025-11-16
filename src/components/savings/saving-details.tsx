@@ -27,7 +27,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getSavings } from "@/server/saving";
 import { Saving } from "@/lib/types";
 import { useUser } from "@/context/UserContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EditSaving from "./edit-saving";
 import { useDeleteSaving } from "@/server/saving";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -45,6 +45,7 @@ export function SavingDetails({
   onAddMoney,
   onWithdraw,
 }: SavingDetailsProps) {
+  const [addMoneyOpen, setAddMoneyOpen] = useState(false);
 
   const { user, isLoading: isAuthLoading } = useUser();
 
@@ -228,7 +229,7 @@ export function SavingDetails({
       </CardContent>
 
       <CardFooter className="flex gap-3 pt-2">
-        <Dialog>
+        <Dialog open={addMoneyOpen} onOpenChange={setAddMoneyOpen}>
           <DialogTrigger asChild>
             <Button
               className="flex-1"
@@ -241,10 +242,10 @@ export function SavingDetails({
           <DialogContent className="p-0 gap-0">
             <DialogPrimitive.Title asChild>
               <VisuallyHidden>
-              <DialogTitle>Add Money to Saving</DialogTitle>
+                <DialogTitle>Add Money to Saving</DialogTitle>
               </VisuallyHidden>
             </DialogPrimitive.Title>
-            <AddMoneyModal savingId={currentSaving.id} />
+            <AddMoneyModal savingId={currentSaving.id} onClose={() => setAddMoneyOpen(false)} />
           </DialogContent>
         </Dialog>
         <Dialog>

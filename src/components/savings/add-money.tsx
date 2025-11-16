@@ -20,6 +20,7 @@ import { useUser } from "@/context/UserContext";
 
 interface AddMoneyFormProps {
   savingId: number;
+  onClose?: () => void;
 }
 
 const formSchema = z.object({
@@ -33,7 +34,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export default function AddMoneyForm({ savingId }: AddMoneyFormProps) {
+export default function AddMoneyForm({ savingId, onClose }: AddMoneyFormProps) {
   const { user } = useUser();
 
   const queryClient = useQueryClient();
@@ -58,11 +59,21 @@ export default function AddMoneyForm({ savingId }: AddMoneyFormProps) {
 
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data, amount) => {
       queryClient.invalidateQueries({ queryKey: ["savings", user?.id] });
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
       queryClient.invalidateQueries({ queryKey: ["savingsHistory"] });
-      toast.success("Amount added successfully");
+      const time = new Date();
+      toast.success("Money added successfully", {
+        description: `$${amount.toLocaleString()} has been added to your savings goal at ${time.toLocaleString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        })}`,
+      });
+      setTimeout(() => {
+        onClose?.();
+      }, 100);
     },
     onError: (error) => {
       toast.error(
@@ -158,14 +169,12 @@ export default function AddMoneyForm({ savingId }: AddMoneyFormProps) {
                   Cancel
                 </Button>
               </DialogClose>
-              <DialogClose asChild>
-                <Button
-                  type="submit"
-                  disabled={!isFormValid || form.formState.isSubmitting}
-                >
-                  Add Money
-                </Button>
-              </DialogClose>
+              <Button
+                type="submit"
+                disabled={!isFormValid || form.formState.isSubmitting}
+              >
+                Add Money
+              </Button>
             </div>
           </form>
         </Form>
