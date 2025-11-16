@@ -43,12 +43,9 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function SpendTrendLineChart({ budgets = [], period = "6months" }: SpendTrendLineChartProps) {
-    // Process budget data into monthly spending
     const chartData = React.useMemo(() => {
-        // Create a map to aggregate spending by month
         const monthlySpending = new Map<string, { monthKey: string, monthLabel: string, spent: number }>();
 
-        // Get the number of months to show
         const monthsToShow = period === "6months" ? 6 : 12;
 
         // Initialize months with 0 spending
@@ -112,7 +109,7 @@ export function SpendTrendLineChart({ budgets = [], period = "6months" }: SpendT
                             content={
                                 <ChartTooltipContent
                                     className="w-[150px]"
-                                    formatter={(value) => [`$${value.toLocaleString()}`, "Spent"]}
+                                    formatter={(value) => [`$${value.toLocaleString()}`]}
                                 />
                             }
                         />

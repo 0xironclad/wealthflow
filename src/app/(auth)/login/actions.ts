@@ -26,13 +26,6 @@ export async function login(formData: FormData) {
     };
   }
   try {
-    // Use UPSERT to handle both new users and existing users
-    // If user exists by email, update the id to match Supabase auth
-    // If user doesn't exist, insert new user
-    console.info(
-      `[LOGIN] Starting UPSERT for user: ${authData.user.email}, ID: ${authData.user.id}`
-    );
-
     const upsertQuery = `
       INSERT INTO users (id, email)
       VALUES ($1, $2)
@@ -48,7 +41,6 @@ export async function login(formData: FormData) {
     console.info(`[LOGIN] UPSERT successful:`, result.rows[0]);
   } catch (error) {
     console.error("[LOGIN] Error upserting user:", error);
-    // Don't fail login if UPSERT fails, but log it
   }
 
   revalidatePath("/", "layout");
