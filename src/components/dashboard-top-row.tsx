@@ -17,11 +17,12 @@ import { useMonthlyIncome } from "@/hooks/useMonthlyIncome";
 interface FinancialMetricCardProps {
     label: string;
     value: number | string;
-    percentageChange: number;
+    percentageChange?: number;
     isPositive?: boolean;
     previousValue?: number;
     icon: React.ComponentType<{ className?: string }>;
     gradient: string;
+    viewAllLink?: string;
 }
 
 const FinancialMetricCardSkeleton: React.FC<{ gradient: string }> = ({ gradient }) => {
@@ -99,7 +100,8 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
     isPositive = true,
     previousValue,
     icon: Icon,
-    gradient
+    gradient,
+    viewAllLink
 }) => {
     const TrendIcon = isPositive ? TrendingUp : TrendingDown;
 
@@ -114,12 +116,18 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
                         </div>
                         <span className="text-sm font-medium text-muted-foreground">{label}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <TrendIcon className={`w-3 h-3 ${isPositive ? 'text-green-600' : 'text-red-600'}`} />
-                        <span className={`text-xs font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                            {isPositive ? '+' : ''}{percentageChange}%
-                        </span>
-                    </div>
+                    {percentageChange !== undefined ? (
+                        <div className="flex items-center gap-1">
+                            <TrendIcon className={`w-3 h-3 ${isPositive ? 'text-green-600' : 'text-red-600'}`} />
+                            <span className={`text-xs font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                                {isPositive ? '+' : ''}{percentageChange}%
+                            </span>
+                        </div>
+                    ) : viewAllLink ? (
+                        <a href={viewAllLink} className="text-xs font-medium text-primary hover:underline">
+                            View all
+                        </a>
+                    ) : null}
                 </div>
 
                 {/* Main value */}
@@ -130,14 +138,16 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
                 </div>
 
                 {/* Comparison */}
-                <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>vs last month</span>
-                    {previousValue && (
-                        <span className="bg-muted px-2 py-1 rounded-full">
-                            ${previousValue.toLocaleString()}
-                        </span>
-                    )}
-                </div>
+                {percentageChange !== undefined && (
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>vs last month</span>
+                        {previousValue && (
+                            <span className="bg-muted px-2 py-1 rounded-full">
+                                ${previousValue.toLocaleString()}
+                            </span>
+                        )}
+                    </div>
+                )}
             </div>
         </Card>
     );
@@ -190,7 +200,7 @@ const DashboardTopRow: React.FC = () => {
             return getIncomesById(user.id);
         },
         enabled: !!user,
-        staleTime: 1000 * 60 * 5, 
+        staleTime: 1000 * 60 * 5,
     });
 
     const { data: expenses } = useQuery({
@@ -363,10 +373,9 @@ const DashboardTopRow: React.FC = () => {
                 <FinancialMetricCard
                     label="Net Savings"
                     value={Number(netSavings)}
-                    percentageChange={15} // You can calculate this based on savings history
-                    isPositive={true}
                     icon={PiggyBank}
                     gradient="from-blue-500 to-cyan-600"
+                    viewAllLink="/goals"
                 />
             </div>
             <div className="col-span-3 md:col-span-1">
