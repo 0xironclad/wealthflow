@@ -34,7 +34,7 @@ function Savings() {
             <div className="flex justify-between p-4 items-center flex-none">
                 <CardTitle>Savings</CardTitle>
                 <CardDescription>
-                    <Link href="/goals" className="text-foreground/70" prefetch={true}>
+                    <Link href="/goals" className="text-primary hover:underline" prefetch={true}>
                         View all
                     </Link>
                 </CardDescription>
