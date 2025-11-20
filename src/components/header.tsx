@@ -3,12 +3,7 @@
 import {
     LogOut,
     User,
-    Sun,
-    Moon,
-    Palette,
-    Monitor
 } from "lucide-react"
-import { useTheme } from "next-themes"
 
 import {
     Avatar,
@@ -23,10 +18,8 @@ import {
     DropdownMenuLabel as DropdownMenuLabelPrimitive,
     DropdownMenuSeparator as DropdownMenuSeparatorPrimitive,
     DropdownMenuTrigger as DropdownMenuTriggerPrimitive,
-    DropdownMenuSub as DropdownMenuSubPrimitive,
-    DropdownMenuSubContent as DropdownMenuSubContentPrimitive,
-    DropdownMenuSubTrigger as DropdownMenuSubTriggerPrimitive,
 } from "@/components/ui/dropdown-menu"
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 
 // Type cast for React 19 compatibility
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -37,9 +30,6 @@ const DropdownMenuItem = DropdownMenuItemPrimitive as any;
 const DropdownMenuLabel = DropdownMenuLabelPrimitive as any;
 const DropdownMenuSeparator = DropdownMenuSeparatorPrimitive as any;
 const DropdownMenuTrigger = DropdownMenuTriggerPrimitive as any;
-const DropdownMenuSub = DropdownMenuSubPrimitive as any;
-const DropdownMenuSubContent = DropdownMenuSubContentPrimitive as any;
-const DropdownMenuSubTrigger = DropdownMenuSubTriggerPrimitive as any;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 import { Button } from "@/components/ui/button"
 import { logout } from "@/app/actions/logout/actions"
@@ -55,7 +45,6 @@ export function Header({
         avatar: string
     }
 }) {
-    const { setTheme, theme } = useTheme()
     const [profileOpen, setProfileOpen] = useState(false)
     const handleLogout = async () => {
         try {
@@ -68,7 +57,8 @@ export function Header({
     }
 
     return (
-        <div className="ml-auto mr-2 mt-0.5">
+        <div className="ml-auto mr-2 mt-1 flex items-center gap-2 ">
+            <AnimatedThemeToggler className="mr-4" />
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="p-0 h-8 w-8 rounded-full">
@@ -106,7 +96,8 @@ export function Header({
                             <User />
                             Profile
                         </DropdownMenuItem>
-                        <DropdownMenuSub>
+                        {/* Old Theme Toggle */}
+                        {/* <DropdownMenuSub>
                             <DropdownMenuSubTrigger>
                                 <Palette />
                                 Theme
@@ -134,7 +125,7 @@ export function Header({
                                     )}
                                 </DropdownMenuItem>
                             </DropdownMenuSubContent>
-                        </DropdownMenuSub>
+                        </DropdownMenuSub> */}
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>

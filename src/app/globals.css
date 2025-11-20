@@ -85,6 +85,10 @@ body {
     --glow-primary: rgba(99, 102, 241, 0.2);
     --glow-secondary: rgba(99, 102, 241, 0.08);
   }
+  .theme {
+    --animate-marquee: marquee var(--duration) infinite linear;
+    --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+  }
 }
 
 @layer base {
@@ -117,7 +121,6 @@ body {
   }
 }
 
-
 .styled-scrollbar::-webkit-scrollbar {
   width: 4px;
   height: 4px;
@@ -139,4 +142,28 @@ body {
 .styled-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: hsl(var(--primary)) transparent;
+}
+
+@theme inline {
+  @keyframes marquee {
+  from {
+    transform: translateX(0);
+    }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+    }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+::view-transition-old(root), ::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
 }
