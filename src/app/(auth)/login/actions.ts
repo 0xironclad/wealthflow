@@ -111,3 +111,43 @@ export async function signInWithGithub() {
         error: "An error occurred while initiating GitHub login.",
     };
 }
+
+export async function signInWithGoogle() {
+    const supabase = await createClient();
+    let redirectUrl = process.env.NEXT_PUBLIC_APP_URL;
+
+    if (!redirectUrl) {
+        if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+            redirectUrl = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+        } else {
+            redirectUrl = "http://localhost:3000";
+        }
+    }
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+            redirectTo: `${redirectUrl}/auth/callback`,
+            queryParams: {
+                access_type: 'offline',
+                prompt: 'consent',
+            },
+        },
+    });
+
+    if (error) {
+        return {
+            success: false,
+            error: error.message,
+        };
+    }
+
+    if (data.url) {
+        redirect(data.url);
+    }
+
+    return {
+        success: false,
+        error: "An error occurred while initiating Google login.",
+    };
+}

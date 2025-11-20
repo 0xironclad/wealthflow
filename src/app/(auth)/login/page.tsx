@@ -4,7 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { login, signInWithGithub } from './actions';
+import { login, signInWithGithub, signInWithGoogle } from './actions';
 import dynamic from 'next/dynamic';
 import {
     Form,
@@ -204,11 +204,30 @@ function SignInPage() {
                             variant="outline"
                             className="w-full bg-transparent"
                             disabled={isLoading}
-                            onClick={() => {
-                                toast({
-                                    title: "Coming Soon",
-                                    description: "Google login will be available soon.",
-                                });
+                            onClick={async () => {
+                                try {
+                                    setIsLoading(true);
+                                    const result = await signInWithGoogle();
+                                    if (result?.error) {
+                                        toast({
+                                            title: "Error",
+                                            description: result.error,
+                                            variant: "destructive",
+                                        });
+                                        setIsLoading(false);
+                                    }
+                                } catch (error) {
+                                    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+                                        return;
+                                    }
+                                    console.error(error);
+                                    toast({
+                                        title: "Error",
+                                        description: "Failed to initiate Google login",
+                                        variant: "destructive",
+                                    });
+                                    setIsLoading(false);
+                                }
                             }}
                         >
                             <FcGoogle size={24} />
