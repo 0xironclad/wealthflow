@@ -32,13 +32,26 @@ export async function GET(request: Request) {
 
             const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
             const isLocalEnv = process.env.NODE_ENV === 'development'
+
+            console.log('[OAUTH CALLBACK] Debug Info:', {
+                origin,
+                next,
+                forwardedHost,
+                isLocalEnv,
+                code: code ? 'present' : 'missing'
+            });
+
             if (isLocalEnv) {
                 // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
                 return NextResponse.redirect(`${origin}${next}`)
             } else if (forwardedHost) {
-                return NextResponse.redirect(`https://${forwardedHost}${next}`)
+                const url = `https://${forwardedHost}${next}`
+                console.log('[OAUTH CALLBACK] Redirecting to:', url)
+                return NextResponse.redirect(url)
             } else {
-                return NextResponse.redirect(`${origin}${next}`)
+                const url = `${origin}${next}`
+                console.log('[OAUTH CALLBACK] Redirecting to (fallback):', url)
+                return NextResponse.redirect(url)
             }
         }
     }
