@@ -11,9 +11,16 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-export function   NavMain({
+export function NavMain({
   items,
 }: {
   items: {
@@ -24,6 +31,7 @@ export function   NavMain({
   }[];
 }) {
   const pathname = usePathname();
+  const { state } = useSidebar();
 
   return (
     <SidebarGroup>
@@ -31,16 +39,38 @@ export function   NavMain({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton asChild>
-              <Link
-                href={item.url}
-                className={pathname === item.url ? "bg-sidebar-accent" : ""}
-                prefetch={true}
-              >
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
-              </Link>
-            </SidebarMenuButton>
+            {state === "collapsed" ? (
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SidebarMenuButton asChild>
+                      <Link
+                        href={item.url}
+                        className={pathname === item.url ? "bg-sidebar-accent" : ""}
+                        prefetch={true}
+                      >
+                        {item.icon && <item.icon />}
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="flex items-center gap-4">
+                    {item.title}
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <SidebarMenuButton asChild>
+                <Link
+                  href={item.url}
+                  className={pathname === item.url ? "bg-sidebar-accent" : ""}
+                  prefetch={true}
+                >
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </Link>
+              </SidebarMenuButton>
+            )}
           </SidebarMenuItem>
         ))}
       </SidebarMenu>
