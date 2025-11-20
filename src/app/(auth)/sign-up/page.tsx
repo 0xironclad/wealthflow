@@ -65,6 +65,7 @@ function SignUpPage() {
                 })
             }
         } catch (error) {
+            console.error("Error creating account:", error)
             toast({
                 title: "Error",
                 description: "Error creating account. Please try again.",
