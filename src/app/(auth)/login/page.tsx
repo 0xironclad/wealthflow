@@ -171,9 +171,29 @@ function SignInPage() {
                             className="w-full bg-transparent"
                             disabled={isLoading}
                             onClick={async () => {
-                                setIsLoading(true);
-                                await signInWithGithub();
-                                // No need to set isLoading(false) as we redirect
+                                try {
+                                    setIsLoading(true);
+                                    const result = await signInWithGithub();
+                                    if (result?.error) {
+                                        toast({
+                                            title: "Error",
+                                            description: result.error,
+                                            variant: "destructive",
+                                        });
+                                        setIsLoading(false);
+                                    }
+                                } catch (error) {
+                                    if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+                                        return;
+                                    }
+                                    console.error(error);
+                                    toast({
+                                        title: "Error",
+                                        description: "Failed to initiate GitHub login",
+                                        variant: "destructive",
+                                    });
+                                    setIsLoading(false);
+                                }
                             }}
                         >
                             <BsGithub size={24} />

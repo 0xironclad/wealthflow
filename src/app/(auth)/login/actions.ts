@@ -95,4 +95,9 @@ export async function signInWithGithub() {
     if (data.url) {
         redirect(data.url);
     }
+
+    return {
+        success: false,
+        error: "An error occurred while initiating GitHub login.",
+    };
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/utils/superbase/server'
+import pool from '@/database/db'
 
 export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url)
@@ -11,6 +12,24 @@ export async function GET(request: Request) {
         const supabase = await createClient()
         const { error } = await supabase.auth.exchangeCodeForSession(code)
         if (!error) {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (user) {
+                try {
+                    const upsertQuery = `
+            INSERT INTO users (id, email)
+            VALUES ($1, $2)
+            ON CONFLICT (email)
+            DO UPDATE SET
+              id = EXCLUDED.id
+            RETURNING *
+          `
+                    await pool.query(upsertQuery, [user.id, user.email])
+                    console.info(`[OAUTH] UPSERT successful for user: ${user.email}`)
+                } catch (dbError) {
+                    console.error("[OAUTH] Error upserting user:", dbError)
+                }
+            }
+
             const forwardedHost = request.headers.get('x-forwarded-host') // original origin before load balancer
             const isLocalEnv = process.env.NODE_ENV === 'development'
             if (isLocalEnv) {
