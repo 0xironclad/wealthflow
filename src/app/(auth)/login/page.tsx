@@ -4,7 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { login } from './actions';
+import { login, signInWithGithub } from './actions';
 import dynamic from 'next/dynamic';
 import {
     Form,
@@ -170,11 +170,10 @@ function SignInPage() {
                             variant="outline"
                             className="w-full bg-transparent"
                             disabled={isLoading}
-                            onClick={() => {
-                                toast({
-                                    title: "Coming Soon",
-                                    description: "GitHub login will be available soon.",
-                                });
+                            onClick={async () => {
+                                setIsLoading(true);
+                                await signInWithGithub();
+                                // No need to set isLoading(false) as we redirect
                             }}
                         >
                             <BsGithub size={24} />
