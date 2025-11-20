@@ -26,6 +26,7 @@ const CardHeader = dynamic(() => import("@/components/ui/card").then(mod => mod.
 const CardTitle = dynamic(() => import("@/components/ui/card").then(mod => mod.CardTitle));
 import { BsGithub } from "react-icons/bs";
 import { FcGoogle } from "react-icons/fc";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 import { useToast } from "@/hooks/use-toast";
 
@@ -99,7 +100,7 @@ function SignInPage() {
     }
 
     return (
-        <Card className="mx-auto w-full max-w-md">
+        <Card className="mx-auto w-full max-w-md relative overflow-hidden">
             <CardHeader>
                 <CardTitle>Sign In</CardTitle>
                 <CardDescription>
@@ -244,6 +245,7 @@ function SignInPage() {
                     </Link>
                 </p>
             </CardFooter>
+            <BorderBeam size={300} duration={8} borderWidth={2}/>
         </Card>
     );
 }
