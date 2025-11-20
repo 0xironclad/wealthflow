@@ -78,10 +78,14 @@ export async function signup(formData: FormData) {
 
 export async function signInWithGithub() {
     const supabase = await createClient();
-    let redirectUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+    let redirectUrl = process.env.NEXT_PUBLIC_APP_URL;
 
-    if (process.env.NEXT_PUBLIC_VERCEL_URL) {
-        redirectUrl = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+    if (!redirectUrl) {
+        if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+            redirectUrl = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
+        } else {
+            redirectUrl = "http://localhost:3000";
+        }
     }
 
     const { data, error } = await supabase.auth.signInWithOAuth({
