@@ -8,7 +8,7 @@ import dashboard2 from "@/assets/dashboard2.png"
 import { FeaturesSectionWithHoverEffects } from "@/components/feature-section-with-hover-effects"
 import Bg from "@/assets/faded_gallery.jpg"
 import { ArrowRight } from 'lucide-react'
-import TestimonialsSection from "@/components/testimonials"
+import { TestimonialsMarquee } from "@/components/testimonials-marquee"
 import { TechStack } from "@/components/tech-stack"
 
 const transitionVariants = {
@@ -58,7 +58,7 @@ export default function Home() {
                                     preset="fade-in-blur"
                                     speedSegment={0.3}
                                     as="h1"
-                                    className="mt-3 text-balance text-4xl md:text-5xl lg:mt-5 xl:text-[4.25rem]"
+                                    className="mt-3 text-balance text-3xl md:text-4xl lg:mt-5 xl:text-[3.25rem]"
                                 >
                                     AI-Powered Financial Intelligence at Your Fingertips
                                 </TextEffect>
@@ -135,7 +135,7 @@ export default function Home() {
                                 preset="fade-in-blur"
                                 speedSegment={0.3}
                                 as="h2"
-                                className="text-balance text-center text-3xl md:text-4xl lg:text-5xl"
+                                className="text-balance text-center text-2xl md:text-3xl lg:text-4xl"
                             >
                                 Features
                             </TextEffect>
@@ -146,24 +146,26 @@ export default function Home() {
 
                 {/* Testimonials Section */}
                 <section className="relative pt-16 md:pt-32" id="testimonials">
-                    <div className="mx-auto max-w-4xl px-6 pt-16 md:pt-32">
+                    <div className="mx-auto max-w-6xl px-6 pt-16 md:pt-32">
                         <AnimatedGroup>
                             <TextEffect
                                 preset="fade-in-blur"
                                 speedSegment={0.3}
                                 as="h2"
-                                className="text-balance text-center text-3xl md:text-4xl lg:text-5xl"
+                                className="text-balance text-center text-2xl md:text-3xl lg:text-4xl"
                             >
-                                Testimonials
+                                What Our Users Say
                             </TextEffect>
                         </AnimatedGroup>
-                        <TestimonialsSection />
+                        <TestimonialsMarquee />
                     </div>
                 </section>
 
-                {/* Team Section */}
-                <section className="relative pb-16 pt-16 md:pb-32">
-                    <TechStack />
+                {/* Tech Stack Section */}
+                <section className="relative pb-16 pt-16 md:pb-32 md:pt-32">
+                    <div className="mx-auto max-w-4xl px-6">
+                        <TechStack />
+                    </div>
                 </section>
             </main>
         </div>
