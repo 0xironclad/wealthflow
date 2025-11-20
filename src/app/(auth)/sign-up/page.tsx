@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast"
+import { BorderBeam } from "@/components/ui/border-beam";
 
 // import { Eye, EyeOff } from "lucide-react";
 import { signUpSchema } from "@/lib/auth-schema";
@@ -75,7 +76,7 @@ function SignUpPage() {
     }
 
     return (
-        <Card className="mx-auto w-full max-w-md">
+        <Card className="mx-auto w-full max-w-md relative overflow-hidden">
             <CardHeader>
                 <CardTitle>Sign Up</CardTitle>
                 <CardDescription>Create an account to continue</CardDescription>
@@ -138,6 +139,7 @@ function SignUpPage() {
                     </Link>
                 </p>
             </CardFooter>
+            <BorderBeam size={300} duration={8} borderWidth={2}/>
         </Card>
     );
 }
