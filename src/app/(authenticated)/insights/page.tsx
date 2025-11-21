@@ -30,7 +30,7 @@ import { RecommendationType } from "@/lib/types";
 
 
 
-const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; 
+const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000;
 const STORAGE_KEY = 'insights_recommendations_cache';
 
 interface CachedRecommendations {
