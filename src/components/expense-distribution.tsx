@@ -136,12 +136,12 @@ function ExpenseDistribution() {
                         <TimelyAverage key={index} title={item.title} amount={Number(item.amount)} />
                     ))}
                 </div>
-                <div className="flex flex-row gap-4 min-h-0 flex-1">
-                    <div className="flex-shrink-0 w-[200px]">
+                <div className="flex flex-row gap-4 min-h-0 flex-1 items-center justify-center">
+                    <div className="flex-1 flex justify-center">
                         <PieChartComponent chartData={chartData} />
                     </div>
-                    <div className="flex-1 min-h-0 overflow-hidden">
-                        <div className="h-full overflow-y-auto pr-2">
+                    <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center">
+                        <div className="max-h-full overflow-y-auto pr-2">
                             <ExpenseDetails chartData={chartData} />
                         </div>
                     </div>
