@@ -30,7 +30,7 @@ import { RecommendationType } from "@/lib/types";
 
 
 
-const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000; 
+const CACHE_DURATION = 7 * 24 * 60 * 60 * 1000;
 const STORAGE_KEY = 'insights_recommendations_cache';
 
 interface CachedRecommendations {
@@ -390,7 +390,7 @@ export default function InsightsPage() {
 
                                         {/* Metrics Grid */}
                                         <div className="grid grid-cols-1 gap-4">
-                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4">
+                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4 border border-border/50">
                                                 <div className="p-3 bg-primary/10 rounded-full text-primary">
                                                     <TrendingUp className="w-6 h-6" />
                                                 </div>
@@ -400,7 +400,7 @@ export default function InsightsPage() {
                                                     <p className="text-xs text-muted-foreground">Target: 20%</p>
                                                 </div>
                                             </div>
-                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4">
+                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4 border border-border/50">
                                                 <div className="p-3 bg-primary/10 rounded-full text-primary">
                                                     <Wallet className="w-6 h-6" />
                                                 </div>
@@ -410,7 +410,7 @@ export default function InsightsPage() {
                                                     <p className="text-xs text-muted-foreground">Based on avg expenses</p>
                                                 </div>
                                             </div>
-                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4">
+                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4 border border-border/50">
                                                 <div className="p-3 bg-primary/10 rounded-full text-primary">
                                                     <Target className="w-6 h-6" />
                                                 </div>
