@@ -170,21 +170,6 @@ export default function AccountsCard() {
                   <IncomeForm onSubmit={handleAddIncome} />
                 </DialogContent>
               </Dialog>
-
-              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                <div className="flex -space-x-1">
-                  <div className="w-6 h-6 rounded-full bg-chart-1/20 flex items-center justify-center">
-                    <CreditCard className="w-3 h-3 text-chart-1" />
-                  </div>
-                  <div className="w-6 h-6 rounded-full bg-chart-2/20 flex items-center justify-center">
-                    <Wallet className="w-3 h-3 text-chart-2" />
-                  </div>
-                  <div className="w-6 h-6 rounded-full bg-chart-3/20 flex items-center justify-center">
-                    <QrCode className="w-3 h-3 text-chart-3" />
-                  </div>
-                </div>
-                <span>Track salary, freelance & more</span>
-              </div>
             </div>
           </div>
         </CardContent>
