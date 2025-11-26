@@ -13,17 +13,17 @@ export function ExpenseDistributionNoData() {
             <div className="flex-1 flex items-center justify-center relative">
                 {/* Background decorative elements */}
                 <div className="absolute inset-0 flex items-center justify-center opacity-5">
-                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-chart-1 to-chart-3 blur-3xl" />
+                    <div className="w-32 h-32 rounded-full bg-primary blur-3xl" />
                 </div>
 
                 <div className="relative z-10 flex flex-col items-center space-y-6 text-center px-4">
                     {/* Animated icon container */}
                     <div className="relative">
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-chart-1/20 to-chart-3/20 flex items-center justify-center mb-2">
-                            <TrendingDown className="w-8 h-8 text-chart-1" />
+                        <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-2">
+                            <TrendingDown className="w-8 h-8 text-primary" />
                         </div>
-                        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-chart-2/20 flex items-center justify-center">
-                            <BarChart3 className="w-3 h-3 text-chart-2" />
+                        <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center">
+                            <BarChart3 className="w-3 h-3 text-primary" />
                         </div>
                     </div>
 
@@ -37,20 +37,20 @@ export function ExpenseDistributionNoData() {
                         </p>
                     </div>
 
-                
+
 
                     {/* Visual indicators */}
                     <div className="flex items-center space-x-4 text-xs text-muted-foreground">
                         <div className="flex items-center space-x-1">
-                            <div className="w-2 h-2 rounded-full bg-chart-1" />
+                            <div className="w-2 h-2 rounded-full bg-primary" />
                             <span>Food</span>
                         </div>
                         <div className="flex items-center space-x-1">
-                            <div className="w-2 h-2 rounded-full bg-chart-2" />
+                            <div className="w-2 h-2 rounded-full bg-primary/70" />
                             <span>Transport</span>
                         </div>
                         <div className="flex items-center space-x-1">
-                            <div className="w-2 h-2 rounded-full bg-chart-3" />
+                            <div className="w-2 h-2 rounded-full bg-primary/40" />
                             <span>Entertainment</span>
                         </div>
                     </div>
@@ -58,7 +58,7 @@ export function ExpenseDistributionNoData() {
             </div>
 
             {/* Bottom decorative bar */}
-            <div className="h-1 bg-gradient-to-r from-chart-1 via-chart-2 to-chart-3 rounded-full opacity-20" />
+            <div className="h-1 bg-primary rounded-full opacity-20" />
         </CardContent>
     </Card>)
 }
