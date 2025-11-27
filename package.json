@@ -8,7 +8,8 @@
     "start": "next build && next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "check": "npm run lint && npm run type-check"
+    "check": "npm run lint && npm run type-check",
+    "db:create-tables": "tsx scripts/create_tables.ts"
   },
   "dependencies": {
     "@google/genai": "^0.8.0",
@@ -80,6 +81,7 @@
     "eslint-config-next": "15.1.6",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }
