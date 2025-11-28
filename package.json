@@ -9,7 +9,12 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "check": "npm run lint && npm run type-check",
-    "db:create-tables": "tsx scripts/create_tables.ts"
+    "db:create-tables": "tsx scripts/create_tables.ts",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:file": "vitest run"
   },
   "dependencies": {
     "@google/genai": "^0.8.0",
@@ -71,17 +76,25 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tanstack/eslint-plugin-query": "^5.66.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",
     "@types/pg": "^8.11.11",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/swagger-ui-react": "^5.18.0",
+    "@vitest/coverage-v8": "^4.0.14",
+    "@vitest/ui": "^4.0.14",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
+    "jsdom": "^27.2.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.0.14"
   }
 }
