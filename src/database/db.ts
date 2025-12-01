@@ -1,7 +1,6 @@
 import { Pool } from "pg";
 
 
-
 const pool = process.env.SUPABASE_DB_URL
   ? new Pool({
       connectionString: process.env.SUPABASE_DB_URL,
