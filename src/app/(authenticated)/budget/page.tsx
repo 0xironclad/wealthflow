@@ -259,7 +259,7 @@ function BudgetManager() {
                 ) : budgets && budgets.length > 0 ? (
                     <BudgetDetails budgets={budgets} />
                 ) : (
-                    <div className="p-8 rounded-lg border bg-card text-center">
+                    <div className="p-8 rounded-lg border bg-card text-center h-full flex items-center justify-center flex-col">
                         <h3 className="text-lg font-semibold mb-2">No budgets found</h3>
                         <p className="text-muted-foreground mb-4">
                             Create your first budget to start tracking your spending
