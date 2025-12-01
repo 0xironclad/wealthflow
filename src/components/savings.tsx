@@ -17,20 +17,20 @@ function Savings() {
 
     const { data: savings, isPending, isError, error, isFetching, isLoading, status, fetchStatus } = useSavings(user?.id ?? '');
 
-    // // Debug logs
-    // console.log('[Savings Component] State:', {
-    //     userId: user?.id,
-    //     isPending,
-    //     isLoading,
-    //     isFetching,
-    //     isError,
-    //     error: error,
-    //     status,
-    //     fetchStatus,
-    //     isAuthLoading,
-    //     hasSavings: !!savings,
-    //     savingsCount: savings?.length
-    // });
+    // Debug logs
+    console.log('[Savings Component] State:', {
+        userId: user?.id,
+        isPending,
+        isLoading,
+        isFetching,
+        isError,
+        error: error,
+        status,
+        fetchStatus,
+        isAuthLoading,
+        hasSavings: !!savings,
+        savingsCount: savings?.length
+    });
 
     if (isAuthLoading) {
         console.log('[Savings] Showing loading: Auth loading');
