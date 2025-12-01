@@ -3,10 +3,10 @@
 import pool from "@/database/db";
 
 export const getMonthlyCashFlow = async (
-  userId: string
+    userId: string
 ): Promise<{ name: string; income: number; expense: number }[]> => {
-  try {
-    const query = `
+    try {
+        const query = `
       WITH months AS (
         SELECT generate_series(
           date_trunc('month', CURRENT_DATE) - INTERVAL '5 months',
@@ -28,23 +28,23 @@ export const getMonthlyCashFlow = async (
       ORDER BY m.month ASC
     `;
 
-    const result = await pool.query(query, [userId]);
-    return result.rows.map((row) => ({
-      name: row.name,
-      income: Number(row.income),
-      expense: Number(row.expense),
-    }));
-  } catch (error) {
-    console.error("Error fetching cash flow:", error);
-    return [];
-  }
+        const result = await pool.query(query, [userId]);
+        return result.rows.map((row) => ({
+            name: row.name,
+            income: Number(row.income),
+            expense: Number(row.expense),
+        }));
+    } catch (error) {
+        console.error("Error fetching cash flow:", error);
+        return [];
+    }
 };
 
 export const getSpendingByCategory = async (
-  userId: string
+    userId: string
 ): Promise<{ name: string; value: number; fill: string }[]> => {
-  try {
-    const query = `
+    try {
+        const query = `
       SELECT
         category,
         SUM(amount) as value
@@ -56,33 +56,33 @@ export const getSpendingByCategory = async (
       ORDER BY value DESC
     `;
 
-    const result = await pool.query(query, [userId]);
+        const result = await pool.query(query, [userId]);
 
-    const COLORS = [
-      "#0088FE",
-      "#00C49F",
-      "#FFBB28",
-      "#FF8042",
-      "#8884d8",
-      "#82ca9d",
-      "#ffc658",
-      "#ff7300",
-    ];
+        const COLORS = [
+            "#0088FE",
+            "#00C49F",
+            "#FFBB28",
+            "#FF8042",
+            "#8884d8",
+            "#82ca9d",
+            "#ffc658",
+            "#ff7300",
+        ];
 
-    return result.rows.map((row, index) => ({
-      name: row.category,
-      value: Number(row.value),
-      fill: COLORS[index % COLORS.length],
-    }));
-  } catch (error) {
-    console.error("Error fetching spending by category:", error);
-    return [];
-  }
+        return result.rows.map((row, index) => ({
+            name: row.category,
+            value: Number(row.value),
+            fill: COLORS[index % COLORS.length],
+        }));
+    } catch (error) {
+        console.error("Error fetching spending by category:", error);
+        return [];
+    }
 };
 
 export const getFinancialHealth = async (userId: string) => {
-  try {
-    const savingsQuery = `
+    try {
+        const savingsQuery = `
             WITH monthly_stats AS (
                 SELECT
                     date_trunc('month', date) as month,
@@ -101,69 +101,79 @@ export const getFinancialHealth = async (userId: string) => {
                 AVG(expense) as avg_monthly_expense
             FROM monthly_stats
         `;
-    const savingsResult = await pool.query(savingsQuery, [userId]);
-    const savingsRate = Number(savingsResult.rows[0]?.savings_rate || 0);
-    const avgMonthlyExpense = Number(
-      savingsResult.rows[0]?.avg_monthly_expense || 0
-    );
+        const savingsResult = await pool.query(savingsQuery, [userId]);
+        const savingsRate = Number(savingsResult.rows[0]?.savings_rate || 0);
+        const avgMonthlyExpense = Number(
+            savingsResult.rows[0]?.avg_monthly_expense || 0
+        );
 
-    const savingsBalanceQuery = `SELECT SUM(amount) as total FROM savings WHERE userid = $1`;
-    const savingsBalanceResult = await pool.query(savingsBalanceQuery, [
-      userId,
-    ]);
-    const totalSavings = Number(savingsBalanceResult.rows[0]?.total || 0);
+        // Calculate total balance (liquid funds) instead of savings
+        // Total balance = incomes - expenses + withdrawals
+        const balanceQuery = `
+      WITH balance_calc AS (
+        SELECT
+          COALESCE((SELECT SUM(amount) FROM incomes WHERE userid = $1), 0) as total_income,
+          COALESCE((SELECT SUM(amount) FROM expenses WHERE userid = $1 AND (type = 'expense')), 0) as total_expense,
+          COALESCE((SELECT SUM(amount) FROM expenses WHERE userid = $1 AND type = 'withdrawal'), 0) as total_withdrawal
+      )
+      SELECT (total_income - total_expense + total_withdrawal) as balance
+      FROM balance_calc
+    `;
+        const balanceResult = await pool.query(balanceQuery, [userId]);
+        const totalBalance = Number(balanceResult.rows[0]?.balance || 0);
 
-    const runwayMonths =
-      avgMonthlyExpense > 0 ? totalSavings / avgMonthlyExpense : 0;
+        // Runway = how many months you can survive on current balance if income stops
+        const runwayMonths =
+            avgMonthlyExpense > 0 ? totalBalance / avgMonthlyExpense : 0;
 
-    // 3. Calculate Score
-    // Savings Rate (50%): Target 20% = 100pts
-    const savingsScore = Math.min((savingsRate / 20) * 100, 100);
+        // 3. Calculate Score
+        // Savings Rate (50%): Target 20% = 100pts
+        const savingsScore = Math.min((savingsRate / 20) * 100, 100);
 
-    // Runway (30%): Target 6 months = 100pts
-    const runwayScore = Math.min((runwayMonths / 6) * 100, 100);
+        // Runway (30%): Target 6 months = 100pts
+        const runwayScore = Math.min((runwayMonths / 6) * 100, 100);
 
-    // Budget Adherence (20%): Simplified as (1 - overspend_rate)
-    // Let's use a simpler proxy: Expense Ratio. < 80% of income = good.
-    // Target expense ratio 80% (meaning 20% savings).
-    // If expense ratio > 100%, score 0.
-    const expenseRatio = 100 - savingsRate;
-    const budgetScore =
-      expenseRatio <= 80 ? 100 : Math.max(0, 100 - (expenseRatio - 80) * 5);
+        // Budget Adherence (20%): Simplified as (1 - overspend_rate)
+        // Let's use a simpler proxy: Expense Ratio. < 80% of income = good.
+        // Target expense ratio 80% (meaning 20% savings).
+        // If expense ratio > 100%, score 0.
+        const expenseRatio = 100 - savingsRate;
+        const budgetScore =
+            expenseRatio <= 80 ? 100 : Math.max(0, 100 - (expenseRatio - 80) * 5);
 
-    const totalScore = Math.round(
-      savingsScore * 0.5 + runwayScore * 0.3 + budgetScore * 0.2
-    );
+        const totalScore = Math.round(
+            savingsScore * 0.5 + runwayScore * 0.3 + budgetScore * 0.2
+        );
 
-    return {
-      score: totalScore,
-      savingsRate: Math.round(savingsRate),
-      runwayMonths: Number(runwayMonths.toFixed(1)),
-      grade:
-        totalScore >= 80
-          ? "Excellent"
-          : totalScore >= 60
-          ? "Good"
-          : totalScore >= 40
-          ? "Fair"
-          : "Needs Improvement",
-    };
-  } catch (error) {
-    console.error("Error calculating financial health:", error);
-    return { score: 0, savingsRate: 0, runwayMonths: 0, grade: "N/A" };
-  }
+        return {
+            score: totalScore,
+            savingsRate: Math.round(savingsRate),
+            runwayMonths: Number(runwayMonths.toFixed(1)),
+            grade:
+                totalScore >= 80
+                    ? "Excellent"
+                    : totalScore >= 60
+                        ? "Good"
+                        : totalScore >= 40
+                            ? "Fair"
+                            : "Needs Improvement",
+        };
+    } catch (error) {
+        console.error("Error calculating financial health:", error);
+        return { score: 0, savingsRate: 0, runwayMonths: 0, grade: "N/A" };
+    }
 };
 
 interface CategoryTrendData {
-  month: string;
-  [category: string]: number | string;
+    month: string;
+    [category: string]: number | string;
 }
 
 export const getCategoryTrends = async (
-  userId: string
+    userId: string
 ): Promise<{ data: CategoryTrendData[]; categories: string[] }> => {
-  try {
-    const topCategoriesQuery = `
+    try {
+        const topCategoriesQuery = `
             SELECT category
             FROM expenses
             WHERE userid = $1
@@ -173,12 +183,12 @@ export const getCategoryTrends = async (
             ORDER BY SUM(amount) DESC
             LIMIT 3
         `;
-    const topCategoriesResult = await pool.query(topCategoriesQuery, [userId]);
-    const topCategories = topCategoriesResult.rows.map((r) => r.category);
+        const topCategoriesResult = await pool.query(topCategoriesQuery, [userId]);
+        const topCategories = topCategoriesResult.rows.map((r) => r.category);
 
-    if (topCategories.length === 0) return { data: [], categories: [] };
+        if (topCategories.length === 0) return { data: [], categories: [] };
 
-    const trendsQuery = `
+        const trendsQuery = `
             WITH months AS (
                 SELECT generate_series(
                     date_trunc('month', CURRENT_DATE) - INTERVAL '5 months',
@@ -189,36 +199,36 @@ export const getCategoryTrends = async (
             SELECT
                 to_char(m.month, 'Mon') as month,
                 ${topCategories
-                  .map(
+                .map(
                     (cat) => `
                     COALESCE(SUM(CASE WHEN e.category = '${cat}' THEN e.amount ELSE 0 END), 0) as "${cat}"
                 `
-                  )
-                  .join(",")}
+                )
+                .join(",")}
             FROM months m
             LEFT JOIN expenses e ON date_trunc('month', e.date) = m.month
                 AND e.userid = $1
                 AND e.type = 'expense'
                 AND e.category IN (${topCategories
-                  .map((c) => `'${c}'`)
-                  .join(",")})
+                .map((c) => `'${c}'`)
+                .join(",")})
             GROUP BY m.month
             ORDER BY m.month ASC
         `;
 
-    const trendsResult = await pool.query(trendsQuery, [userId]);
-    return {
-      data: trendsResult.rows.map((row) => {
-        const newRow: CategoryTrendData = { month: row.month };
-        topCategories.forEach((cat) => {
-          newRow[cat] = Number(row[cat]);
-        });
-        return newRow;
-      }),
-      categories: topCategories,
-    };
-  } catch (error) {
-    console.error("Error fetching category trends:", error);
-    return { data: [], categories: [] };
-  }
+        const trendsResult = await pool.query(trendsQuery, [userId]);
+        return {
+            data: trendsResult.rows.map((row) => {
+                const newRow: CategoryTrendData = { month: row.month };
+                topCategories.forEach((cat) => {
+                    newRow[cat] = Number(row[cat]);
+                });
+                return newRow;
+            }),
+            categories: topCategories,
+        };
+    } catch (error) {
+        console.error("Error fetching category trends:", error);
+        return { data: [], categories: [] };
+    }
 };
