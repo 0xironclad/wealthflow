@@ -68,39 +68,18 @@ export default function Home() {
                                     speedSegment={0.3}
                                     delay={0.5}
                                     as="p"
-                                    className="mx-auto mt-4 max-w-2xl text-balance text-lg"
+                                    className="mx-auto mt-12 max-w-2xl text-balance text-lg"
                                 >
                                     Smart financial management with AI insights and automated tracking.
                                 </TextEffect>
 
-                                <AnimatedGroup
-                                    variants={{
-                                        container: {
-                                            visible: {
-                                                transition: {
-                                                    staggerChildren: 0.05,
-                                                    delayChildren: 0.75,
-                                                },
-                                            },
-                                        },
-                                        ...transitionVariants,
-                                    }}
-                                    className="mt-12 flex flex-col items-center justify-center gap-2 md:flex-row"
-                                >
-                                    {/* TODO: Add action buttons */}
-                                    <Button key={1} asChild size="lg" variant="default" className="px-5">
-                                        <Link href="#ai-in-action">
-                                            <span className="text-nowrap">AI in Action</span>
-                                            <ArrowRight className="ml-2 inline-block size-4" />
-                                        </Link>
-                                    </Button>
-                                </AnimatedGroup>
+
                             </div>
                         </div>
 
                         <div className="mx-auto max-w-4xl px-6">
                             <AnimatedGroup>
-                                <div className="relative mt-6 overflow-hidden sm:mt-8 md:mt-12">
+                                <div className="relative mt-6 overflow-hidden sm:mt-8 md:mt-15">
                                     <div
                                         aria-hidden
                                         className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-background/80 to-background"
