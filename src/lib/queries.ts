@@ -67,9 +67,21 @@ export const useIncomes = (userId: string) => {
 export const useSavings = (userId: string) => {
     return useQuery({
         queryKey: ["savings", userId],
-        queryFn: () => getSavings(userId),
+        queryFn: async () => {
+            console.log('[useSavings] Fetching savings for userId:', userId);
+            try {
+                const result = await getSavings(userId);
+                console.log('[useSavings] Fetch successful, count:', result?.length);
+                return result;
+            } catch (error) {
+                console.error('[useSavings] Fetch error:', error);
+                throw error;
+            }
+        },
         refetchOnWindowFocus: false,
         staleTime: 1000 * 60 * 60,
+        gcTime: 1000 * 60 * 60 * 2,
+        retry: false,
         enabled: !!userId,
         select: (data) =>
             data?.map(

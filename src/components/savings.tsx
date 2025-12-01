@@ -15,13 +15,39 @@ import LoadingComponent from "./loading-component"
 function Savings() {
     const { user, isLoading: isAuthLoading } = useUser();
 
-    const { data: savings, isLoading, isError } = useSavings(user?.id ?? '');
+    const { data: savings, isPending, isError, error, isFetching, isLoading, status, fetchStatus } = useSavings(user?.id ?? '');
 
-    if (!user?.id) return null;
-    if (isLoading || isAuthLoading) {
+    // // Debug logs
+    // console.log('[Savings Component] State:', {
+    //     userId: user?.id,
+    //     isPending,
+    //     isLoading,
+    //     isFetching,
+    //     isError,
+    //     error: error,
+    //     status,
+    //     fetchStatus,
+    //     isAuthLoading,
+    //     hasSavings: !!savings,
+    //     savingsCount: savings?.length
+    // });
+
+    if (isAuthLoading) {
+        console.log('[Savings] Showing loading: Auth loading');
         return <LoadingComponent title="Savings" />
     }
-    if (isError) {
+    if (!user?.id) {
+        console.log('[Savings] No user ID, returning null');
+        return null;
+    }
+
+    if (isPending) {
+        console.log('[Savings] Showing loading: isPending');
+        return <LoadingComponent title="Savings" />
+    }
+
+    if (isError && !savings) {
+        console.log('[Savings] Showing loading: Error state with no data');
         return <LoadingComponent title="Savings" />
     }
 
