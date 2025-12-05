@@ -28,7 +28,7 @@ export async function GET(request: Request) {
             apiKey: process.env.GOOGLE_API_KEY,
         });
         const response = await ai.models.generateContent({
-            model: "gemini-2.0-flash",
+            model: "gemini-2.5-flash",
             contents: prompt,
         });
         return NextResponse.json({

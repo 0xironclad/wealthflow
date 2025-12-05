@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import { Send, Bot, User, X, MessageSquare } from 'lucide-react';
 import { useUser } from "@/context/UserContext";
 import { useQuery } from "@tanstack/react-query";
+import { getFinancialHealth, getMonthlyCashFlow, getSpendingByCategory, getCategoryTrends } from "@/server/analytics";
+import { getUserData } from "@/server/user";
 
 interface Message {
     role: "user" | "assistant";
@@ -48,6 +50,42 @@ function FloatingChatbot() {
     const { data: budgetData } = useQuery({
         queryKey: ['budget', userId],
         queryFn: () => fetch(`/api/budget?userId=${userId}`).then(res => res.json()),
+        enabled: !!userId
+    });
+
+    const { data: balanceData } = useQuery({
+        queryKey: ['balance', userId],
+        queryFn: () => fetch(`/api/balance?userId=${userId}`).then(res => res.json()),
+        enabled: !!userId
+    });
+
+    const { data: userProfileData } = useQuery({
+        queryKey: ['userProfile', userId],
+        queryFn: () => userId ? getUserData(userId) : Promise.resolve(null),
+        enabled: !!userId
+    });
+
+    const { data: financialHealthData } = useQuery({
+        queryKey: ['financialHealth', userId],
+        queryFn: () => userId ? getFinancialHealth(userId) : Promise.resolve(null),
+        enabled: !!userId
+    });
+
+    const { data: monthlyCashFlowData } = useQuery({
+        queryKey: ['monthlyCashFlow', userId],
+        queryFn: () => userId ? getMonthlyCashFlow(userId) : Promise.resolve([]),
+        enabled: !!userId
+    });
+
+    const { data: spendingByCategoryData } = useQuery({
+        queryKey: ['spendingByCategory', userId],
+        queryFn: () => userId ? getSpendingByCategory(userId) : Promise.resolve([]),
+        enabled: !!userId
+    });
+
+    const { data: categoryTrendsData } = useQuery({
+        queryKey: ['categoryTrends', userId],
+        queryFn: () => userId ? getCategoryTrends(userId) : Promise.resolve({ data: [], categories: [] }),
         enabled: !!userId
     });
 
@@ -101,11 +139,17 @@ function FloatingChatbot() {
                 body: JSON.stringify({
                     messages: messagesToSend,
                     userData: {
-                        savings: savingsData.data,
-                        transactions: transactionsData.data,
-                        savingHistory: savingHistoryData.data,
-                        income: incomeData.data,
-                        budget: budgetData.data
+                        savings: savingsData?.data,
+                        transactions: transactionsData?.data,
+                        savingHistory: savingHistoryData?.data,
+                        income: incomeData?.data,
+                        budget: budgetData?.data,
+                        balance: balanceData?.data,
+                        userProfile: userProfileData,
+                        financialHealth: financialHealthData,
+                        monthlyCashFlow: monthlyCashFlowData,
+                        spendingByCategory: spendingByCategoryData,
+                        categoryTrends: categoryTrendsData
                     }
                 })
             });
@@ -173,13 +217,12 @@ function FloatingChatbot() {
                                         <Bot className="h-4 w-4 text-primary" />
                                     </div>
                                 )}
-                                <div className={`p-3 rounded-lg ${
-                                    message.role === "user"
+                                <div className={`p-3 rounded-lg ${message.role === "user"
                                     ? "bg-primary text-primary-foreground ml-12"
                                     : message.error
                                         ? "bg-destructive/10 border border-destructive/50"
                                         : "bg-secondary/50 mr-12"
-                                }`}>
+                                    }`}>
                                     <p className="text-sm whitespace-pre-wrap">{message.content}</p>
                                 </div>
                                 {message.role === "user" && (
