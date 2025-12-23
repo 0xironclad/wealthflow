@@ -18,7 +18,7 @@ import BudgetDetails from "@/components/budget/budget-details"
 import { useBudgets, useBudgetTotal } from "@/lib/queries"
 import { useUser } from "@/context/UserContext"
 import { useDatePeriod } from "@/hooks/useDatePeriod"
-import { AlertCircle, Plus } from "lucide-react"
+import { AlertCircle, Plus, Sparkles } from "lucide-react"
 import { EditBudgetForm } from "@/components/budget/budget-form"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
@@ -259,42 +259,64 @@ function BudgetManager() {
                 ) : budgets && budgets.length > 0 ? (
                     <BudgetDetails budgets={budgets} />
                 ) : (
-                    <div className="p-8 rounded-lg border bg-card text-center h-full flex items-center justify-center flex-col">
-                        <h3 className="text-lg font-semibold mb-2">No budgets found</h3>
-                        <p className="text-muted-foreground mb-4">
-                            Create your first budget to start tracking your spending
-                        </p>
-                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                            <DialogTrigger asChild>
-                                <Button variant="default">
-                                    <Plus className="w-4 h-4 mr-2" />
-                                    Create Budget
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                                <DialogHeader>
-                                    <DialogTitle>Create New Budget</DialogTitle>
-                                </DialogHeader>
-                                {user && (
-                                    <EditBudgetForm
-                                        budget={{
-                                            id: 0, // 0 indicates new budget creation
-                                            userId: user.id,
-                                            name: "",
-                                            description: "",
-                                            periodType: "monthly",
-                                            startDate: new Date().toISOString(),
-                                            endDate: new Date().toISOString(),
-                                            category: "Food",
-                                            plannedAmount: 0,
-                                            spentAmount: 0,
-                                            rollOver: false,
-                                        }}
-                                        onSuccessfulSubmit={handleBudgetSuccess}
-                                    />
-                                )}
-                            </DialogContent>
-                        </Dialog>
+                    <div className="relative rounded-xl border border-border/50 bg-card text-center h-full flex items-center justify-center flex-col overflow-hidden">
+                        {/* Decorative background */}
+                        <div className="absolute inset-0 overflow-hidden">
+                            <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full bg-primary/5 blur-3xl" />
+                            <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full bg-muted/30 blur-3xl" />
+                        </div>
+
+                        <div className="relative z-10 max-w-md px-8 py-12">
+                            {/* Illustrated icon */}
+                            <div className="relative mx-auto mb-8 w-24 h-24">
+                                <div className="absolute inset-0 rounded-full bg-primary/10 animate-pulse" />
+                                <div className="absolute inset-2 rounded-full bg-secondary/80 flex items-center justify-center">
+                                    <Sparkles className="h-10 w-10 text-primary/70" />
+                                </div>
+                                {/* Decorative orbits */}
+                                <div className="absolute inset-0 rounded-full border border-dashed border-border/40 animate-[spin_15s_linear_infinite]" />
+                                <div className="absolute -inset-3 rounded-full border border-dashed border-border/20 animate-[spin_20s_linear_infinite_reverse]" />
+                            </div>
+
+                            <h3 className="text-xl font-semibold text-foreground mb-3">
+                                Start Your Budget Journey
+                            </h3>
+                            <p className="text-muted-foreground mb-6 leading-relaxed">
+                                Take control of your finances by creating your first budget. Track spending, set goals, and build better money habits.
+                            </p>
+
+                            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="default" size="lg" className="gap-2">
+                                        <Plus className="w-4 h-4" />
+                                        Create Your First Budget
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                                    <DialogHeader>
+                                        <DialogTitle>Create New Budget</DialogTitle>
+                                    </DialogHeader>
+                                    {user && (
+                                        <EditBudgetForm
+                                            budget={{
+                                                id: 0,
+                                                userId: user.id,
+                                                name: "",
+                                                description: "",
+                                                periodType: "monthly",
+                                                startDate: new Date().toISOString(),
+                                                endDate: new Date().toISOString(),
+                                                category: "Food",
+                                                plannedAmount: 0,
+                                                spentAmount: 0,
+                                                rollOver: false,
+                                            }}
+                                            onSuccessfulSubmit={handleBudgetSuccess}
+                                        />
+                                    )}
+                                </DialogContent>
+                            </Dialog>
+                        </div>
                     </div>
                 )}
             </div>

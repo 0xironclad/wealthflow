@@ -26,7 +26,7 @@ import {
 
 import { Budget } from "@/lib/types"
 import { EditBudgetForm } from "./budget-form"
-import { Edit, Trash2, MoreVertical } from "lucide-react"
+import { Edit, Trash2, MoreVertical, ClipboardList } from "lucide-react"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import { useQueryClient } from "@tanstack/react-query"
@@ -97,11 +97,39 @@ function BudgetDetails({ budgets = [] }: BudgetDetailsProps) {
 
     if (!budgets || budgets.length === 0) {
         return (
-            <Card className="w-full h-[400px]">
-                <CardContent className="flex items-center justify-center h-full">
-                    <div className="text-center text-muted-foreground">
-                        <p className="text-lg font-medium mb-2">No budgets found</p>
-                        <p className="text-sm">Create your first budget to get started</p>
+            <Card className="w-full h-[400px] relative overflow-hidden">
+                {/* Decorative background elements */}
+                <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute top-1/2 left-1/4 -translate-y-1/2 w-64 h-64 rounded-full bg-primary/5 blur-3xl" />
+                    <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-64 h-64 rounded-full bg-muted/20 blur-3xl" />
+                </div>
+
+                <CardContent className="flex items-center justify-center h-full relative z-10">
+                    <div className="text-center max-w-sm">
+                        {/* Illustrated empty state */}
+                        <div className="relative mx-auto mb-6 w-20 h-20">
+                            {/* Background shape */}
+                            <div className="absolute inset-0 rounded-2xl bg-secondary/60 rotate-6" />
+                            <div className="absolute inset-0 rounded-2xl bg-secondary/80 -rotate-3" />
+                            {/* Main icon container */}
+                            <div className="absolute inset-0 rounded-2xl bg-card border border-border/50 flex items-center justify-center shadow-sm">
+                                <ClipboardList className="h-8 w-8 text-muted-foreground/70" />
+                            </div>
+                            {/* Decorative badge */}
+                            <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary/20 border-2 border-card flex items-center justify-center">
+                                <span className="text-xs font-bold text-primary">0</span>
+                            </div>
+                        </div>
+
+                        <h3 className="text-lg font-semibold text-foreground mb-2">
+                            No Budgets Yet
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed mb-1">
+                            Start tracking your spending by creating your first budget.
+                        </p>
+                        <p className="text-xs text-muted-foreground/70">
+                            Set spending limits for different categories to stay on track
+                        </p>
                     </div>
                 </CardContent>
             </Card>
