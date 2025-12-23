@@ -15,39 +15,25 @@ import LoadingComponent from "./loading-component"
 function Savings() {
     const { user, isLoading: isAuthLoading } = useUser();
 
-    const { data: savings, isPending, isError, error, isFetching, isLoading, status, fetchStatus } = useSavings(user?.id ?? '');
+    // Only call the hook with a valid userId - pass empty string when not ready
+    // The hook will be disabled when userId is empty
+    const userId = user?.id ?? '';
+    const { data: savings, isPending, isError } = useSavings(userId);
 
-    // Debug logs
-    console.log('[Savings Component] State:', {
-        userId: user?.id,
-        isPending,
-        isLoading,
-        isFetching,
-        isError,
-        error: error,
-        status,
-        fetchStatus,
-        isAuthLoading,
-        hasSavings: !!savings,
-        savingsCount: savings?.length
-    });
-
-    if (isAuthLoading) {
-        console.log('[Savings] Showing loading: Auth loading');
-        return <LoadingComponent title="Savings" />
-    }
-    if (!user?.id) {
-        console.log('[Savings] No user ID, returning null');
-        return null;
-    }
-
-    if (isPending) {
-        console.log('[Savings] Showing loading: isPending');
+    // Show loading while auth is loading or we don't have a user yet
+    if (isAuthLoading || !user?.id) {
         return <LoadingComponent title="Savings" />
     }
 
+    // Show loading only when actually fetching data (not when query is disabled)
+    // isPending is true when query has no data yet AND is enabled
+    // isFetching is true when query is actively fetching
+    if (isPending && !savings) {
+        return <LoadingComponent title="Savings" />
+    }
+
+    // Only show loading on error if we have no cached data to display
     if (isError && !savings) {
-        console.log('[Savings] Showing loading: Error state with no data');
         return <LoadingComponent title="Savings" />
     }
 

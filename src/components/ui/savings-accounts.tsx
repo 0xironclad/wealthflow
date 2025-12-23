@@ -114,8 +114,13 @@ export default function SavingAccounts() {
     enabled: !!user?.id && !isAuthLoading,
     retry: 2,
     retryDelay: 1000,
-    staleTime: 1000 * 60,
-    refetchOnMount: true,
+    // Match the staleTime with useSavings hook to prevent query config conflicts
+    staleTime: 1000 * 60 * 60, // 1 hour - same as useSavings
+    gcTime: 1000 * 60 * 60 * 2, // 2 hours - same as useSavings
+    // IMPORTANT: refetchOnMount was causing random loading states when navigating
+    // because it would trigger a refetch every time this component mounted,
+    // which would also affect other components using the same query key
+    refetchOnMount: false,
     refetchOnWindowFocus: false,
     select: (data) => {
       if (!Array.isArray(data)) return [];
