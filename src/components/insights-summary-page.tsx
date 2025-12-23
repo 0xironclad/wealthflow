@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Badge } from "@/components/ui/badge";
-import { Eye, CheckCircle2, AlertCircle } from "lucide-react";
+import { Eye, CheckCircle2, AlertCircle, TrendingUp, PiggyBank } from "lucide-react";
 
 interface InsightsSummaryCardsProps {
   progressStatus: {
@@ -37,29 +37,48 @@ export const InsightsSummaryCards: React.FC<InsightsSummaryCardsProps> = ({ prog
       <div className="sm:col-span-2">
         <MonthlySavingsLineChart />
       </div>
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Savings Progress</CardDescription>
-          <div className="flex items-baseline justify-between">
-            <CardTitle className="text-2xl">{progressStatus.progress}%</CardTitle>
-            <span className={`text-xs py-1 px-2 rounded-full ${progressStatus.status === 'Behind' ? 'bg-red-100 text-red-600' : 'bg-primary/20 text-primary'
+
+      {/* Savings Progress Card */}
+      <Card className="relative overflow-hidden border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+        {/* Decorative gradient */}
+        <div className="absolute -top-12 -right-12 w-24 h-24 rounded-full bg-primary/10 blur-2xl" />
+
+        <CardHeader className="pb-2 relative z-10">
+          <div className="flex items-center justify-between">
+            <CardDescription className="text-xs">Savings Progress</CardDescription>
+            <div className="p-1.5 rounded-lg bg-gradient-to-br from-primary/20 to-primary/5">
+              <PiggyBank className="w-3.5 h-3.5 text-primary" />
+            </div>
+          </div>
+          <div className="flex items-baseline justify-between mt-1">
+            <CardTitle className="text-2xl font-bold tracking-tight">{progressStatus.progress}%</CardTitle>
+            <span className={`text-xs py-0.5 px-2 rounded-full font-medium ${progressStatus.status === 'Behind' ? 'bg-destructive/20 text-destructive' : 'bg-primary/20 text-primary'
               }`}>
               {progressStatus.status}
             </span>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="text-xs text-muted-foreground">
             {progressStatus.text}
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Budget Health</CardDescription>
-          <div className="flex items-baseline justify-between">
-            <CardTitle className="text-2xl">
+      {/* Budget Health Card */}
+      <Card className="relative overflow-hidden border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+        {/* Decorative gradient */}
+        <div className="absolute -bottom-12 -left-12 w-24 h-24 rounded-full bg-chart-2/10 blur-2xl" />
+
+        <CardHeader className="pb-2 relative z-10">
+          <div className="flex items-center justify-between">
+            <CardDescription className="text-xs">Budget Health</CardDescription>
+            <div className="p-1.5 rounded-lg bg-gradient-to-br from-chart-2/20 to-chart-2/5">
+              <TrendingUp className="w-3.5 h-3.5 text-chart-2" />
+            </div>
+          </div>
+          <div className="flex items-baseline justify-between mt-1">
+            <CardTitle className="text-2xl font-bold tracking-tight">
               {budgetHealthPropData.budgetProgress}%
             </CardTitle>
             <TooltipProvider>
@@ -67,10 +86,10 @@ export const InsightsSummaryCards: React.FC<InsightsSummaryCardsProps> = ({ prog
                 <TooltipTrigger asChild>
                   <Badge
                     variant="outline"
-                    className="cursor-help gap-1.5 transition-colors bg-transparent hover:bg-transparent"
+                    className="cursor-help gap-1 text-xs py-0.5 px-2 transition-colors bg-secondary/50 hover:bg-secondary/80 border-border/50"
                   >
                     <Eye className="w-3 h-3" />
-                    Quick Glance
+                    Glance
                   </Badge>
                 </TooltipTrigger>
                 <TooltipContent
@@ -91,14 +110,14 @@ export const InsightsSummaryCards: React.FC<InsightsSummaryCardsProps> = ({ prog
                             key={index}
                             className="flex items-center gap-2 text-xs"
                           >
-                            <AlertCircle className="w-3 h-3 text-amber-500 flex-shrink-0" />
+                            <AlertCircle className="w-3 h-3 text-chart-4 flex-shrink-0" />
                             <span className="text-muted-foreground">{budget}</span>
                           </div>
                         ))}
                       </div>
                     ) : (
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <CheckCircle2 className="w-3 h-3 text-green-500" />
+                        <CheckCircle2 className="w-3 h-3 text-primary" />
                         <span>Everything looks great!</span>
                       </div>
                     )}
@@ -108,26 +127,22 @@ export const InsightsSummaryCards: React.FC<InsightsSummaryCardsProps> = ({ prog
             </TooltipProvider>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative z-10">
           <div className="flex items-center gap-2">
             {budgetHealthPropData.budgetsOverSpentCount > 0 ? (
-              <>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                  <span className="text-xs font-medium text-amber-600">
-                    {budgetHealthPropData.budgetsOverSpentCount} {budgetHealthPropData.budgetsOverSpentCount === 1 ? 'budget' : 'budgets'} over
-                  </span>
-                </div>
-              </>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-chart-4 animate-pulse" />
+                <span className="text-xs font-medium text-chart-4">
+                  {budgetHealthPropData.budgetsOverSpentCount} {budgetHealthPropData.budgetsOverSpentCount === 1 ? 'budget' : 'budgets'} over
+                </span>
+              </div>
             ) : (
-              <>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-2 h-2 rounded-full bg-green-500" />
-                  <span className="text-xs font-medium text-green-600">
-                    All budgets on track
-                  </span>
-                </div>
-              </>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full bg-primary" />
+                <span className="text-xs font-medium text-primary">
+                  All budgets on track
+                </span>
+              </div>
             )}
           </div>
         </CardContent>

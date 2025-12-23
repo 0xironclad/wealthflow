@@ -160,17 +160,17 @@ const AIInsights: React.FC = () => {
 
   const getInsightIcon = (index: number) => {
     const icons = [
-      <Lightbulb key="icon1" className="h-9 w-9 text-primary mt-0.5" />,
-      <TrendingUp key="icon2" className="h-9 w-9 text-green-500 mt-0.5" />,
-      <AlertTriangle key="icon3" className="h-9 w-9 text-amber-500 mt-0.5" />,
-      <Sparkles key="icon4" className="h-9 w-9 text-purple-500 mt-0.5" />,
+      <Lightbulb key="icon1" className="h-5 w-5 text-primary" />,
+      <TrendingUp key="icon2" className="h-5 w-5 text-chart-1" />,
+      <AlertTriangle key="icon3" className="h-5 w-5 text-chart-4" />,
+      <Sparkles key="icon4" className="h-5 w-5 text-chart-5" />,
     ];
     return icons[index] || icons[0];
   };
 
   if (isLoading || isAuthLoading) {
     return (
-      <Card className="h-full w-full flex items-center justify-center">
+      <Card className="h-full w-full flex items-center justify-center border-border/50">
         <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" />
       </Card>
     );
@@ -187,53 +187,53 @@ const AIInsights: React.FC = () => {
   }
 
   return (
-    <Card className="h-full w-full flex flex-col">
-      <CardHeader className="pb-2 flex-none">
+    <Card className="h-full w-full flex flex-col relative overflow-hidden border-border/50">
+      {/* Decorative gradient */}
+      <div className="absolute -top-16 -left-16 w-32 h-32 rounded-full bg-purple-500/10 blur-3xl" />
+      <div className="absolute -bottom-16 -right-16 w-32 h-32 rounded-full bg-primary/10 blur-3xl" />
+
+      <CardHeader className="pb-2 flex-none relative z-10">
         <div className="flex justify-between items-center">
           <CardTitle className="flex items-center gap-2">
-            <span className="text-sm">AI recommendations </span>
-            <Sparkles className="h-4 w-5 text-primary mt-0.5" />
+            <span className="text-sm font-semibold">AI Recommendations</span>
+            <div className="p-1 rounded-lg bg-gradient-to-br from-purple-500/20 to-primary/10">
+              <Sparkles className="h-3.5 w-3.5 text-primary" />
+            </div>
           </CardTitle>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleManualRefresh}
             disabled={isLoading}
-            className="gap-2"
+            className="h-8 px-2"
           >
             {isLoading ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Refreshing...</span>
-              </>
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
-              <>
-                <RefreshCw className="h-4 w-4" />
-                <span>Refresh</span>
-              </>
+              <RefreshCw className="h-4 w-4" />
             )}
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 min-h-0">
+      <CardContent className="flex-1 min-h-0 relative z-10">
         <div className="h-full overflow-y-auto styled-scrollbar pr-2">
-          <div className="flex flex-col justify-start gap-4">
-            <div className="space-y-4">
-              {insights.map((insight, index) => (
-                <div
-                  key={index}
-                  className="flex items-start gap-2 p-2 rounded-lg"
-                >
+          <div className="space-y-3">
+            {insights.map((insight, index) => (
+              <div
+                key={index}
+                className="flex items-start gap-3 p-2.5 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors duration-200"
+              >
+                <div className="flex-shrink-0 p-2 rounded-xl bg-card">
                   {getInsightIcon(index)}
-                  <div>
-                    <p className="text-sm font-medium">{insight.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {insight.description}
-                    </p>
-                  </div>
                 </div>
-              ))}
-            </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground">{insight.title}</p>
+                  <p className="text-xs text-muted-foreground leading-relaxed mt-0.5">
+                    {insight.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </CardContent>

@@ -50,11 +50,11 @@ function GoalProgress() {
 
     if (isLoading || isAuthLoading) {
         return (
-            <Card className="w-full h-full flex flex-col">
+            <Card className="w-full h-full flex flex-col border-border/50">
                 <CardHeader className="py-3">
-                    <CardTitle>Saving Progress</CardTitle>
+                    <CardTitle className="text-sm font-semibold">Saving Progress</CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-center h-[200px]">
+                <CardContent className="flex items-center justify-center flex-1">
                     <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" />
                 </CardContent>
             </Card>
@@ -62,24 +62,29 @@ function GoalProgress() {
     }
 
     return (
-        <Card className="w-full h-full flex flex-col">
-            <CardHeader className="py-3 flex-none">
-                <CardTitle>Saving Progress</CardTitle>
+        <Card className="w-full h-full flex flex-col relative overflow-hidden border-border/50">
+            {/* Decorative gradient */}
+            <div className="absolute -bottom-16 -left-16 w-32 h-32 rounded-full bg-chart-2/10 blur-3xl" />
+
+            <CardHeader className="py-3 flex-none relative z-10">
+                <CardTitle className="text-sm font-semibold">Saving Progress</CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 min-h-0">
-                <div className="h-full overflow-y-auto styled-scrollbar space-y-2 pr-2">
+            <CardContent className="flex-1 min-h-0 relative z-10">
+                <div className="h-full overflow-y-auto styled-scrollbar space-y-3 pr-2">
                     {progresses?.map((item: {
                         title: string;
                         value: number;
                     }, index: number) => (
-                        <div key={index} className="space-y-1">
-                            <p className="text-sm text-muted-foreground flex justify-between">
-                                {item.title}
-                                <span className="text-sm text-muted-foreground">
-                                    {Number.isInteger(item.value) ? item.value : item.value.toFixed(2)}%
+                        <div key={index} className="space-y-1.5">
+                            <div className="flex justify-between items-center">
+                                <span className="text-sm font-medium text-foreground truncate max-w-[60%]">
+                                    {item.title}
                                 </span>
-                            </p>
-                            <Progress value={item.value} />
+                                <span className="text-xs font-semibold text-muted-foreground bg-secondary/80 px-2 py-0.5 rounded-full">
+                                    {Number.isInteger(item.value) ? item.value : item.value.toFixed(1)}%
+                                </span>
+                            </div>
+                            <Progress value={item.value} className="h-2" />
                         </div>
                     ))}
                 </div>

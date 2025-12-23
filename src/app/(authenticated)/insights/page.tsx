@@ -291,192 +291,204 @@ export default function InsightsPage() {
 
 
     return (
-        <div className="w-full h-screen max-w-[100vw] px-4 pb-10 flex flex-col overflow-hidden ">
-            <h1 className="text-3xl font-bold py-4">Insights</h1>
+        <div className="w-full h-full flex flex-col overflow-hidden">
+            <div className="flex-shrink-0 px-4 py-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+                <h1 className="text-3xl font-bold">Insights</h1>
+            </div>
 
-            <div className="flex-1 flex flex-col space-y-5 min-h-0">
+            <div className="flex-1 flex flex-col gap-4 px-4 pb-4 overflow-y-auto styled-scrollbar">
                 {/* Top Row - Summary Cards */}
-                <div className="flex-none">
+                <div className="flex-shrink-0">
                     <InsightsSummaryCards progressStatus={progressStatus} budgetHealthPropData={budgetHealthPropData} />
                 </div>
 
                 {/* Middle Section - Charts and Recommendations */}
-                <div className="flex-1 h-[150px] grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[400px]">
                     {/* Left Column - AI Recommendations */}
-                    <Card className="md:col-span-1 flex flex-col min-h-0">
-                        <CardHeader className="flex-none">
+                    <Card className="md:col-span-1 flex flex-col min-h-0 relative overflow-hidden border-border/50">
+                        {/* Decorative gradient */}
+                        <div className="absolute -top-16 -left-16 w-32 h-32 rounded-full bg-purple-500/10 blur-3xl" />
+                        <div className="absolute -bottom-16 -right-16 w-32 h-32 rounded-full bg-primary/10 blur-3xl" />
+
+                        <CardHeader className="flex-none relative z-10">
                             <div className="flex justify-between items-center">
-                                <CardTitle>AI Recommendations</CardTitle>
+                                <CardTitle className="text-sm font-semibold">AI Recommendations</CardTitle>
                                 <Button
                                     variant="ghost"
                                     size="sm"
                                     onClick={handleRefreshRecommendations}
                                     disabled={isLoadingRecommendations}
+                                    className="h-8 px-2"
                                 >
                                     {isLoadingRecommendations ? (
-                                        <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+                                        <Loader2 className="animate-spin h-4 w-4" />
                                     ) : (
                                         "Refresh"
                                     )}
                                 </Button>
                             </div>
                         </CardHeader>
-                        <CardContent className="flex-1 overflow-auto min-h-0">
-                            <div className="space-y-4 styled-scrollbar max-h-full overflow-y-auto pr-2">
+                        <CardContent className="flex-1 overflow-auto min-h-0 relative z-10">
+                            <div className="space-y-3 styled-scrollbar max-h-full overflow-y-auto pr-2">
                                 {isLoadingRecommendations ? (
                                     <div className="flex items-center justify-center py-8">
-                                        <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+                                        <Loader2 className="animate-spin h-8 w-8 text-primary" />
                                     </div>
                                 ) : (
                                     recommendations.map((recommendation, index) => (
                                         <div
                                             key={index}
-                                            className="space-y-2 p-4 bg-secondary/10 rounded-lg dark:bg-secondary/30"
+                                            className="space-y-2 p-3 bg-secondary/30 rounded-xl hover:bg-secondary/50 transition-colors duration-200"
                                         >
                                             <div className="flex items-start justify-between gap-2">
-                                                <p className="text-sm font-medium flex-1">{recommendation.title}</p>
+                                                <p className="text-sm font-medium flex-1 text-foreground">{recommendation.title}</p>
                                                 <span className={cn(
-                                                    "text-xs px-2 py-1 rounded-full",
+                                                    "text-xs px-2 py-0.5 rounded-full font-medium",
                                                     {
                                                         "bg-destructive/20 text-destructive": recommendation.priority === "high",
-                                                        "bg-yellow-500/20 text-yellow-600": recommendation.priority === "medium",
-                                                        "bg-green-500/20 text-green-600": recommendation.priority === "low"
+                                                        "bg-chart-4/20 text-chart-4": recommendation.priority === "medium",
+                                                        "bg-primary/20 text-primary": recommendation.priority === "low"
                                                     }
                                                 )}>
                                                     {recommendation.priority}
                                                 </span>
                                             </div>
-                                            <p className="text-xs text-muted-foreground">{recommendation.description}</p>
+                                            <p className="text-xs text-muted-foreground leading-relaxed">{recommendation.description}</p>
                                         </div>
                                     ))
                                 )}
                             </div>
                         </CardContent>
                     </Card>
+
                     {/* Right Column - Financial Health & Breakdown */}
-                    <div className="md:col-span-2 flex flex-col space-y-4 min-h-0">
-                        <Card className="flex-1 flex flex-col min-h-0 overflow-hidden">
-                            <CardHeader>
-                                <CardTitle>Financial Health</CardTitle>
-                                <CardDescription>Overview of your financial stability and goals</CardDescription>
+                    <div className="md:col-span-2 flex flex-col min-h-0">
+                        <Card className="flex-1 flex flex-col min-h-0 overflow-hidden relative border-border/50">
+                            {/* Decorative gradient */}
+                            <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-chart-1/10 blur-3xl" />
+                            <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-chart-2/10 blur-3xl" />
+
+                            <CardHeader className="relative z-10">
+                                <CardTitle className="text-sm font-semibold">Financial Health</CardTitle>
+                                <CardDescription className="text-xs">Overview of your financial stability and goals</CardDescription>
                             </CardHeader>
-                            <CardContent className="flex-1 overflow-y-auto styled-scrollbar">
-                                <div className="flex flex-col space-y-8">
+                            <CardContent className="flex-1 overflow-y-auto styled-scrollbar relative z-10">
+                                <div className="flex flex-col space-y-6">
                                     {/* Health Score & Metrics */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {/* Score Card */}
-                                        <div className="bg-secondary/10 rounded-xl p-6 flex flex-col items-center justify-center text-center space-y-4">
+                                        <div className="bg-gradient-to-br from-secondary/30 to-secondary/10 rounded-xl p-5 flex flex-col items-center justify-center text-center space-y-3 border border-border/50">
                                             <div className="relative">
-                                                <div className="w-32 h-32 rounded-full border-8 border-secondary flex items-center justify-center">
-                                                    <span className="text-4xl font-bold">{financialHealth?.score ?? 0}</span>
+                                                <div className="w-28 h-28 rounded-full border-6 border-secondary flex items-center justify-center bg-card">
+                                                    <span className="text-3xl font-bold text-foreground">{financialHealth?.score ?? 0}</span>
                                                 </div>
                                                 <div className={cn(
-                                                    "absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-sm font-medium",
+                                                    "absolute -bottom-2 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-xs font-semibold",
                                                     {
-                                                        "bg-green-500 text-white": (financialHealth?.score ?? 0) >= 80,
-                                                        "bg-blue-500 text-white": (financialHealth?.score ?? 0) >= 60 && (financialHealth?.score ?? 0) < 80,
-                                                        "bg-yellow-500 text-white": (financialHealth?.score ?? 0) >= 40 && (financialHealth?.score ?? 0) < 60,
-                                                        "bg-red-500 text-white": (financialHealth?.score ?? 0) < 40,
+                                                        "bg-primary text-primary-foreground": (financialHealth?.score ?? 0) >= 80,
+                                                        "bg-chart-2 text-white": (financialHealth?.score ?? 0) >= 60 && (financialHealth?.score ?? 0) < 80,
+                                                        "bg-chart-4 text-white": (financialHealth?.score ?? 0) >= 40 && (financialHealth?.score ?? 0) < 60,
+                                                        "bg-destructive text-white": (financialHealth?.score ?? 0) < 40,
                                                     }
                                                 )}>
                                                     {financialHealth?.grade ?? 'N/A'}
                                                 </div>
                                             </div>
                                             <div>
-                                                <h3 className="text-lg font-semibold">Financial Health Score</h3>
-                                                <p className="text-sm text-muted-foreground">Based on savings, budget adherence, and runway.</p>
+                                                <h3 className="text-sm font-semibold text-foreground">Health Score</h3>
+                                                <p className="text-xs text-muted-foreground">Savings, budget & runway</p>
                                             </div>
                                         </div>
 
                                         {/* Metrics Grid */}
-                                        <div className="grid grid-cols-1 gap-4">
-                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4 border border-border/50">
-                                                <div className="p-3 bg-primary/10 rounded-full text-primary">
-                                                    <TrendingUp className="w-6 h-6" />
+                                        <div className="grid grid-cols-1 gap-3">
+                                            <div className="bg-secondary/20 rounded-xl p-3 flex items-center gap-3 border border-border/50 hover:border-primary/20 transition-colors">
+                                                <div className="p-2.5 bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl">
+                                                    <TrendingUp className="w-5 h-5 text-primary" />
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm text-muted-foreground">Savings Rate</p>
-                                                    <p className="text-xl font-bold">{financialHealth?.savingsRate ?? 0}%</p>
-                                                    <p className="text-xs text-muted-foreground">Target: 20%</p>
+                                                <div className="flex-1">
+                                                    <p className="text-xs text-muted-foreground">Savings Rate</p>
+                                                    <p className="text-lg font-bold text-foreground">{financialHealth?.savingsRate ?? 0}%</p>
                                                 </div>
+                                                <span className="text-xs text-muted-foreground bg-secondary/80 px-2 py-0.5 rounded-full">Target: 20%</span>
                                             </div>
-                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4 border border-border/50">
-                                                <div className="p-3 bg-primary/10 rounded-full text-primary">
-                                                    <Wallet className="w-6 h-6" />
+                                            <div className="bg-secondary/20 rounded-xl p-3 flex items-center gap-3 border border-border/50 hover:border-primary/20 transition-colors">
+                                                <div className="p-2.5 bg-gradient-to-br from-chart-2/20 to-chart-2/5 rounded-xl">
+                                                    <Wallet className="w-5 h-5 text-chart-2" />
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm text-muted-foreground">Runway</p>
-                                                    <p className="text-xl font-bold">{financialHealth?.runwayMonths ?? 0} Months</p>
-                                                    <p className="text-xs text-muted-foreground">Based on avg expenses</p>
+                                                <div className="flex-1">
+                                                    <p className="text-xs text-muted-foreground">Runway</p>
+                                                    <p className="text-lg font-bold text-foreground">{financialHealth?.runwayMonths ?? 0} Months</p>
                                                 </div>
+                                                <span className="text-xs text-muted-foreground bg-secondary/80 px-2 py-0.5 rounded-full">Avg expenses</span>
                                             </div>
-                                            <div className="bg-secondary/10 rounded-xl p-4 flex items-center gap-4 border border-border/50">
-                                                <div className="p-3 bg-primary/10 rounded-full text-primary">
-                                                    <Target className="w-6 h-6" />
+                                            <div className="bg-secondary/20 rounded-xl p-3 flex items-center gap-3 border border-border/50 hover:border-primary/20 transition-colors">
+                                                <div className="p-2.5 bg-gradient-to-br from-chart-1/20 to-chart-1/5 rounded-xl">
+                                                    <Target className="w-5 h-5 text-chart-1" />
                                                 </div>
-                                                <div>
-                                                    <p className="text-sm text-muted-foreground">Budget Status</p>
-                                                    <p className="text-xl font-bold">{budgetsOverSpentCount === 0 ? "On Track" : `${budgetsOverSpentCount} Over`}</p>
-                                                    <p className="text-xs text-muted-foreground">Active budgets</p>
+                                                <div className="flex-1">
+                                                    <p className="text-xs text-muted-foreground">Budget Status</p>
+                                                    <p className="text-lg font-bold text-foreground">{budgetsOverSpentCount === 0 ? "On Track" : `${budgetsOverSpentCount} Over`}</p>
                                                 </div>
+                                                <span className="text-xs text-muted-foreground bg-secondary/80 px-2 py-0.5 rounded-full">Active</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     {/* Health Breakdown Section */}
-                                    <div className="space-y-4">
-                                        <h3 className="text-lg font-semibold">Health Breakdown</h3>
+                                    <div className="space-y-3">
+                                        <h3 className="text-sm font-semibold text-foreground">Health Breakdown</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {/* At-Risk Budgets */}
-                                            <div className="space-y-3">
-                                                <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                                                    <AlertCircle className="w-4 h-4" /> At-Risk Budgets
+                                            <div className="space-y-2">
+                                                <h4 className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+                                                    <AlertCircle className="w-3.5 h-3.5" /> At-Risk Budgets
                                                 </h4>
                                                 {budgetPerformance && budgetPerformance.some((b: BudgetPerformance) => b.percentage >= 80) ? (
                                                     <div className="space-y-2">
                                                         {budgetPerformance.filter((b: BudgetPerformance) => b.percentage >= 80).slice(0, 3).map((budget: BudgetPerformance, i: number) => (
-                                                            <div key={i} className="flex justify-between items-center p-3 bg-secondary/5 rounded-lg border border-border/50">
-                                                                <span className="font-medium">{budget.name}</span>
-                                                                <span className={cn("text-sm font-bold", budget.percentage > 100 ? "text-destructive" : "text-yellow-500")}>
+                                                            <div key={i} className="flex justify-between items-center p-2.5 bg-secondary/20 rounded-xl border border-border/50">
+                                                                <span className="text-sm font-medium text-foreground">{budget.name}</span>
+                                                                <span className={cn("text-sm font-bold", budget.percentage > 100 ? "text-destructive" : "text-chart-4")}>
                                                                     {Math.round(budget.percentage)}%
                                                                 </span>
                                                             </div>
                                                         ))}
                                                     </div>
                                                 ) : (
-                                                    <div className="p-4 bg-secondary/5 rounded-lg border border-border/50 text-center">
+                                                    <div className="p-4 bg-secondary/20 rounded-xl border border-border/50 text-center">
                                                         <div className="flex flex-col items-center gap-2">
-                                                            <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
-                                                                <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                                                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                                                 </svg>
                                                             </div>
-                                                            <p className="text-sm font-medium">All budgets are healthy!</p>
-                                                            <p className="text-xs text-muted-foreground">No budgets are at risk</p>
+                                                            <p className="text-sm font-medium text-foreground">All budgets healthy!</p>
+                                                            <p className="text-xs text-muted-foreground">No budgets at risk</p>
                                                         </div>
                                                     </div>
                                                 )}
                                             </div>
 
                                             {/* Top Savings Goals */}
-                                            <div className="space-y-3">
-                                                <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                                                    <Target className="w-4 h-4" /> Top Savings Goals
+                                            <div className="space-y-2">
+                                                <h4 className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+                                                    <Target className="w-3.5 h-3.5" /> Top Savings Goals
                                                 </h4>
                                                 {savings && savings.length > 0 ? (
                                                     <div className="space-y-2">
                                                         {[...savings].sort((a: Saving, b: Saving) => b.amount - a.amount).slice(0, 3).map((saving: Saving, i: number) => (
-                                                            <div key={i} className="flex justify-between items-center p-3 bg-secondary/5 rounded-lg border border-border/50">
-                                                                <span className="font-medium">{saving.name}</span>
+                                                            <div key={i} className="flex justify-between items-center p-2.5 bg-secondary/20 rounded-xl border border-border/50">
+                                                                <span className="text-sm font-medium text-foreground">{saving.name}</span>
                                                                 <div className="text-right">
-                                                                    <span className="text-sm font-bold block">${saving.amount.toLocaleString()}</span>
+                                                                    <span className="text-sm font-bold text-foreground block">${saving.amount.toLocaleString()}</span>
                                                                     <span className="text-xs text-muted-foreground">of ${saving.goal.toLocaleString()}</span>
                                                                 </div>
                                                             </div>
                                                         ))}
                                                     </div>
                                                 ) : (
-                                                    <div className="p-4 bg-secondary/5 rounded-lg border border-border/50 text-center text-sm text-muted-foreground">
+                                                    <div className="p-4 bg-secondary/20 rounded-xl border border-border/50 text-center text-sm text-muted-foreground">
                                                         No active savings goals.
                                                     </div>
                                                 )}

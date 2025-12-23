@@ -8,9 +8,10 @@ import {
 } from "@/components/ui/card";
 import { RadialProgress } from "./radial-progress";
 import { getSavings } from "@/server/saving"
-import { Loader2 } from "lucide-react";
+import { Loader2, Target, CheckCircle2, AlertTriangle, TrendingUp } from "lucide-react";
 import { SavingsType } from "@/lib/types";
 import { useUser } from "@/context/UserContext";
+import { cn } from "@/lib/utils";
 
 function FinancialGoalSummary() {
     const { user, isLoading: isAuthLoading } = useUser();
@@ -41,11 +42,11 @@ function FinancialGoalSummary() {
 
     if (isLoading || isAuthLoading) {
         return (
-            <Card className="w-full h-full flex flex-col">
+            <Card className="w-full h-full flex flex-col border-border/50">
                 <CardHeader className="py-3">
-                    <CardTitle>Financial Goal Summary</CardTitle>
+                    <CardTitle className="text-sm font-semibold">Financial Goal Summary</CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-center h-[200px]">
+                <CardContent className="flex items-center justify-center flex-1">
                     <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" />
                 </CardContent>
             </Card>
@@ -55,32 +56,43 @@ function FinancialGoalSummary() {
     const activeGoals = savings?.filter((saving: SavingsType) => saving.status === 'active').length || 0;
     const completed = savings?.filter((saving: SavingsType) => saving.status === 'completed').length || 0;
     const atRisk = savings?.filter((saving: SavingsType) => saving.status === 'atRisk').length || 0;
+    const onTrack = activeGoals - atRisk;
     const totalGoals = activeGoals + completed + atRisk;
     const percentageComplete = totalGoals > 0 ? Math.round((completed / totalGoals) * 100) : 0;
 
     const goalSummary = [
-        { label: 'Active Goals', value: activeGoals },
-        { label: 'Completed Goals', value: completed },
-        { label: 'At Risk Goals', value: atRisk },
-        { label: 'On Track Goals', value: activeGoals - atRisk }
+        { label: 'Active', value: activeGoals, icon: Target, color: 'text-chart-2' },
+        { label: 'Completed', value: completed, icon: CheckCircle2, color: 'text-primary' },
+        { label: 'At Risk', value: atRisk, icon: AlertTriangle, color: 'text-chart-4' },
+        { label: 'On Track', value: onTrack, icon: TrendingUp, color: 'text-chart-1' }
     ];
+
     return (
-        <Card className="w-full h-full flex flex-col">
-            <CardHeader className="py-3">
-                <CardTitle>Financial Goal Summary</CardTitle>
+        <Card className="w-full h-full flex flex-col relative overflow-hidden border-border/50">
+            {/* Decorative gradient */}
+            <div className="absolute -top-16 -right-16 w-32 h-32 rounded-full bg-primary/10 blur-3xl" />
+
+            <CardHeader className="py-3 relative z-10">
+                <CardTitle className="text-sm font-semibold">Financial Goal Summary</CardTitle>
             </CardHeader>
-            <CardContent className="flex justify-between items-center flex-1 py-2">
-                <div>
-                    {goalSummary.map((item, index) => (
-                        <div key={index} className="mb-1">
-                            <p className="text-sm text-muted-foreground flex justify-between gap-2">
-                                <span>{item.label}</span>
-                                <span>{item.value}</span>
-                            </p>
-                        </div>
-                    ))}
+            <CardContent className="flex justify-between items-center flex-1 py-2 relative z-10">
+                <div className="space-y-2">
+                    {goalSummary.map((item, index) => {
+                        const Icon = item.icon;
+                        return (
+                            <div key={index} className="flex items-center gap-2">
+                                <div className={cn("p-1.5 rounded-lg bg-secondary/80")}>
+                                    <Icon className={cn("w-3.5 h-3.5", item.color)} />
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm text-muted-foreground">{item.label}</span>
+                                    <span className="text-sm font-semibold text-foreground">{item.value}</span>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
-                <div className="h-32 w-32 flex-shrink-0 flex items-start justify-center flex-col">
+                <div className="h-28 w-28 flex-shrink-0 flex items-center justify-center">
                     <RadialProgress progress={percentageComplete} />
                 </div>
             </CardContent>
