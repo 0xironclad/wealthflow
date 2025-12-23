@@ -22,7 +22,7 @@ const IncomeVSExpense = dynamic(() => import("@/components/income-expense").then
 
 const LoadingComponent = () => (
   <Card className="h-full">
-    <CardContent className="flex items-center justify-center h-[200px]">
+    <CardContent className="flex items-center justify-center h-full min-h-[200px]">
       <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
     </CardContent>
   </Card>
@@ -31,8 +31,8 @@ const LoadingComponent = () => (
 export default function BottomComponents() {
   return (
     <>
-      {/* Desktop Layout - Original grid layout */}
-      <div className="hidden lg:grid grid-cols-12 gap-4 h-[380px]">
+      {/* Desktop Layout - Fill available height */}
+      <div className="hidden lg:grid grid-cols-12 gap-4 h-full">
         <div className="col-span-2 h-full">
           <Savings />
         </div>
@@ -47,30 +47,30 @@ export default function BottomComponents() {
       </div>
 
       {/* Tablet Layout - Stacked with some horizontal arrangement */}
-      <div className="hidden md:block lg:hidden pb-5">
+      <div className="hidden md:block lg:hidden">
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="h-[280px]">
+          <div className="min-h-[240px]">
             <Savings />
           </div>
-          <div className="h-[280px]">
+          <div className="min-h-[240px]">
             <SpendTrend />
           </div>
         </div>
-        <div className="h-[280px]">
+        <div className="min-h-[240px]">
           <IncomeVSExpense />
         </div>
       </div>
 
       {/* Mobile Layout - All components stacked vertically */}
-      <div className="block md:hidden pb-5">
+      <div className="block md:hidden">
         <div className="flex flex-col gap-4">
-          <div className="h-[250px]">
+          <div className="min-h-[220px]">
             <Savings />
           </div>
-          <div className="h-[280px]">
+          <div className="min-h-[240px]">
             <SpendTrend />
           </div>
-          <div className="h-[280px]">
+          <div className="min-h-[240px]">
             <IncomeVSExpense />
           </div>
         </div>

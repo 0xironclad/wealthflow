@@ -124,14 +124,15 @@ function ExpenseDistribution() {
     }
 
     return (
-        <Card className="h-full w-full">
-            <CardHeader className="pb-3">
-                <div>
-                    <CardTitle className="text-sm">Expense Distribution</CardTitle>
-                </div>
+        <Card className="h-full w-full relative overflow-hidden border-border/50">
+            {/* Decorative background */}
+            <div className="absolute -bottom-20 -left-20 w-40 h-40 rounded-full bg-chart-1/5 blur-3xl" />
+
+            <CardHeader className="pb-3 relative z-10">
+                <CardTitle className="text-sm font-semibold">Expense Distribution</CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-col gap-4 h-[calc(100%-4rem)] styled-scrollbar">
-                <div className="grid grid-cols-3 gap-4">
+            <CardContent className="flex flex-col gap-3 h-[calc(100%-3.5rem)] styled-scrollbar relative z-10">
+                <div className="grid grid-cols-3 gap-3">
                     {timelyData.map((item, index) => (
                         <TimelyAverage key={index} title={item.title} amount={Number(item.amount)} />
                     ))}
@@ -141,7 +142,7 @@ function ExpenseDistribution() {
                         <PieChartComponent chartData={chartData} />
                     </div>
                     <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center">
-                        <div className="max-h-full overflow-y-auto pr-2">
+                        <div className="max-h-full overflow-y-auto pr-2 styled-scrollbar">
                             <ExpenseDetails chartData={chartData} />
                         </div>
                     </div>

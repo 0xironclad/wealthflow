@@ -76,69 +76,78 @@ export default function LatestTransactions() {
   }
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="flex-none pb-4">
+    <Card className="h-full flex flex-col relative overflow-hidden border-border/50">
+      {/* Decorative background */}
+      <div className="absolute -top-20 -left-20 w-40 h-40 rounded-full bg-chart-2/5 blur-3xl" />
+
+      <CardHeader className="flex-none pb-3 relative z-10">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-              Latest Transactions
-            </CardTitle>
-          </div>
-          <CardDescription className="text-xs font-bold text-zinc-600 dark:text-zinc-400 mt-0">
-            This Month-
-            <span className="text-xs font-bold text-zinc-600 dark:text-zinc-400">
+          <CardTitle className="text-sm font-semibold text-foreground">
+            Latest Transactions
+          </CardTitle>
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary/80">
+            <span className="text-xs text-muted-foreground">This Month</span>
+            <span className="text-xs font-bold text-foreground">
               {expenses?.length || 0}
             </span>
-          </CardDescription>
+          </div>
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 dark:scrollbar-thumb-zinc-800 scrollbar-track-transparent styled-scrollbar">
+      <CardContent className="flex-1 overflow-y-auto styled-scrollbar p-3 relative z-10">
         <div className="space-y-1">
           {sortedTransactions.map((transaction) => (
             <div
               key={transaction.id}
               className={cn(
                 "group flex items-center gap-3",
-                "p-2 rounded-lg",
-                "hover:bg-zinc-100 dark:hover:bg-zinc-800/50",
-                "transition-all duration-200"
+                "p-2.5 rounded-xl",
+                "hover:bg-secondary/60",
+                "transition-all duration-200",
+                "border border-transparent hover:border-border/50"
               )}
             >
               <div className="flex-1 flex items-center justify-between min-w-0">
-                <div className="flex gap-2 items-center">
-                  {transaction.category === "Food" && (
-                    <Utensils className="text-zinc-900 dark:text-zinc-100" />
-                  )}
-                  {transaction.category === "Rent" && (
-                    <HousePlus className="text-zinc-900 dark:text-zinc-100" />
-                  )}
-                  {transaction.category === "Entertainment" && (
-                    <MonitorPlay className="text-zinc-900 dark:text-zinc-100" />
-                  )}
-                  {transaction.category === "Transport" && (
-                    <CarFront className="text-zinc-900 dark:text-zinc-100" />
-                  )}
-                  {transaction.category === "Health" && (
-                    <HeartPulse className="text-zinc-900 dark:text-zinc-100" />
-                  )}
-                  {transaction.category === "Utilities" && (
-                    <Droplets className="text-zinc-900 dark:text-zinc-100" />
-                  )}
-                  {transaction.category === "Education" && (
-                    <GraduationCap className="text-zinc-900 dark:text-zinc-100" />
-                  )}
-                  {transaction.category === "Shopping" && (
-                    <ShoppingCart className="text-zinc-900 dark:text-zinc-100" />
-                  )}
-                  {transaction.category === "Other" && (
-                    <WalletCards className="text-zinc-900 dark:text-zinc-100" />
-                  )}
+                <div className="flex gap-3 items-center">
+                  <div className={cn(
+                    "p-2 rounded-xl",
+                    transaction.type === "incoming"
+                      ? "bg-gradient-to-br from-primary/20 to-primary/5"
+                      : "bg-gradient-to-br from-destructive/20 to-destructive/5"
+                  )}>
+                    {transaction.category === "Food" && (
+                      <Utensils className="w-4 h-4 text-muted-foreground" />
+                    )}
+                    {transaction.category === "Rent" && (
+                      <HousePlus className="w-4 h-4 text-muted-foreground" />
+                    )}
+                    {transaction.category === "Entertainment" && (
+                      <MonitorPlay className="w-4 h-4 text-muted-foreground" />
+                    )}
+                    {transaction.category === "Transport" && (
+                      <CarFront className="w-4 h-4 text-muted-foreground" />
+                    )}
+                    {transaction.category === "Health" && (
+                      <HeartPulse className="w-4 h-4 text-muted-foreground" />
+                    )}
+                    {transaction.category === "Utilities" && (
+                      <Droplets className="w-4 h-4 text-muted-foreground" />
+                    )}
+                    {transaction.category === "Education" && (
+                      <GraduationCap className="w-4 h-4 text-muted-foreground" />
+                    )}
+                    {transaction.category === "Shopping" && (
+                      <ShoppingCart className="w-4 h-4 text-muted-foreground" />
+                    )}
+                    {transaction.category === "Other" && (
+                      <WalletCards className="w-4 h-4 text-muted-foreground" />
+                    )}
+                  </div>
                   <div className="space-y-0.5">
-                    <h3 className="text-xs font-medium text-zinc-900 dark:text-zinc-100">
+                    <h3 className="text-sm font-medium text-foreground">
                       {transaction.title}
                     </h3>
-                    <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
+                    <p className="text-xs text-muted-foreground">
                       {transaction.date.toLocaleDateString()}{" "}
                       {transaction.timestamp}
                     </p>
@@ -148,19 +157,19 @@ export default function LatestTransactions() {
                 <div className="flex items-center gap-1.5 pl-3">
                   <span
                     className={cn(
-                      "text-xs font-medium",
+                      "text-sm font-semibold",
                       transaction.type === "incoming"
-                        ? "text-emerald-600 dark:text-emerald-400"
-                        : "text-red-600 dark:text-red-400"
+                        ? "text-primary"
+                        : "text-destructive"
                     )}
                   >
-                    {transaction.type === "incoming" ? "+" : ""}$
+                    {transaction.type === "incoming" ? "+" : "-"}$
                     {Math.abs(transaction.amount).toFixed(2)}
                   </span>
                   {transaction.type === "incoming" ? (
-                    <ArrowDownLeft className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    <ArrowDownLeft className="w-4 h-4 text-primary" />
                   ) : (
-                    <ArrowUpRight className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+                    <ArrowUpRight className="w-4 h-4 text-destructive" />
                   )}
                 </div>
               </div>
@@ -169,15 +178,11 @@ export default function LatestTransactions() {
         </div>
       </CardContent>
 
-      <CardFooter className="border-t mt-auto p-2">
-        <Button className="w-full">
-          <Link
-            href="/transaction"
-            className="flex gap-2 items-center justify-center"
-            prefetch={true}
-          >
+      <CardFooter className="border-t border-border/50 mt-auto p-3 relative z-10">
+        <Button className="w-full h-9 gap-2" asChild>
+          <Link href="/transaction" prefetch={true}>
             View All Transactions
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            <ArrowUpRight className="w-4 h-4" />
           </Link>
         </Button>
       </CardFooter>

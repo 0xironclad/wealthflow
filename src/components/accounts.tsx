@@ -178,20 +178,23 @@ export default function AccountsCard() {
   }
   const displayAccounts = incomes
   return (
-    <Card className="h-full w-full relative flex flex-col">
-      <CardHeader className="p-3 border-b">
+    <Card className="h-full w-full relative flex flex-col overflow-hidden border-border/50">
+      {/* Decorative background */}
+      <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-primary/5 blur-3xl" />
+
+      <CardHeader className="p-4 border-b border-border/50 relative z-10">
         <p className="text-xs text-muted-foreground">Total Balance</p>
         {totalIncomeLoading ? (
-          <div className="h-6 w-24 bg-muted rounded animate-pulse" />
+          <div className="h-7 w-28 bg-muted rounded animate-pulse" />
         ) : (
-          <CardTitle className="text-2xl font-semibold">
+          <CardTitle className="text-2xl font-bold tracking-tight">
             {totalBalance ?? '$0'}
           </CardTitle>
         )}
       </CardHeader>
 
-      <CardContent className="flex-1 overflow-y-auto styled-scrollbar">
-        <h2 className="text-xs font-medium mb-2">Your incomes</h2>
+      <CardContent className="flex-1 overflow-y-auto styled-scrollbar p-3 relative z-10">
+        <h2 className="text-xs font-medium text-muted-foreground mb-3">Your incomes</h2>
 
         <div className="space-y-1">
           {(displayAccounts ?? []).map((account: {
@@ -205,41 +208,44 @@ export default function AccountsCard() {
               key={account.id}
               className={cn(
                 "group flex items-center justify-between",
-                "p-2 rounded-lg",
-                "hover:bg-accent/50",
+                "p-2.5 rounded-xl",
+                "hover:bg-secondary/60",
                 "transition-all duration-200",
+                "border border-transparent hover:border-border/50"
               )}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <div
-                  className={cn("p-1.5 rounded-lg bg-primary/10",
+                  className={cn(
+                    "p-2 rounded-xl",
+                    "bg-gradient-to-br from-primary/20 to-primary/5",
                   )}
                 >
                   {account.type === "savings" && (
-                    <Wallet className="w-3.5 h-3.5 text-primary" />
+                    <Wallet className="w-4 h-4 text-primary" />
                   )}
                   {account.type === "checking" && (
-                    <QrCode className="w-3.5 h-3.5 text-primary" />
+                    <QrCode className="w-4 h-4 text-primary" />
                   )}
                   {account.type === "investment" && (
-                    <ArrowUpRight className="w-3.5 h-3.5 text-primary" />
+                    <ArrowUpRight className="w-4 h-4 text-primary" />
                   )}
                   {account.type === "debt" && (
-                    <CreditCard className="w-3.5 h-3.5 text-destructive" />
+                    <CreditCard className="w-4 h-4 text-destructive" />
                   )}
                 </div>
                 <div>
-                  <h3 className="text-xs font-medium">{account.title}</h3>
+                  <h3 className="text-sm font-medium text-foreground">{account.title}</h3>
                   {account.description && (
-                    <p className="text-[11px] text-muted-foreground">{account.description}</p>
+                    <p className="text-xs text-muted-foreground">{account.description}</p>
                   )}
                 </div>
               </div>
 
               <div className="text-right">
                 <span className={cn(
-                  "text-xs font-medium",
-                  account.type === "debt" && "text-destructive"
+                  "text-sm font-semibold",
+                  account.type === "debt" ? "text-destructive" : "text-foreground"
                 )}>
                   {account.balance}
                 </span>
@@ -249,12 +255,12 @@ export default function AccountsCard() {
         </div>
       </CardContent>
 
-      <CardFooter className="p-2 border-t grid grid-cols-1 gap-2">
+      <CardFooter className="p-3 border-t border-border/50 relative z-10">
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="sm" className="h-auto py-2 flex items-center gap-1">
-              <Plus className="w-3.5 h-3.5" />
-              <span>Add</span>
+            <Button size="sm" className="w-full h-9 gap-2">
+              <Plus className="w-4 h-4" />
+              <span>Add Income</span>
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -267,10 +273,6 @@ export default function AccountsCard() {
             <IncomeForm onSubmit={handleAddIncome} />
           </DialogContent>
         </Dialog>
-        {/* <Button size="sm" variant={"secondary"} className="h-auto py-2 flex items-center gap-1">
-          <ArrowUpRight className="w-3.5 h-3.5" />
-          <span>Manage</span>
-        </Button> */}
       </CardFooter>
     </Card>
   );

@@ -127,21 +127,24 @@ export function SpendTrend() {
   const chartTitle = timeRange === "1month" ? "This Month" : "Last 6 Months";
 
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-2 flex flex-row items-center justify-between">
+    <Card className="h-full relative overflow-hidden border-border/50">
+      {/* Decorative background */}
+      <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-chart-2/5 blur-3xl" />
+
+      <CardHeader className="pb-2 flex flex-row items-center justify-between relative z-10">
         <div>
-          <CardTitle>Money spent</CardTitle>
-          <CardDescription>
-            Money spent in {chartTitle}
+          <CardTitle className="text-sm font-semibold">Money Spent</CardTitle>
+          <CardDescription className="text-xs">
+            {chartTitle}
           </CardDescription>
         </div>
-        <div className="flex rounded-md border border-input p-0.5 bg-background">
+        <div className="flex rounded-lg border border-border/50 p-0.5 bg-secondary/50">
           <button
             onClick={() => handleTimeRangeChange("1month")}
             className={cn(
-              "px-3 py-1 text-xs font-medium rounded-sm transition-colors",
+              "px-3 py-1 text-xs font-medium rounded-md transition-all duration-200",
               timeRange === "1month"
-                ? "bg-primary text-primary-foreground"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -150,9 +153,9 @@ export function SpendTrend() {
           <button
             onClick={() => handleTimeRangeChange("6months")}
             className={cn(
-              "px-3 py-1 text-xs font-medium rounded-sm transition-colors",
+              "px-3 py-1 text-xs font-medium rounded-md transition-all duration-200",
               timeRange === "6months"
-                ? "bg-primary text-primary-foreground"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -160,26 +163,25 @@ export function SpendTrend() {
           </button>
         </div>
       </CardHeader>
-      <CardContent className="p-2">
-        <ChartContainer config={chartConfig} className="h-[220px] w-full">
+      <CardContent className="p-2 pt-0 h-[calc(100%-4.5rem)] relative z-10">
+        <ChartContainer config={chartConfig} className="h-full w-full">
           <AreaChart
             data={chartData}
             margin={{
               left: 12,
               right: 12,
-              top: 30,
+              top: 20,
               bottom: 0
             }}
-            height={220}
-            width={500}
           >
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border/50" />
             <XAxis
               dataKey="month"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
               tickFormatter={(value) => timeRange === "1month" ? value : value.slice(0, 3)}
+              className="text-xs"
             />
             <ChartTooltip
               cursor={false}
@@ -189,7 +191,7 @@ export function SpendTrend() {
               dataKey="spent"
               type="natural"
               fill="hsl(var(--chart-2))"
-              fillOpacity={0.4}
+              fillOpacity={0.3}
               stroke="hsl(var(--chart-2))"
               strokeWidth={2}
             />

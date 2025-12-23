@@ -42,23 +42,36 @@ function Savings() {
     return hasNoSavings ? (
         <SavingsNoData />
     ) : (
-        <Card className="h-full flex flex-col">
-            <div className="flex justify-between p-4 items-center flex-none">
-                <CardTitle>Savings</CardTitle>
-                <CardDescription>
-                    <Link href="/goals" className="text-primary hover:underline" prefetch={true}>
-                        View all
-                    </Link>
-                </CardDescription>
+        <Card className="h-full flex flex-col relative overflow-hidden border-border/50">
+            {/* Decorative background */}
+            <div className="absolute -bottom-16 -right-16 w-32 h-32 rounded-full bg-primary/5 blur-3xl" />
+
+            <div className="flex justify-between p-4 items-center flex-none relative z-10">
+                <CardTitle className="text-sm font-semibold">Savings</CardTitle>
+                <Link
+                    href="/goals"
+                    className="text-xs font-medium text-primary hover:underline"
+                    prefetch={true}
+                >
+                    View all
+                </Link>
             </div>
-            <CardContent className="overflow-y-scroll max-h-[200px] styled-scrollbar">
+            <CardContent className="flex-1 overflow-y-auto styled-scrollbar p-4 pt-0 relative z-10">
                 <div className="space-y-4">
-                    {savings?.map((saving: SavingsType) => (
-                        <div key={saving.name} className="space-y-1.5">
-                            <p className="text-sm text-muted-foreground">{saving.name}</p>
-                            <Progress value={saving.goal ? (saving.amount / saving.goal * 100) : 0} />
-                        </div>
-                    ))}
+                    {savings?.map((saving: SavingsType) => {
+                        const progress = saving.goal ? (saving.amount / saving.goal * 100) : 0;
+                        return (
+                            <div key={saving.name} className="space-y-2">
+                                <div className="flex justify-between items-center">
+                                    <p className="text-sm font-medium text-foreground">{saving.name}</p>
+                                    <span className="text-xs text-muted-foreground">
+                                        {Math.round(progress)}%
+                                    </span>
+                                </div>
+                                <Progress value={progress} className="h-2" />
+                            </div>
+                        );
+                    })}
                 </div>
             </CardContent>
         </Card>

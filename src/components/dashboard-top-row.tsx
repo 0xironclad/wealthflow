@@ -106,20 +106,23 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
     const TrendIcon = isPositive ? TrendingUp : TrendingDown;
 
     return (
-        <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-lg">
-            <div className="p-4 flex flex-col h-full justify-between">
+        <Card className="h-full flex flex-col relative overflow-hidden border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+            {/* Decorative gradient background */}
+            <div className={`absolute -top-16 -right-16 w-32 h-32 rounded-full bg-gradient-to-br ${gradient} opacity-10 blur-2xl`} />
+
+            <div className="p-4 flex flex-col h-full justify-between relative z-10">
                 {/* Header with icon */}
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className={`p-2 bg-gradient-to-r ${gradient} rounded-lg`}>
+                        <div className={`p-2 bg-gradient-to-br ${gradient} rounded-xl shadow-sm`}>
                             <Icon className="w-4 h-4 text-white" />
                         </div>
-                        <span className="text-sm font-medium text-muted-foreground">{label}</span>
+                        <span className="text-xs font-medium text-muted-foreground">{label}</span>
                     </div>
                     {percentageChange !== undefined ? (
-                        <div className="flex items-center gap-1">
-                            <TrendIcon className={`w-3 h-3 ${isPositive ? 'text-green-600' : 'text-red-600'}`} />
-                            <span className={`text-xs font-semibold ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
+                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full ${isPositive ? 'bg-primary/10' : 'bg-destructive/10'}`}>
+                            <TrendIcon className={`w-3 h-3 ${isPositive ? 'text-primary' : 'text-destructive'}`} />
+                            <span className={`text-xs font-semibold ${isPositive ? 'text-primary' : 'text-destructive'}`}>
                                 {isPositive ? '+' : ''}{percentageChange}%
                             </span>
                         </div>
@@ -131,8 +134,8 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
                 </div>
 
                 {/* Main value */}
-                <div className="mb-2">
-                    <div className="text-2xl font-bold text-foreground leading-none">
+                <div className="flex-1 flex items-center">
+                    <div className="text-2xl font-bold text-foreground tracking-tight">
                         {typeof value === 'number' ? `$${value.toLocaleString()}` : value}
                     </div>
                 </div>
@@ -141,8 +144,8 @@ const FinancialMetricCard: React.FC<FinancialMetricCardProps> = ({
                 {percentageChange !== undefined && (
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
                         <span>vs last month</span>
-                        {previousValue && (
-                            <span className="bg-muted px-2 py-1 rounded-full">
+                        {previousValue !== undefined && (
+                            <span className="bg-secondary/80 px-2 py-0.5 rounded-full font-medium">
                                 ${previousValue.toLocaleString()}
                             </span>
                         )}
@@ -379,20 +382,23 @@ const DashboardTopRow: React.FC = () => {
                 />
             </div>
             <div className="col-span-3 md:col-span-1">
-                <Card className="h-full flex flex-col transition-all duration-300 hover:shadow-lg">
-                    <div className="p-4 flex flex-col h-full">
+                <Card className="h-full flex flex-col relative overflow-hidden border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+                    {/* Decorative gradient background */}
+                    <div className="absolute -top-16 -right-16 w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 opacity-10 blur-2xl" />
+
+                    <div className="p-4 flex flex-col h-full relative z-10">
                         {/* Header */}
-                        <div className="flex items-center gap-2 mb-2">
-                            <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg">
+                        <div className="flex items-center gap-2">
+                            <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-sm">
                                 <Wallet className="w-4 h-4 text-white" />
                             </div>
-                            <span className="text-sm font-medium text-muted-foreground">Budget Progress</span>
+                            <span className="text-xs font-medium text-muted-foreground">Budget Progress</span>
                         </div>
 
                         {/* Progress circle and details */}
-                        <div className="flex items-center justify-between mb-3">
+                        <div className="flex-1 flex items-center justify-between">
                             <div className="relative">
-                                <div className="w-14 h-14 rounded-full border-4 border-muted flex items-center justify-center">
+                                <div className="w-14 h-14 rounded-full border-4 border-secondary flex items-center justify-center">
                                     <span className="text-sm font-bold text-foreground">
                                         {isLoading ? '...' : `${percentUsed}%`}
                                     </span>
@@ -403,10 +409,10 @@ const DashboardTopRow: React.FC = () => {
                                         cy="28"
                                         r="24"
                                         stroke="currentColor"
-                                        strokeWidth="3"
+                                        strokeWidth="4"
                                         fill="none"
-                                        className={`transition-all duration-500 ${percentUsed > 90 ? 'text-red-500' :
-                                            percentUsed > 70 ? 'text-yellow-500' : 'text-green-500'
+                                        className={`transition-all duration-500 ${percentUsed > 90 ? 'text-destructive' :
+                                            percentUsed > 70 ? 'text-chart-4' : 'text-primary'
                                             }`}
                                         strokeDasharray={`${(percentUsed / 100) * 150.8} 150.8`}
                                         strokeLinecap="round"
@@ -414,17 +420,15 @@ const DashboardTopRow: React.FC = () => {
                                 </svg>
                             </div>
                             <div className="text-right">
-                                <div className="text-xs text-muted-foreground mb-1">Spent / Budget</div>
-                                <div className="text-sm font-semibold text-foreground">
+                                <div className="text-xs text-muted-foreground mb-0.5">Spent / Budget</div>
+                                <div className="text-lg font-bold text-foreground leading-tight">
                                     ${totalSpent.toLocaleString()}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
-                                    / ${totalBudget.toLocaleString()}
+                                    of ${totalBudget.toLocaleString()}
                                 </div>
                             </div>
                         </div>
-
-                        {/* Action button */}
                     </div>
                 </Card>
             </div>
