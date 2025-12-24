@@ -285,15 +285,9 @@ const DashboardTopRow: React.FC = () => {
     if (isLoadingData) {
         return (
             <div className="grid grid-cols-3 md:grid-cols-4 gap-4 h-full">
-                <div className="col-span-1">
-                    <FinancialMetricCardSkeleton gradient="from-emerald-500 to-teal-600" />
-                </div>
-                <div className="col-span-1">
-                    <FinancialMetricCardSkeleton gradient="from-rose-500 to-pink-600" />
-                </div>
-                <div className="col-span-1">
-                    <FinancialMetricCardSkeleton gradient="from-blue-500 to-cyan-600" />
-                </div>
+                <FinancialMetricCardSkeleton gradient="from-emerald-500 to-teal-600" />
+                <FinancialMetricCardSkeleton gradient="from-rose-500 to-pink-600" />
+                <FinancialMetricCardSkeleton gradient="from-blue-500 to-cyan-600" />
                 <div className="col-span-3 md:col-span-1">
                     <BudgetProgressCardSkeleton />
                 </div>
@@ -350,37 +344,31 @@ const DashboardTopRow: React.FC = () => {
 
     return (
         <div className="grid grid-cols-3 md:grid-cols-4 gap-4 h-full">
-            <div className="col-span-1">
-                <FinancialMetricCard
-                    label="Income This Month"
-                    value={totalIncomeThisMonth}
-                    percentageChange={incomeChange}
-                    isPositive={incomeChange >= 0}
-                    previousValue={totalIncomeLastMonth}
-                    icon={DollarSign}
-                    gradient="from-emerald-500 to-teal-600"
-                />
-            </div>
-            <div className="col-span-1">
-                <FinancialMetricCard
-                    label="Expenses This Month"
-                    value={Number(expensesThisMonth)}
-                    percentageChange={Math.abs(expenseChange)}
-                    isPositive={expenseChange <= 0} // Lower expenses are positive
-                    previousValue={expensesLastMonth}
-                    icon={CreditCard}
-                    gradient="from-rose-500 to-pink-600"
-                />
-            </div>
-            <div className="col-span-1">
-                <FinancialMetricCard
-                    label="Net Savings"
-                    value={Number(netSavings)}
-                    icon={PiggyBank}
-                    gradient="from-blue-500 to-cyan-600"
-                    viewAllLink="/goals"
-                />
-            </div>
+            <FinancialMetricCard
+                label="Income This Month"
+                value={totalIncomeThisMonth}
+                percentageChange={incomeChange}
+                isPositive={incomeChange >= 0}
+                previousValue={totalIncomeLastMonth}
+                icon={DollarSign}
+                gradient="from-emerald-500 to-teal-600"
+            />
+            <FinancialMetricCard
+                label="Expenses This Month"
+                value={Number(expensesThisMonth)}
+                percentageChange={Math.abs(expenseChange)}
+                isPositive={expenseChange <= 0} // Lower expenses are positive
+                previousValue={expensesLastMonth}
+                icon={CreditCard}
+                gradient="from-rose-500 to-pink-600"
+            />
+            <FinancialMetricCard
+                label="Net Savings"
+                value={Number(netSavings)}
+                icon={PiggyBank}
+                gradient="from-blue-500 to-cyan-600"
+                viewAllLink="/goals"
+            />
             <div className="col-span-3 md:col-span-1">
                 <Card className="h-full flex flex-col relative overflow-hidden border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
                     {/* Decorative gradient background */}
