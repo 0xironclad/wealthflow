@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -61,6 +62,7 @@ type ProcessedIncomeData = {
 export default function AccountsCard() {
   const { user, isLoading: isAuthLoading } = useUser();
   const { toast } = useToast()
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
   const { data: incomeData, error } = useQuery({
     queryKey: ['incomes', user?.id],
@@ -144,6 +146,7 @@ export default function AccountsCard() {
         title: "Success",
         description: "Income added successfully",
       })
+      setIsAddDialogOpen(false);
     },
     onError: (error) => {
       console.error('Income creation error:', error)
@@ -234,7 +237,7 @@ export default function AccountsCard() {
               </p>
             </div>
 
-            <Dialog>
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
               <DialogTrigger asChild>
                 <Button size="sm" className="gap-2">
                   <Plus className="w-4 h-4" />
@@ -361,7 +364,7 @@ export default function AccountsCard() {
           incomes={incomeData.allIncomes}
           userId={user?.id as string}
         />
-        <Dialog>
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm" className="flex-1 h-9 gap-2">
               <Plus className="w-4 h-4" />

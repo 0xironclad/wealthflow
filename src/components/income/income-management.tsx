@@ -25,6 +25,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Wallet,
   Settings,
@@ -39,6 +47,8 @@ import {
   TrendingUp,
   Pencil,
   MoreHorizontal,
+  Search,
+  X,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -65,12 +75,16 @@ type IncomeManagementProps = {
   userId: string;
 };
 
+const CATEGORIES = ["All", "Salary", "Bonus", "Investment", "Freelance", "Business", "Other"] as const;
+
 export function IncomeManagement({ incomes, userId }: IncomeManagementProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIncome, setSelectedIncome] = useState<IncomeRecord | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -109,6 +123,24 @@ export function IncomeManagement({ incomes, userId }: IncomeManagementProps) {
       chartData,
     };
   }, [incomes]);
+
+  // Filter incomes based on search and category
+  const filteredIncomes = useMemo(() => {
+    return incomes.filter((income) => {
+      const matchesSearch = searchQuery === "" ||
+        income.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        income.source.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = categoryFilter === "All" || income.category === categoryFilter;
+      return matchesSearch && matchesCategory;
+    });
+  }, [incomes, searchQuery, categoryFilter]);
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setCategoryFilter("All");
+  };
+
+  const hasActiveFilters = searchQuery !== "" || categoryFilter !== "All";
 
   const chartConfig = {
     amount: {
@@ -220,23 +252,17 @@ export function IncomeManagement({ incomes, userId }: IncomeManagementProps) {
         </DialogTrigger>
         <DialogContent className="sm:max-w-[900px] max-h-[90vh] flex flex-col p-0 gap-0">
           {/* Header */}
-          <DialogHeader className="p-6 pb-0">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="p-3 rounded-xl bg-primary/10">
-                  <Wallet className="w-6 h-6 text-primary" />
-                </div>
-                <div>
-                  <DialogTitle className="text-xl">Income Management</DialogTitle>
-                  <DialogDescription className="mt-1">
-                    Track, manage and analyze your income sources
-                  </DialogDescription>
-                </div>
+          <DialogHeader className="p-6 pb-4">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-xl bg-primary/10">
+                <Wallet className="w-6 h-6 text-primary" />
               </div>
-              <Button className="gap-2" onClick={() => setShowAddDialog(true)}>
-                <Plus className="w-4 h-4" />
-                Add Income
-              </Button>
+              <div className="flex-1">
+                <DialogTitle className="text-xl">Income Management</DialogTitle>
+                <DialogDescription className="mt-1">
+                  Track, manage and analyze your income sources
+                </DialogDescription>
+              </div>
             </div>
           </DialogHeader>
 
@@ -333,13 +359,63 @@ export function IncomeManagement({ incomes, userId }: IncomeManagementProps) {
 
           {/* Income List */}
           <div className="flex-1 min-h-0 p-6 pt-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-muted-foreground">All Income Entries</h3>
-              <span className="text-xs text-muted-foreground">{incomes.length} entries</span>
+            {/* Search, Filter and Add Button Row */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search by name or source..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 h-9"
+                />
+                {searchQuery && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
+                    onClick={() => setSearchQuery("")}
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </Button>
+                )}
+              </div>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-[140px] h-9">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CATEGORIES.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {hasActiveFilters && (
+                <Button variant="ghost" size="sm" onClick={clearFilters} className="h-9 px-2 text-muted-foreground">
+                  Clear
+                </Button>
+              )}
+              <Button className="gap-2 h-9" onClick={() => setShowAddDialog(true)}>
+                <Plus className="w-4 h-4" />
+                Add Income
+              </Button>
             </div>
-            <div className="max-h-[280px] overflow-y-auto styled-scrollbar pr-2">
+
+            {/* Results count */}
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-medium text-muted-foreground">
+                {hasActiveFilters ? "Filtered Results" : "All Income Entries"}
+              </h3>
+              <span className="text-xs text-muted-foreground">
+                {filteredIncomes.length} of {incomes.length} entries
+              </span>
+            </div>
+
+            <div className="max-h-[240px] overflow-y-auto styled-scrollbar pr-2">
               {incomes.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-16 text-center">
+                <div className="flex flex-col items-center justify-center py-12 text-center">
                   <div className="p-4 rounded-full bg-muted mb-4">
                     <Wallet className="w-8 h-8 text-muted-foreground" />
                   </div>
@@ -352,9 +428,23 @@ export function IncomeManagement({ incomes, userId }: IncomeManagementProps) {
                     Add Income
                   </Button>
                 </div>
+              ) : filteredIncomes.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="p-4 rounded-full bg-muted mb-4">
+                    <Search className="w-8 h-8 text-muted-foreground" />
+                  </div>
+                  <p className="text-base font-medium">No matching results</p>
+                  <p className="text-sm text-muted-foreground mt-1 mb-4">
+                    Try adjusting your search or filter criteria
+                  </p>
+                  <Button variant="outline" onClick={clearFilters} className="gap-2">
+                    <X className="w-4 h-4" />
+                    Clear Filters
+                  </Button>
+                </div>
               ) : (
                 <div className="space-y-2">
-                  {incomes.map((income) => (
+                  {filteredIncomes.map((income) => (
                     <div
                       key={income.id}
                       className={cn(
