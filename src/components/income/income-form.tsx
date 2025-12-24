@@ -43,20 +43,22 @@ export const formSchema = z.object({
 })
 
 type IncomeFormProps = {
-    onSubmit: (values: z.infer<typeof formSchema>) => void
+    onSubmit: (values: z.infer<typeof formSchema>) => void;
+    defaultValues?: Partial<z.infer<typeof formSchema>>;
+    submitLabel?: string;
 }
 
-export function IncomeForm({ onSubmit }: IncomeFormProps) {
+export function IncomeForm({ onSubmit, defaultValues, submitLabel = "Add Income" }: IncomeFormProps) {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "",
-            amount: 0,
-            date: new Date(),
-            category: "Salary",
-            source: "Employer",
-            isRecurring: false,
-            recurringFrequency: undefined,
+            name: defaultValues?.name ?? "",
+            amount: defaultValues?.amount ?? 0,
+            date: defaultValues?.date ?? new Date(),
+            category: defaultValues?.category ?? "Salary",
+            source: defaultValues?.source ?? "Employer",
+            isRecurring: defaultValues?.isRecurring ?? false,
+            recurringFrequency: defaultValues?.recurringFrequency ?? undefined,
         },
     })
 
@@ -236,7 +238,7 @@ export function IncomeForm({ onSubmit }: IncomeFormProps) {
                 )}
 
                 <DialogFooter>
-                    <Button type="submit">Add Income</Button>
+                    <Button type="submit">{submitLabel}</Button>
                 </DialogFooter>
             </form>
         </Form>

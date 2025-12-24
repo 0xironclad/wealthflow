@@ -16,7 +16,6 @@ import {
   TrendingDown,
   Calendar,
   RefreshCw,
-  Settings
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -31,6 +30,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { IncomeForm } from "./income/income-form"
+import { IncomeManagement } from "./income/income-management"
 import { useMutation } from "@tanstack/react-query"
 import { createIncome } from "@/server/income"
 import { useToast } from "@/hooks/use-toast"
@@ -50,6 +50,7 @@ type IncomeRecord = {
 };
 
 type ProcessedIncomeData = {
+  allIncomes: IncomeRecord[];
   recentIncomes: IncomeRecord[];
   thisMonthTotal: number;
   lastMonthTotal: number;
@@ -70,6 +71,7 @@ export default function AccountsCard() {
     select: (response): ProcessedIncomeData => {
       if (!response || response.length === 0) {
         return {
+          allIncomes: [],
           recentIncomes: [],
           thisMonthTotal: 0,
           lastMonthTotal: 0,
@@ -107,6 +109,7 @@ export default function AccountsCard() {
       const recentIncomes = response.slice(0, 4);
 
       return {
+        allIncomes: response,
         recentIncomes,
         thisMonthTotal,
         lastMonthTotal,
@@ -354,10 +357,10 @@ export default function AccountsCard() {
       </CardContent>
 
       <CardFooter className="p-3 border-t border-border/50 relative z-10 gap-2">
-        <Button variant="outline" size="sm" className="flex-1 h-9 gap-2">
-          <Settings className="w-4 h-4" />
-          <span>Manage</span>
-        </Button>
+        <IncomeManagement
+          incomes={incomeData.allIncomes}
+          userId={user?.id as string}
+        />
         <Dialog>
           <DialogTrigger asChild>
             <Button size="sm" className="flex-1 h-9 gap-2">

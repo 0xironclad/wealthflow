@@ -140,3 +140,76 @@ export const getMonthlyIncomeTotal = async (
 export const getCurrentMonthIncomeTotal = async (userId: string) => {
   return getMonthlyIncomeTotal(userId);
 };
+
+export async function deleteIncome(incomeId: string, userId: string) {
+  try {
+    if (!incomeId || !userId) {
+      throw new Error("Income ID and User ID are required");
+    }
+
+    const query = `DELETE FROM incomes WHERE id = $1 AND userid = $2 RETURNING *`;
+    const result = await pool.query(query, [incomeId, userId]);
+
+    if (result.rowCount === 0) {
+      throw new Error("Income not found or unauthorized");
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error deleting income:", error);
+    throw error;
+  }
+}
+
+export async function updateIncome(data: {
+  id: string;
+  userId: string;
+  name: string;
+  amount: number;
+  date: Date;
+  category: string;
+  source: string;
+  isRecurring: boolean;
+  recurringFrequency?: string;
+}) {
+  try {
+    if (!data.id || !data.userId) {
+      throw new Error("Income ID and User ID are required");
+    }
+
+    const query = `
+      UPDATE incomes SET
+        name = $1,
+        amount = $2,
+        date = $3,
+        category = $4,
+        source = $5,
+        isRecurring = $6,
+        recurringFrequency = $7
+      WHERE id = $8 AND userid = $9
+      RETURNING *
+    `;
+    const values = [
+      data.name,
+      data.amount,
+      data.date,
+      data.category,
+      data.source,
+      data.isRecurring,
+      data.recurringFrequency || null,
+      data.id,
+      data.userId,
+    ];
+
+    const result = await pool.query(query, values);
+
+    if (result.rowCount === 0) {
+      throw new Error("Income not found or unauthorized");
+    }
+
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error updating income:", error);
+    throw error;
+  }
+}
