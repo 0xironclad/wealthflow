@@ -39,7 +39,7 @@ function ExpenseDetails({ chartData }: { chartData: ChartData[] }) {
                         className="flex-shrink-0 w-3 h-3 rounded-full"
                         style={{ backgroundColor: item.fill }}
                     />
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    <span className="text-sm text-muted-foreground whitespace-nowrap">
                         {item.title} - ${item.amount.toFixed(2)}
                     </span>
                 </div>
@@ -132,16 +132,16 @@ function ExpenseDistribution() {
                 <CardTitle className="text-sm font-semibold">Expense Distribution</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-3 h-[calc(100%-3.5rem)] styled-scrollbar relative z-10">
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2 flex-shrink-0">
                     {timelyData.map((item, index) => (
                         <TimelyAverage key={index} title={item.title} amount={Number(item.amount)} />
                     ))}
                 </div>
-                <div className="flex flex-row gap-2 min-h-0 flex-1 items-center">
-                    <div className="h-full aspect-square max-h-[180px] flex-shrink-0">
+                <div className="flex-1 min-h-0 flex flex-row">
+                    <div className="w-1/2 h-full flex items-center justify-center p-2">
                         <PieChartComponent chartData={chartData} />
                     </div>
-                    <div className="flex-1 min-h-0 overflow-hidden flex flex-col justify-center">
+                    <div className="w-1/2 h-full flex items-center overflow-hidden p-2">
                         <div className="max-h-full overflow-y-auto pr-2 styled-scrollbar">
                             <ExpenseDetails chartData={chartData} />
                         </div>

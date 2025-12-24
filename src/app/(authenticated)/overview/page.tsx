@@ -19,14 +19,14 @@ export default function Overview() {
                 </div>
 
                 {/* Desktop Layout - Fill viewport height */}
-                <div className="hidden lg:flex flex-col flex-1 gap-4 px-4 pb-4 min-h-0">
+                <div className="hidden lg:flex flex-col flex-1 gap-4 px-4 pb-4 min-h-0 overflow-hidden">
                     {/* Top - Fixed height for metric cards */}
                     <div className="w-full h-[140px] flex-shrink-0">
                         <DashboardTopRow />
                     </div>
 
-                    {/* Middle - Flexible height (takes ~40% of remaining space) */}
-                    <div className="flex gap-4 w-full flex-[4] min-h-0">
+                    {/* Middle - Flexible height (takes ~53% of remaining space) */}
+                    <div className="flex gap-4 w-full flex-[53] min-h-0">
                         <div className="flex-1 min-h-0">
                             <AccountsCard />
                         </div>
@@ -38,8 +38,8 @@ export default function Overview() {
                         </div>
                     </div>
 
-                    {/* Bottom - Flexible height (takes ~35% of remaining space) */}
-                    <div className="w-full flex-[3.5] min-h-0">
+                    {/* Bottom - Flexible height (takes ~47% of remaining space) */}
+                    <div className="w-full flex-[47] min-h-0">
                         <BottomComponents />
                     </div>
                 </div>

@@ -30,28 +30,28 @@ const FinancialMetricCardSkeleton: React.FC<{ gradient: string }> = ({ gradient 
         <Card className="h-full flex flex-col transition-all duration-300">
             <div className="p-4 flex flex-col h-full justify-between">
                 {/* Header skeleton */}
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className={`p-2 bg-gradient-to-r ${gradient} rounded-lg animate-pulse`}>
+                        <div className={`p-2 bg-gradient-to-r ${gradient} rounded-xl`}>
                             <div className="w-4 h-4 bg-white/20 rounded"></div>
                         </div>
                         <div className="h-4 w-16 bg-muted rounded animate-pulse"></div>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted/50">
                         <div className="w-3 h-3 bg-muted rounded animate-pulse"></div>
                         <div className="h-3 w-8 bg-muted rounded animate-pulse"></div>
                     </div>
                 </div>
 
                 {/* Main value skeleton */}
-                <div className="mb-2">
+                <div className="flex-1 flex items-center">
                     <div className="h-8 w-24 bg-muted rounded animate-pulse"></div>
                 </div>
 
                 {/* Comparison skeleton */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between text-xs">
                     <div className="h-3 w-20 bg-muted rounded animate-pulse"></div>
-                    <div className="h-5 w-12 bg-muted rounded-full animate-pulse"></div>
+                    <div className="h-5 w-12 bg-secondary/80 rounded-full animate-pulse"></div>
                 </div>
             </div>
         </Card>
@@ -63,7 +63,7 @@ const BudgetProgressCardSkeleton: React.FC = () => {
         <Card className="h-full flex flex-col transition-all duration-300">
             <div className="p-4 flex flex-col h-full">
                 {/* Header skeleton */}
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2">
                     <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg animate-pulse">
                         <div className="w-4 h-4 bg-white/20 rounded"></div>
                     </div>
@@ -71,7 +71,7 @@ const BudgetProgressCardSkeleton: React.FC = () => {
                 </div>
 
                 {/* Progress circle and details skeleton */}
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex-1 flex items-center justify-between">
                     <div className="relative">
                         <div className="w-14 h-14 rounded-full border-4 border-muted animate-pulse">
                             <div className="w-full h-full flex items-center justify-center">
@@ -85,9 +85,6 @@ const BudgetProgressCardSkeleton: React.FC = () => {
                         <div className="h-3 w-16 bg-muted rounded animate-pulse"></div>
                     </div>
                 </div>
-
-                {/* Action button skeleton */}
-                <div className="h-8 w-full bg-muted rounded animate-pulse"></div>
             </div>
         </Card>
     );

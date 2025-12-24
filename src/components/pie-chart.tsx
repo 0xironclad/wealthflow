@@ -25,7 +25,7 @@ export function PieChartComponent({ chartData }: { chartData: any[] }) {
     return (
         <ChartContainer
             config={chartConfig}
-            className="h-full w-full aspect-square"
+            className="h-full w-full max-h-full"
         >
             <PieChart>
                 <ChartTooltip
