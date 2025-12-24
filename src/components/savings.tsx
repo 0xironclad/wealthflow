@@ -1,7 +1,6 @@
 import {
     Card,
     CardContent,
-    CardDescription,
     CardTitle,
 } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
@@ -15,24 +14,17 @@ import LoadingComponent from "./loading-component"
 function Savings() {
     const { user, isLoading: isAuthLoading } = useUser();
 
-    // Only call the hook with a valid userId - pass empty string when not ready
-    // The hook will be disabled when userId is empty
     const userId = user?.id ?? '';
     const { data: savings, isPending, isError } = useSavings(userId);
 
-    // Show loading while auth is loading or we don't have a user yet
     if (isAuthLoading || !user?.id) {
         return <LoadingComponent title="Savings" />
     }
 
-    // Show loading only when actually fetching data (not when query is disabled)
-    // isPending is true when query has no data yet AND is enabled
-    // isFetching is true when query is actively fetching
     if (isPending && !savings) {
         return <LoadingComponent title="Savings" />
     }
 
-    // Only show loading on error if we have no cached data to display
     if (isError && !savings) {
         return <LoadingComponent title="Savings" />
     }
