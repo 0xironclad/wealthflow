@@ -8,6 +8,7 @@ import {
     CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
     Loader2,
@@ -331,8 +332,20 @@ export default function InsightsPage() {
                         <CardContent className="flex-1 overflow-auto min-h-0 relative z-10">
                             <div className="space-y-3 styled-scrollbar max-h-full overflow-y-auto pr-2">
                                 {isLoadingRecommendations ? (
-                                    <div className="flex items-center justify-center py-8">
-                                        <Loader2 className="animate-spin h-8 w-8 text-primary" />
+                                    <div className="space-y-3">
+                                        {[...Array(4)].map((_, index) => (
+                                            <div
+                                                key={index}
+                                                className="space-y-2 p-3 rounded-xl"
+                                            >
+                                                <div className="flex items-start justify-between gap-2">
+                                                    <Skeleton className="h-4 flex-1" />
+                                                    <Skeleton className="h-5 w-14 rounded-full" />
+                                                </div>
+                                                <Skeleton className="h-3 w-full" />
+                                                <Skeleton className="h-3 w-4/5" />
+                                            </div>
+                                        ))}
                                     </div>
                                 ) : (
                                     recommendations.map((recommendation, index) => (
