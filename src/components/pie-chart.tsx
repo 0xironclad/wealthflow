@@ -4,10 +4,6 @@
 import { Pie, PieChart } from "recharts"
 
 import {
-    Card,
-    CardContent
-} from "@/components/ui/card"
-import {
     ChartConfig,
     ChartContainer,
     ChartTooltip,
@@ -27,25 +23,21 @@ export function PieChartComponent({ chartData }: { chartData: any[] }) {
     }
 
     return (
-        <Card className="flex flex-col border-0 shadow-none bg-transparent">
-            <CardContent className="flex items-center justify-center pb-0">
-                <ChartContainer
-                    config={chartConfig}
-                    className="mx-auto h-52 w-52"
-                >
-                    <PieChart>
-                        <ChartTooltip
-                            cursor={false}
-                            content={<ChartTooltipContent hideLabel />}
-                        />
-                        <Pie
-                            data={chartData}
-                            dataKey="amount"
-                            nameKey="title"
-                        />
-                    </PieChart>
-                </ChartContainer>
-            </CardContent>
-        </Card>
+        <ChartContainer
+            config={chartConfig}
+            className="h-full w-full max-h-full"
+        >
+            <PieChart>
+                <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                />
+                <Pie
+                    data={chartData}
+                    dataKey="amount"
+                    nameKey="title"
+                />
+            </PieChart>
+        </ChartContainer>
     )
 }

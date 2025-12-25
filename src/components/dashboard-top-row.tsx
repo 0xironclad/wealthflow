@@ -30,28 +30,28 @@ const FinancialMetricCardSkeleton: React.FC<{ gradient: string }> = ({ gradient 
         <Card className="h-full flex flex-col transition-all duration-300">
             <div className="p-4 flex flex-col h-full justify-between">
                 {/* Header skeleton */}
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className={`p-2 bg-gradient-to-r ${gradient} rounded-lg animate-pulse`}>
+                        <div className={`p-2 bg-gradient-to-r ${gradient} rounded-xl`}>
                             <div className="w-4 h-4 bg-white/20 rounded"></div>
                         </div>
                         <div className="h-4 w-16 bg-muted rounded animate-pulse"></div>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted/50">
                         <div className="w-3 h-3 bg-muted rounded animate-pulse"></div>
                         <div className="h-3 w-8 bg-muted rounded animate-pulse"></div>
                     </div>
                 </div>
 
                 {/* Main value skeleton */}
-                <div className="mb-2">
+                <div className="flex-1 flex items-center">
                     <div className="h-8 w-24 bg-muted rounded animate-pulse"></div>
                 </div>
 
                 {/* Comparison skeleton */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between text-xs">
                     <div className="h-3 w-20 bg-muted rounded animate-pulse"></div>
-                    <div className="h-5 w-12 bg-muted rounded-full animate-pulse"></div>
+                    <div className="h-5 w-12 bg-secondary/80 rounded-full animate-pulse"></div>
                 </div>
             </div>
         </Card>
@@ -63,7 +63,7 @@ const BudgetProgressCardSkeleton: React.FC = () => {
         <Card className="h-full flex flex-col transition-all duration-300">
             <div className="p-4 flex flex-col h-full">
                 {/* Header skeleton */}
-                <div className="flex items-center gap-2 mb-2">
+                <div className="flex items-center gap-2">
                     <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg animate-pulse">
                         <div className="w-4 h-4 bg-white/20 rounded"></div>
                     </div>
@@ -71,7 +71,7 @@ const BudgetProgressCardSkeleton: React.FC = () => {
                 </div>
 
                 {/* Progress circle and details skeleton */}
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex-1 flex items-center justify-between">
                     <div className="relative">
                         <div className="w-14 h-14 rounded-full border-4 border-muted animate-pulse">
                             <div className="w-full h-full flex items-center justify-center">
@@ -85,9 +85,6 @@ const BudgetProgressCardSkeleton: React.FC = () => {
                         <div className="h-3 w-16 bg-muted rounded animate-pulse"></div>
                     </div>
                 </div>
-
-                {/* Action button skeleton */}
-                <div className="h-8 w-full bg-muted rounded animate-pulse"></div>
             </div>
         </Card>
     );
@@ -285,15 +282,9 @@ const DashboardTopRow: React.FC = () => {
     if (isLoadingData) {
         return (
             <div className="grid grid-cols-3 md:grid-cols-4 gap-4 h-full">
-                <div className="col-span-1">
-                    <FinancialMetricCardSkeleton gradient="from-emerald-500 to-teal-600" />
-                </div>
-                <div className="col-span-1">
-                    <FinancialMetricCardSkeleton gradient="from-rose-500 to-pink-600" />
-                </div>
-                <div className="col-span-1">
-                    <FinancialMetricCardSkeleton gradient="from-blue-500 to-cyan-600" />
-                </div>
+                <FinancialMetricCardSkeleton gradient="from-emerald-500 to-teal-600" />
+                <FinancialMetricCardSkeleton gradient="from-rose-500 to-pink-600" />
+                <FinancialMetricCardSkeleton gradient="from-blue-500 to-cyan-600" />
                 <div className="col-span-3 md:col-span-1">
                     <BudgetProgressCardSkeleton />
                 </div>
@@ -350,37 +341,31 @@ const DashboardTopRow: React.FC = () => {
 
     return (
         <div className="grid grid-cols-3 md:grid-cols-4 gap-4 h-full">
-            <div className="col-span-1">
-                <FinancialMetricCard
-                    label="Income This Month"
-                    value={totalIncomeThisMonth}
-                    percentageChange={incomeChange}
-                    isPositive={incomeChange >= 0}
-                    previousValue={totalIncomeLastMonth}
-                    icon={DollarSign}
-                    gradient="from-emerald-500 to-teal-600"
-                />
-            </div>
-            <div className="col-span-1">
-                <FinancialMetricCard
-                    label="Expenses This Month"
-                    value={Number(expensesThisMonth)}
-                    percentageChange={Math.abs(expenseChange)}
-                    isPositive={expenseChange <= 0} // Lower expenses are positive
-                    previousValue={expensesLastMonth}
-                    icon={CreditCard}
-                    gradient="from-rose-500 to-pink-600"
-                />
-            </div>
-            <div className="col-span-1">
-                <FinancialMetricCard
-                    label="Net Savings"
-                    value={Number(netSavings)}
-                    icon={PiggyBank}
-                    gradient="from-blue-500 to-cyan-600"
-                    viewAllLink="/goals"
-                />
-            </div>
+            <FinancialMetricCard
+                label="Income This Month"
+                value={totalIncomeThisMonth}
+                percentageChange={incomeChange}
+                isPositive={incomeChange >= 0}
+                previousValue={totalIncomeLastMonth}
+                icon={DollarSign}
+                gradient="from-emerald-500 to-teal-600"
+            />
+            <FinancialMetricCard
+                label="Expenses This Month"
+                value={Number(expensesThisMonth)}
+                percentageChange={Math.abs(expenseChange)}
+                isPositive={expenseChange <= 0} // Lower expenses are positive
+                previousValue={expensesLastMonth}
+                icon={CreditCard}
+                gradient="from-rose-500 to-pink-600"
+            />
+            <FinancialMetricCard
+                label="Net Savings"
+                value={Number(netSavings)}
+                icon={PiggyBank}
+                gradient="from-blue-500 to-cyan-600"
+                viewAllLink="/goals"
+            />
             <div className="col-span-3 md:col-span-1">
                 <Card className="h-full flex flex-col relative overflow-hidden border-border/50 hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
                     {/* Decorative gradient background */}
