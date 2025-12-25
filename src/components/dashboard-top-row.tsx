@@ -2,13 +2,13 @@
 import {
     Card,
 } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import { TrendingUp, TrendingDown, CreditCard, PiggyBank, DollarSign, Wallet } from "lucide-react"
 import { getIncomesById } from "@/server/income";
 import { getExpensesById } from "@/server/expense";
 import { useQuery } from "@tanstack/react-query";
 import { InvoiceType, IncomeType, SavingsType } from "@/lib/types";
 import { getSavings } from "@/server/saving";
-// import dynamic from "next/dynamic";
 import { getBudgetsById } from "@/server/budget";
 import { useQueryClient } from "@tanstack/react-query";
 import { useUser } from "@/context/UserContext";
@@ -27,31 +27,28 @@ interface FinancialMetricCardProps {
 
 const FinancialMetricCardSkeleton: React.FC<{ gradient: string }> = ({ gradient }) => {
     return (
-        <Card className="h-full flex flex-col transition-all duration-300">
+        <Card className="h-full flex flex-col border-border/50">
             <div className="p-4 flex flex-col h-full justify-between">
                 {/* Header skeleton */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className={`p-2 bg-gradient-to-r ${gradient} rounded-xl`}>
-                            <div className="w-4 h-4 bg-white/20 rounded"></div>
+                        <div className={`p-2 bg-gradient-to-r ${gradient} rounded-xl opacity-50`}>
+                            <div className="w-4 h-4" />
                         </div>
-                        <div className="h-4 w-16 bg-muted rounded animate-pulse"></div>
+                        <Skeleton className="h-3 w-20" />
                     </div>
-                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-muted/50">
-                        <div className="w-3 h-3 bg-muted rounded animate-pulse"></div>
-                        <div className="h-3 w-8 bg-muted rounded animate-pulse"></div>
-                    </div>
+                    <Skeleton className="h-5 w-14 rounded-full" />
                 </div>
 
                 {/* Main value skeleton */}
                 <div className="flex-1 flex items-center">
-                    <div className="h-8 w-24 bg-muted rounded animate-pulse"></div>
+                    <Skeleton className="h-7 w-28" />
                 </div>
 
                 {/* Comparison skeleton */}
-                <div className="flex items-center justify-between text-xs">
-                    <div className="h-3 w-20 bg-muted rounded animate-pulse"></div>
-                    <div className="h-5 w-12 bg-secondary/80 rounded-full animate-pulse"></div>
+                <div className="flex items-center justify-between">
+                    <Skeleton className="h-3 w-20" />
+                    <Skeleton className="h-5 w-14 rounded-full" />
                 </div>
             </div>
         </Card>
@@ -60,29 +57,25 @@ const FinancialMetricCardSkeleton: React.FC<{ gradient: string }> = ({ gradient 
 
 const BudgetProgressCardSkeleton: React.FC = () => {
     return (
-        <Card className="h-full flex flex-col transition-all duration-300">
+        <Card className="h-full flex flex-col border-border/50">
             <div className="p-4 flex flex-col h-full">
                 {/* Header skeleton */}
                 <div className="flex items-center gap-2">
-                    <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg animate-pulse">
-                        <div className="w-4 h-4 bg-white/20 rounded"></div>
+                    <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl opacity-50">
+                        <div className="w-4 h-4" />
                     </div>
-                    <div className="h-4 w-24 bg-muted rounded animate-pulse"></div>
+                    <Skeleton className="h-3 w-24" />
                 </div>
 
                 {/* Progress circle and details skeleton */}
                 <div className="flex-1 flex items-center justify-between">
                     <div className="relative">
-                        <div className="w-14 h-14 rounded-full border-4 border-muted animate-pulse">
-                            <div className="w-full h-full flex items-center justify-center">
-                                <div className="h-4 w-6 bg-muted rounded animate-pulse"></div>
-                            </div>
-                        </div>
+                        <Skeleton className="w-14 h-14 rounded-full" />
                     </div>
-                    <div className="text-right space-y-1">
-                        <div className="h-3 w-20 bg-muted rounded animate-pulse"></div>
-                        <div className="h-4 w-12 bg-muted rounded animate-pulse"></div>
-                        <div className="h-3 w-16 bg-muted rounded animate-pulse"></div>
+                    <div className="text-right space-y-1.5">
+                        <Skeleton className="h-3 w-20 ml-auto" />
+                        <Skeleton className="h-5 w-16 ml-auto" />
+                        <Skeleton className="h-3 w-14 ml-auto" />
                     </div>
                 </div>
             </div>

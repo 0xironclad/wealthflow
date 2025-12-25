@@ -1,29 +1,74 @@
 "use client";
 import dynamic from 'next/dynamic';
-import { Loader2 } from "lucide-react";
-
-const CardContent = dynamic(() => import("@/components/ui/card").then(mod => mod.CardContent), { ssr: false });
-const Card = dynamic(() => import("@/components/ui/card").then(mod => mod.Card), { ssr: false });
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Savings = dynamic(() => import("@/components/savings"), {
-  loading: () => <LoadingComponent />,
+  loading: () => <SavingsLoadingSkeleton />,
   ssr: false,
 });
 
 const SpendTrend = dynamic(() => import("@/components/spend-trend").then(mod => mod.SpendTrend), {
-  loading: () => <LoadingComponent />,
+  loading: () => <ChartLoadingSkeleton />,
   ssr: false,
 });
 
 const IncomeVSExpense = dynamic(() => import("@/components/income-expense").then(mod => mod.IncomeVSExpense), {
-  loading: () => <LoadingComponent />,
+  loading: () => <ChartLoadingSkeleton />,
   ssr: false,
 });
 
-const LoadingComponent = () => (
-  <Card className="h-full">
-    <CardContent className="flex items-center justify-center h-full min-h-[200px]">
-      <Loader2 className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+const SavingsLoadingSkeleton = () => (
+  <Card className="h-full border-border/50">
+    <div className="flex justify-between p-4 items-center">
+      <Skeleton className="h-4 w-16" />
+      <Skeleton className="h-3 w-14" />
+    </div>
+    <CardContent className="p-4 pt-0">
+      <div className="space-y-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="space-y-2">
+            <div className="flex justify-between items-center">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-3 w-8" />
+            </div>
+            <Skeleton className="h-2 w-full rounded-full" />
+          </div>
+        ))}
+      </div>
+    </CardContent>
+  </Card>
+);
+
+const ChartLoadingSkeleton = () => (
+  <Card className="h-full border-border/50">
+    <CardHeader className="pb-2">
+      <div className="flex justify-between items-center">
+        <div>
+          <Skeleton className="h-4 w-28 mb-1" />
+          <Skeleton className="h-3 w-20" />
+        </div>
+        <Skeleton className="h-7 w-16 rounded-lg" />
+      </div>
+    </CardHeader>
+    <CardContent className="p-2 pt-0">
+      <div className="h-[180px] w-full flex flex-col">
+        <div className="flex-1 relative">
+          <div className="absolute inset-0 flex flex-col justify-between">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-px w-full opacity-30" />
+            ))}
+          </div>
+          <div className="absolute bottom-4 left-0 right-0 h-20">
+            <Skeleton className="h-full w-full rounded-lg opacity-40" />
+          </div>
+        </div>
+        <div className="flex justify-between mt-2">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-3 w-8" />
+          ))}
+        </div>
+      </div>
     </CardContent>
   </Card>
 );

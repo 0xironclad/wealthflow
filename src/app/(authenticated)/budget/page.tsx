@@ -99,7 +99,7 @@ function BudgetManager() {
     // Show error state
     if (budgetsError || totalError) {
         return (
-            <div className="h-screen w-full flex flex-col">
+            <div className="h-full w-full flex flex-col overflow-hidden">
                 <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
                     <h1 className="text-3xl font-bold">Budgets</h1>
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -147,7 +147,7 @@ function BudgetManager() {
     }
 
     return (
-        <div className="h-screen w-full flex flex-col">
+        <div className="h-full w-full flex flex-col overflow-hidden">
             <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
                 <h1 className="text-3xl font-bold">Budgets</h1>
                 <div className="flex items-center gap-3">
@@ -190,22 +190,31 @@ function BudgetManager() {
                 {budgetData.map((data) => (
                     <div key={data.title} className="h-[180px]">
                         {data.isLoading ? (
-                            <Card className="w-full h-full flex flex-col">
-                                {data.hasRadialChart ? (
+                            data.hasRadialChart ? (
+                                <Card className="flex flex-col h-full">
                                     <CardContent className="flex-1 pb-0 flex items-center justify-center">
-                                        <Skeleton className="h-20 w-20 rounded-full" />
+                                        <div className="relative">
+                                            <Skeleton className="h-[120px] w-[120px] rounded-full" />
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <Skeleton className="h-8 w-12" />
+                                            </div>
+                                        </div>
                                     </CardContent>
-                                ) : (
-                                    <>
-                                        <CardHeader className="pb-2">
+                                </Card>
+                            ) : (
+                                <Card className="w-full h-full flex flex-col relative overflow-hidden">
+                                    <CardContent className="p-5 flex flex-col h-full">
+                                        <div className="flex items-center justify-between mb-4">
                                             <Skeleton className="h-4 w-24" />
-                                        </CardHeader>
-                                        <CardContent className="pt-0 flex-1 flex items-start">
-                                            <Skeleton className="h-6 w-16" />
-                                        </CardContent>
-                                    </>
-                                )}
-                            </Card>
+                                            <Skeleton className="h-8 w-8 rounded-lg" />
+                                        </div>
+                                        <div className="flex-1 flex flex-col justify-center">
+                                            <Skeleton className="h-9 w-32" />
+                                        </div>
+                                        <Skeleton className="h-1 w-16 rounded-full mt-4" />
+                                    </CardContent>
+                                </Card>
+                            )
                         ) : (
                             <div className="h-full">
                                 <GenericCard
@@ -225,20 +234,66 @@ function BudgetManager() {
             <div className="w-full px-4 py-3 grid grid-cols-1 gap-4 md:grid-cols-12">
                 <div className="md:col-span-8">
                     {budgetsLoading ? (
-                        <div className="p-6 rounded-lg border bg-card">
-                            <Skeleton className="h-6 w-32 mb-4" />
-                            <Skeleton className="h-64 w-full" />
-                        </div>
+                        <Card className="flex flex-col h-[400px]">
+                            <CardContent className="flex gap-4 h-full p-6">
+                                {/* Pie chart skeleton */}
+                                <div className="mx-auto aspect-square max-h-[350px] flex-shrink-0 flex items-center justify-center">
+                                    <div className="relative">
+                                        <Skeleton className="h-[200px] w-[200px] rounded-full" />
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                            <Skeleton className="h-8 w-20 mb-1" />
+                                            <Skeleton className="h-4 w-16" />
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* Progress bars skeleton */}
+                                <div className="flex flex-col flex-1 min-h-0 space-y-4">
+                                    {[...Array(4)].map((_, i) => (
+                                        <div key={i} className="space-y-2">
+                                            <div className="flex justify-between">
+                                                <Skeleton className="h-3 w-20" />
+                                                <Skeleton className="h-3 w-24" />
+                                            </div>
+                                            <Skeleton className="h-2 w-full rounded-full" />
+                                        </div>
+                                    ))}
+                                </div>
+                            </CardContent>
+                        </Card>
                     ) : (
                         <BudgetAllocation budgets={budgets} />
                     )}
                 </div>
                 <div className="md:col-span-4">
                     {budgetsLoading ? (
-                        <div className="p-6 rounded-lg border bg-card">
-                            <Skeleton className="h-6 w-32 mb-4" />
-                            <Skeleton className="h-64 w-full" />
-                        </div>
+                        <Card className="h-[400px]">
+                            <CardHeader>
+                                <Skeleton className="h-6 w-48" />
+                            </CardHeader>
+                            <CardContent>
+                                <div className="h-[300px] w-full flex flex-col">
+                                    {/* Line chart skeleton */}
+                                    <div className="flex-1 relative">
+                                        {/* Grid lines */}
+                                        <div className="absolute inset-0 flex flex-col justify-between">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Skeleton key={i} className="h-px w-full opacity-30" />
+                                            ))}
+                                        </div>
+                                        {/* Chart line representation */}
+                                        <div className="absolute bottom-8 left-0 right-0 h-32">
+                                            <Skeleton className="h-full w-full rounded-lg opacity-50" />
+                                        </div>
+                                    </div>
+                                    {/* X-axis labels */}
+                                    <div className="flex justify-between mt-2">
+                                        {[...Array(6)].map((_, i) => (
+                                            <Skeleton key={i} className="h-3 w-8" />
+                                        ))}
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     ) : (
                         <SpendTrendLineChart budgets={budgets} period={currentPeriod.type} />
                     )}
@@ -246,16 +301,47 @@ function BudgetManager() {
             </div>
 
             {/* Third Row - Budget Details Table */}
-            <div className="w-full px-4 py-3 flex-1">
+            <div className="w-full px-4 py-3 flex-1 min-h-0 pb-4">
                 {budgetsLoading ? (
-                    <div className="p-6 rounded-lg border bg-card">
-                        <Skeleton className="h-6 w-32 mb-4" />
-                        <div className="space-y-3">
-                            {[...Array(5)].map((_, i) => (
-                                <Skeleton key={i} className="h-12 w-full" />
-                            ))}
-                        </div>
-                    </div>
+                    <Card className="w-full h-full">
+                        <CardContent className="h-full overflow-auto">
+                            {/* Table skeleton */}
+                            <div className="w-full">
+                                {/* Table header */}
+                                <div className="border-b">
+                                    <div className="flex py-3 gap-4">
+                                        <Skeleton className="h-4 w-28" />
+                                        <Skeleton className="h-4 w-20" />
+                                        <Skeleton className="h-4 w-16" />
+                                        <Skeleton className="h-4 w-20 ml-auto" />
+                                        <Skeleton className="h-4 w-16" />
+                                        <Skeleton className="h-4 w-24" />
+                                        <Skeleton className="h-4 w-20" />
+                                        <Skeleton className="h-4 w-16" />
+                                    </div>
+                                </div>
+                                {/* Table rows */}
+                                <div className="space-y-1">
+                                    {[...Array(5)].map((_, i) => (
+                                        <div key={i} className="flex items-center py-4 gap-4 border-b border-border/50">
+                                            <Skeleton className="h-4 w-32" />
+                                            <Skeleton className="h-4 w-20" />
+                                            <Skeleton className="h-4 w-16" />
+                                            <Skeleton className="h-4 w-16 ml-auto" />
+                                            <Skeleton className="h-4 w-16" />
+                                            <Skeleton className="h-4 w-16" />
+                                            <Skeleton className="h-4 w-12" />
+                                            <Skeleton className="h-8 w-8 rounded" />
+                                        </div>
+                                    ))}
+                                </div>
+                                {/* Table caption */}
+                                <div className="flex justify-center py-4">
+                                    <Skeleton className="h-4 w-48" />
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
                 ) : budgets && budgets.length > 0 ? (
                     <BudgetDetails budgets={budgets} />
                 ) : (

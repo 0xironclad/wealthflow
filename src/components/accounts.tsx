@@ -8,11 +8,11 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   ArrowUpRight,
   Wallet,
   Plus,
-  Loader2,
   TrendingUp,
   TrendingDown,
   Calendar,
@@ -179,15 +179,60 @@ export default function AccountsCard() {
 
   if (isAuthLoading || totalIncomeLoading) {
     return (
-      <Card className="h-full w-full relative overflow-hidden border-border/50">
+      <Card className="h-full w-full relative flex flex-col overflow-hidden border-border/50">
         <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-primary/5 blur-3xl" />
-        <CardHeader className="p-4 border-b border-border/50 relative z-10">
-          <p className="text-xs text-muted-foreground">Total Balance</p>
-          <div className="h-8 w-32 bg-muted/50 rounded animate-pulse" />
+        <CardHeader className="p-4 pb-3 border-b border-border/50 relative z-10">
+          <div className="flex items-start justify-between">
+            <div>
+              <Skeleton className="h-3 w-20 mb-2" />
+              <Skeleton className="h-7 w-28" />
+            </div>
+            <Skeleton className="h-6 w-14 rounded-md" />
+          </div>
+          <div className="flex items-center gap-4 mt-3">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-7 w-7 rounded-md" />
+              <div>
+                <Skeleton className="h-2 w-14 mb-1" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-7 w-7 rounded-md" />
+              <div>
+                <Skeleton className="h-2 w-14 mb-1" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </div>
+          </div>
         </CardHeader>
-        <CardContent className="flex items-center justify-center h-[200px] relative z-10">
-          <Loader2 className="animate-spin text-primary" />
+        <CardContent className="flex-1 overflow-y-auto p-3 relative z-10">
+          <div className="flex items-center justify-between mb-3">
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="h-3 w-12" />
+          </div>
+          <div className="space-y-1">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="flex items-center justify-between p-2.5 rounded-xl">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="h-9 w-9 rounded-xl" />
+                  <div>
+                    <Skeleton className="h-4 w-24 mb-1" />
+                    <Skeleton className="h-3 w-16" />
+                  </div>
+                </div>
+                <div className="text-right">
+                  <Skeleton className="h-4 w-16 mb-1" />
+                  <Skeleton className="h-3 w-12" />
+                </div>
+              </div>
+            ))}
+          </div>
         </CardContent>
+        <CardFooter className="p-3 border-t border-border/50 relative z-10 gap-2">
+          <Skeleton className="flex-1 h-9 rounded-md" />
+          <Skeleton className="flex-1 h-9 rounded-md" />
+        </CardFooter>
       </Card>
     );
   }

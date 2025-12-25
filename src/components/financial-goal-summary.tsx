@@ -6,9 +6,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { RadialProgress } from "./radial-progress";
 import { getSavings } from "@/server/saving"
-import { Loader2, Target, CheckCircle2, AlertTriangle, TrendingUp } from "lucide-react";
+import { Target, CheckCircle2, AlertTriangle, TrendingUp } from "lucide-react";
 import { SavingsType } from "@/lib/types";
 import { useUser } from "@/context/UserContext";
 import { cn } from "@/lib/utils";
@@ -44,10 +45,28 @@ function FinancialGoalSummary() {
         return (
             <Card className="w-full h-full flex flex-col border-border/50">
                 <CardHeader className="py-3">
-                    <CardTitle className="text-sm font-semibold">Financial Goal Summary</CardTitle>
+                    <Skeleton className="h-4 w-40" />
                 </CardHeader>
-                <CardContent className="flex items-center justify-center flex-1">
-                    <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" />
+                <CardContent className="flex justify-between items-center flex-1 py-2">
+                    <div className="space-y-2">
+                        {[...Array(4)].map((_, index) => (
+                            <div key={index} className="flex items-center gap-2">
+                                <Skeleton className="h-7 w-7 rounded-lg" />
+                                <div className="flex items-center gap-2">
+                                    <Skeleton className="h-4 w-16" />
+                                    <Skeleton className="h-4 w-6" />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className="h-28 w-28 flex-shrink-0 flex items-center justify-center">
+                        <div className="relative">
+                            <Skeleton className="h-24 w-24 rounded-full" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <Skeleton className="h-6 w-10" />
+                            </div>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
         );

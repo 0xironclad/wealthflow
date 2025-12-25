@@ -137,8 +137,8 @@ function BudgetDetails({ budgets = [] }: BudgetDetailsProps) {
     }
 
     return (
-        <Card className="w-full h-[400px]">
-            <CardContent>
+        <Card className="w-full h-full">
+            <CardContent className="h-full overflow-auto">
                 <Table>
                     <TableCaption>A list of your current budgets.</TableCaption>
                     <TableHeader>

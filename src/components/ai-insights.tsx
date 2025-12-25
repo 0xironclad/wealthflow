@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Lightbulb,
   TrendingUp,
@@ -170,8 +171,35 @@ const AIInsights: React.FC = () => {
 
   if (isLoading || isAuthLoading) {
     return (
-      <Card className="h-full w-full flex items-center justify-center border-border/50">
-        <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" />
+      <Card className="h-full w-full flex flex-col border-border/50">
+        <CardHeader className="pb-2 flex-none">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-4 w-32" />
+              <Skeleton className="h-6 w-6 rounded-lg" />
+            </div>
+            <Skeleton className="h-8 w-8 rounded" />
+          </div>
+        </CardHeader>
+        <CardContent className="flex-1 min-h-0">
+          <div className="h-full pr-2">
+            <div className="space-y-3">
+              {[...Array(4)].map((_, index) => (
+                <div
+                  key={index}
+                  className="flex items-start gap-3 p-2.5 rounded-xl"
+                >
+                  <Skeleton className="h-9 w-9 rounded-xl flex-shrink-0" />
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-full" />
+                    <Skeleton className="h-3 w-5/6" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
       </Card>
     );
   }

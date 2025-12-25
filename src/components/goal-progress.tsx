@@ -7,10 +7,10 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Progress as ProgressPrimitive } from "@/components/ui/progress"
+import { Skeleton } from "@/components/ui/skeleton"
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Progress = ProgressPrimitive as any;
-import { Loader2 } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { getSavings } from "@/server/saving"
 import { SavingsType } from "@/lib/types"
@@ -52,10 +52,20 @@ function GoalProgress() {
         return (
             <Card className="w-full h-full flex flex-col border-border/50">
                 <CardHeader className="py-3">
-                    <CardTitle className="text-sm font-semibold">Saving Progress</CardTitle>
+                    <Skeleton className="h-4 w-28" />
                 </CardHeader>
-                <CardContent className="flex items-center justify-center flex-1">
-                    <Loader2 className="animate-spin rounded-full h-8 w-8 text-primary" />
+                <CardContent className="flex-1 min-h-0">
+                    <div className="h-full space-y-3 pr-2">
+                        {[...Array(3)].map((_, index) => (
+                            <div key={index} className="space-y-1.5">
+                                <div className="flex justify-between items-center">
+                                    <Skeleton className="h-4 w-24" />
+                                    <Skeleton className="h-5 w-12 rounded-full" />
+                                </div>
+                                <Skeleton className="h-2 w-full rounded-full" />
+                            </div>
+                        ))}
+                    </div>
                 </CardContent>
             </Card>
         );
