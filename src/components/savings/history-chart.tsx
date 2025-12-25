@@ -10,6 +10,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
     ChartConfig,
     ChartContainer,
@@ -94,8 +95,50 @@ export function HistoryChart() {
 
     if (isLoading || isAuthLoading) {
         return (
-            <Card className="h-full w-full flex items-center justify-center border-border/50 min-h-[300px]">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            <Card className="h-full w-full border-border/50 min-h-[300px]">
+                <CardHeader>
+                    <Skeleton className="h-4 w-44" />
+                    <Skeleton className="h-3 w-72 mt-1" />
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[200px] w-full flex flex-col">
+                        {/* Chart area skeleton */}
+                        <div className="flex-1 relative">
+                            {/* Horizontal grid lines */}
+                            <div className="absolute inset-0 flex flex-col justify-between">
+                                {[...Array(5)].map((_, i) => (
+                                    <Skeleton key={i} className="h-px w-full opacity-30" />
+                                ))}
+                            </div>
+                            {/* Chart lines representation */}
+                            <div className="absolute bottom-4 left-0 right-0 h-24">
+                                <Skeleton className="h-full w-full rounded-lg opacity-40" />
+                            </div>
+                        </div>
+                        {/* X-axis labels */}
+                        <div className="flex justify-between mt-2">
+                            {[...Array(6)].map((_, i) => (
+                                <Skeleton key={i} className="h-3 w-10" />
+                            ))}
+                        </div>
+                    </div>
+                </CardContent>
+                <CardFooter className="border-t border-border/50">
+                    <div className="flex w-full items-center justify-between">
+                        <div className="flex flex-col gap-1">
+                            <Skeleton className="h-5 w-24" />
+                            <Skeleton className="h-3 w-36" />
+                        </div>
+                        <div className="flex gap-3">
+                            {[...Array(3)].map((_, i) => (
+                                <div key={i} className="flex items-center gap-1.5">
+                                    <Skeleton className="w-2.5 h-2.5 rounded-full" />
+                                    <Skeleton className="h-3 w-16" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </CardFooter>
             </Card>
         );
     }

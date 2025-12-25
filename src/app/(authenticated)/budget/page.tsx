@@ -99,7 +99,7 @@ function BudgetManager() {
     // Show error state
     if (budgetsError || totalError) {
         return (
-            <div className="h-screen w-full flex flex-col">
+            <div className="h-full w-full flex flex-col overflow-hidden">
                 <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
                     <h1 className="text-3xl font-bold">Budgets</h1>
                     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -147,7 +147,7 @@ function BudgetManager() {
     }
 
     return (
-        <div className="h-screen w-full flex flex-col">
+        <div className="h-full w-full flex flex-col overflow-hidden">
             <div className="flex-shrink-0 p-4 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex justify-between items-center">
                 <h1 className="text-3xl font-bold">Budgets</h1>
                 <div className="flex items-center gap-3">
@@ -301,10 +301,10 @@ function BudgetManager() {
             </div>
 
             {/* Third Row - Budget Details Table */}
-            <div className="w-full px-4 py-3 flex-1">
+            <div className="w-full px-4 py-3 flex-1 min-h-0 pb-4">
                 {budgetsLoading ? (
-                    <Card className="w-full h-[400px]">
-                        <CardContent>
+                    <Card className="w-full h-full">
+                        <CardContent className="h-full overflow-auto">
                             {/* Table skeleton */}
                             <div className="w-full">
                                 {/* Table header */}
