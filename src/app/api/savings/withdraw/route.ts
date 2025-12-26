@@ -38,8 +38,8 @@ export async function PATCH(request: Request) {
     const newStatus = determineStatus(
       newAmount,
       currentResult.rows[0].goal,
-      currentResult.rows[0].targetDate,
-      currentResult.rows[0].createdAt
+      currentResult.rows[0].target_date,
+      currentResult.rows[0].created_at
     );
 
     if (newStatus !== currentStatus) {
@@ -57,7 +57,7 @@ export async function PATCH(request: Request) {
       `${currentResult.rows[0].name} - Withdrawal`,
       new Date(),
       withdrawAmount,
-      "withdrawal",
+      "saving",
       "debit",
       "Saving"
     ]);

@@ -295,7 +295,7 @@ export async function DELETE(request: Request) {
     const userId = saving.userid;
     const currentAmount = parseFloat(saving.amount || 0);
 
-    // if there is remaining amount, record a withdrawal expense and history
+    // if there is remaining amount, record a saving expense and history
     if (currentAmount > 0) {
       const expenseInsert = `
                 INSERT INTO expenses (userid, name, date, amount, type, paymentmethod, category)
@@ -306,7 +306,7 @@ export async function DELETE(request: Request) {
         `${saving.name} - Withdrawal (on delete)`,
         new Date(),
         currentAmount,
-        "withdrawal",
+        "saving",
         "debit",
         "Saving",
       ]);

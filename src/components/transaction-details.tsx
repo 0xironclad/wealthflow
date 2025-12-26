@@ -54,8 +54,10 @@ function TransactionDetails({ expense, onEdit, onDelete }: TransactionDetailsPro
         <Button
           variant="outline"
           size="sm"
-          className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
+          className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={() => onEdit(expense)}
+          disabled={expense.type === "saving"}
+          title={expense.type === "saving" ? "Saving transactions cannot be edited" : undefined}
         >
           <TbEdit className="h-4 w-4 mr-2" />
           Edit
