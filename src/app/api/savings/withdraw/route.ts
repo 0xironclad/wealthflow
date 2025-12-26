@@ -57,7 +57,7 @@ export async function PATCH(request: Request) {
       `${currentResult.rows[0].name} - Withdrawal`,
       new Date(),
       withdrawAmount,
-      "income",
+      "saving",
       "debit",
       "Saving"
     ]);

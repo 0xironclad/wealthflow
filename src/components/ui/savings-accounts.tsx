@@ -1,6 +1,6 @@
 "use client"
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { SavingsState } from "./empty-states/savings-empty-state";
 import {
   Calendar,
@@ -122,6 +122,8 @@ export default function SavingAccounts() {
     // which would also affect other components using the same query key
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    // Keep previous data during refetch to prevent UI flicker and dialog closing
+    placeholderData: keepPreviousData,
     select: (data) => {
       if (!Array.isArray(data)) return [];
 
